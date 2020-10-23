@@ -5,6 +5,8 @@ Plist editor
 
 写这个软件的时候，其实有些犹豫，类似的软件貌似也不少，再加上时间的关系，一直没有成行。但写一款Plist编辑器的想法，一直挥之不去，所以最终促成了PlistEDPlus...
 
+github下载加速器：https://toolwa.com/github/
+
 特征包括但不限于：
 
 1.开源、跨平台
