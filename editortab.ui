@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditorTab</class>
+ <widget class="QWidget" name="EditorTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QTreeView" name="treeView">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">
+/*QTreeView::branch:closed:has-children{
+    image: url(:/new/toolbar/res/main.png);
+}
+QTreeView::branch:open:has-children{
+    image: url(:/new/toolbar/res/sub.png);
+}*/
+
+/*QTreeView::branch {
+    background: palette(base);
+}*/
+ 
+/*QTreeView::branch:has-siblings:!adjoins-item {
+    background: cyan;
+}*/
+ 
+/*QTreeView::branch:has-siblings:adjoins-item {
+    background: red;
+}
+ 
+QTreeView::branch:!has-children:!has-siblings:adjoins-item {
+    background: blue;
+}*/
+ 
+/*QTreeView::branch:closed:has-children:has-siblings {
+    background: pink;
+}*/
+ 
+/*QTreeView::branch:has-children:!has-siblings:closed {
+    background: gray;
+}*/
+ 
+/*QTreeView::branch:open:has-children:has-siblings {
+    background: magenta;
+}*/
+ 
+/*QTreeView::branch:open:has-children:!has-siblings {
+    background: green;
+}*/
+
+
+
+/*QTreeView::branch:has-siblings:!adjoins-item {
+    border-image: url(:/new/toolbar/res/Add.png) 0;
+}*/
+ 
+/*QTreeView::branch:has-siblings:adjoins-item {
+    border-image: url(:/new/toolbar/res/Add.png) 0;
+}
+ 
+QTreeView::branch:!has-children:!has-siblings:adjoins-item {
+    border-image: url(:/new/toolbar/res/Remove.png) 0;
+}*/
+ 
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+    border-image: none;
+    image: url(:/new/toolbar/res/main.png);
+}
+ 
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings  {
+    border-image: none;
+    image: url(:/new/toolbar/res/sub.png);
+}
+
+
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Sunken</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+     </property>
+     <property name="showDropIndicator" stdset="0">
+      <bool>false</bool>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="autoExpandDelay">
+      <number>-1</number>
+     </property>
+     <property name="rootIsDecorated">
+      <bool>true</bool>
+     </property>
+     <property name="uniformRowHeights">
+      <bool>false</bool>
+     </property>
+     <property name="itemsExpandable">
+      <bool>true</bool>
+     </property>
+     <property name="animated">
+      <bool>false</bool>
+     </property>
+     <property name="allColumnsShowFocus">
+      <bool>false</bool>
+     </property>
+     <property name="expandsOnDoubleClick">
+      <bool>false</bool>
+     </property>
+     <attribute name="headerCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="headerDefaultSectionSize">
+      <number>100</number>
+     </attribute>
+     <attribute name="headerHighlightSections">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

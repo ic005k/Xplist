@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/new/toolbar">
+        <file>res/Add.png</file>
+        <file>res/Remove.png</file>
+        <file>res/Transfer.png</file>
+        <file>res/find.png</file>
+        <file>res/redo.png</file>
+        <file>res/undo.png</file>
+        <file>res/new.png</file>
+        <file>res/open.png</file>
+        <file>res/save.png</file>
+        <file>res/translation_cn.qm</file>
+        <file>res/translation_ru.qm</file>
+        <file>res/qt_zh_CN.qm</file>
+        <file>res/my.png</file>
+        <file>res/saveas.png</file>
+        <file>res/copy.png</file>
+        <file>res/cut.png</file>
+        <file>res/paste.png</file>
+        <file>res/main.png</file>
+        <file>res/sub.png</file>
+        <file>res/col.png</file>
+        <file>res/exp.png</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>
