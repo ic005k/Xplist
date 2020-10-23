@@ -67,6 +67,10 @@ private slots:
 
     void findEdit_returnPressed();
 
+    void on_copyAction();
+    void on_cutAction();
+    void on_pasteAction();
+
 
 private:
 

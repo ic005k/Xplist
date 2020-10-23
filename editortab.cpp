@@ -101,6 +101,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
     QAction *expandAction = new QAction(tr("Expand"), this);
     expandAction->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+    expandAction->setShortcut(tr("ctrl+c"));
     menu.addAction(expandAction);
 
     QAction *collapseAction = new QAction(tr("Collapse"), this);
@@ -111,6 +112,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
     copyAction = new QAction(tr("Copy"), this);
     copyAction->setIcon(QIcon(":/new/toolbar/res/copy.png"));
+    copyAction->setShortcut(Qt::Key_Control & Qt::Key_C);
     menu.addAction(copyAction);
 
     cutAction = new QAction(tr("Cut"), this);
@@ -121,6 +123,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
     pasteAction = new QAction(tr("Paste"), this);
     pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
+    pasteAction->setShortcut(tr("ctrl+v"));
     menu.addAction(pasteAction);
 
     connect(copyAction, &QAction::triggered, this, &EditorTab::on_copyAction);

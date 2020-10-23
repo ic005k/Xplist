@@ -102,17 +102,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->mainToolBar->addSeparator();
 
-    copyAction = new QAction(tr("Copy"), this);
-    copyAction->setIcon(QIcon(":/new/toolbar/res/copy.png"));
-    //myToolBar->addAction(copyAction);
+    ui->actionCopy->setIcon(QIcon(":/new/toolbar/res/copy.png"));
+    ui->actionCopy->setShortcut(tr("ctrl+c"));
+    connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
 
-    pasteAction = new QAction(tr("Paste"), this);
-    pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
-    //myToolBar->addAction(pasteAction);
+    ui->actionPaste->setIcon(QIcon(":/new/toolbar/res/paste.png"));
+    ui->actionPaste->setShortcut(tr("ctrl+v"));
+    connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
 
-    cutAction = new QAction(tr("Cut"), this);
-    cutAction->setIcon(QIcon(":/new/toolbar/res/cut.png"));
-    //myToolBar->addAction(cutAction);
+    ui->actionCut->setIcon(QIcon(":/new/toolbar/res/cut.png"));
+    ui->actionCut->setShortcut(tr("ctrl+t"));
+    connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
 
     //ui->mainToolBar->addSeparator();
 
@@ -637,4 +637,76 @@ void MainWindow::findEdit_returnPressed()
 {
     on_Find();
 }
+
+void MainWindow::on_copyAction()
+{
+
+    DomModel *model;
+    QModelIndex index;
+    EditorTab *tab = tabWidget->getCurentTab();
+    index = tab->currentIndex();
+    model = tab->getModel();
+
+    if(index.isValid())
+    {
+
+        //当前节点
+        //DomItem *pCurItem;
+        //pCurItem = static_cast<DomItem*>(index.internalPointer());
+
+        copy_item = NULL;
+        copy_item = model->copyItem(index);
+
+    }
+
+}
+
+void MainWindow::on_cutAction()
+{
+
+    DomModel *model;
+    QModelIndex index;
+    EditorTab *tab = tabWidget->getCurentTab();
+    index = tab->currentIndex();
+    model = tab->getModel();
+
+    if(index.parent().data().toString() == "") //最顶层不允许剪切
+        return;
+
+    if(index.isValid())
+    {
+
+        copy_item = model->copyItem(index);//必须要有克隆的过程，否则粘贴出错
+
+        model->removeItem(index);
+
+    }
+
+}
+
+void MainWindow::on_pasteAction()
+{
+
+    if(copy_item == NULL)
+        return;
+
+    DomModel *model;
+    QModelIndex index;
+    EditorTab *tab = tabWidget->getCurentTab();
+    index = tab->currentIndex();
+    model = tab->getModel();
+    //index = this->currentIndex();
+    //model = this->model;
+
+    const QModelIndex parent = index.parent();
+
+    if(index.isValid())
+    {
+        //qDebug() << "粘贴的内容" << copy_item->getName();
+        model->pasteItem(parent, -1, NULL);
+
+    }
+
+}
+
 
