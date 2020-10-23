@@ -20,4 +20,8 @@ Plist editor
 ...
 
 
+讨论区：
 
+远景pcbeta:
+
+insanelymac:https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
