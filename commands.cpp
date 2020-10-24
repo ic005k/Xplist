@@ -27,6 +27,7 @@ void AddCommand::redo()
 
     m_index = m_model->addItem(m_parent);
 
+
 }
 
 RemoveCommand::RemoveCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)
@@ -106,3 +107,29 @@ void EditCommand::redo()
     m_model->setData(m_index, m_newVal);
 }
 
+PasteCommand::PasteCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)
+{
+
+    Q_UNUSED(parent);
+
+    m_model = model;
+    m_index = QModelIndex();
+    m_parent = index;
+
+    // maybe we should create permanent index?
+    setText(QObject::tr("Paste entry"));
+
+}
+
+void PasteCommand::undo()
+{
+    // remove item
+    m_model->removeItem(m_index);
+}
+
+void PasteCommand::redo()
+{
+
+    m_index = m_model->pasteItem(m_parent.parent(), -1, NULL);
+
+}

@@ -7,6 +7,7 @@
 #include "editortab.h"
 extern EditorTabsWidget *tabWidget;
 extern DomItem *copy_item;
+extern bool paste;
 
  DomModel::DomModel(QObject *parent)
      : QAbstractItemModel(parent)
@@ -338,7 +339,8 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
 
 void DomModel::removeItem(const QModelIndex &index)
  {
-     if (index.isValid())
+
+    if (index.isValid())
      {
          DomItem *item = itemForIndex(index);
          int row = index.row();

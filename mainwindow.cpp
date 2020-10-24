@@ -15,6 +15,8 @@ QAction *copyAction;
 QAction *cutAction;
 QAction *pasteAction;
 
+QUndoGroup *undoGroup;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -29,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.0");
+    setWindowTitle("PlistEDPlus V1.0.1");
     QApplication::setOrganizationName("PlistED");
 
     undoGroup = new QUndoGroup(this);
@@ -103,15 +105,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addSeparator();
 
     ui->actionCopy->setIcon(QIcon(":/new/toolbar/res/copy.png"));
-    ui->actionCopy->setShortcut(tr("ctrl+c"));
+    //ui->actionCopy->setShortcut(tr("ctrl+c"));
+    ui->actionCopy->setShortcuts(QKeySequence::Copy);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
 
     ui->actionPaste->setIcon(QIcon(":/new/toolbar/res/paste.png"));
-    ui->actionPaste->setShortcut(tr("ctrl+v"));
+    ui->actionPaste->setShortcuts(QKeySequence::Paste);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
 
     ui->actionCut->setIcon(QIcon(":/new/toolbar/res/cut.png"));
-    ui->actionCut->setShortcut(tr("ctrl+t"));
+    ui->actionCut->setShortcuts(QKeySequence::Cut);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
 
     //ui->mainToolBar->addSeparator();
@@ -345,6 +348,7 @@ void MainWindow::actionAdd_activated()
 
         if (index.isValid())
         {
+
             QUndoCommand *addCommand = new AddCommand(tab->getModel(), index);
             undoGroup->activeStack()->push(addCommand);
 
@@ -678,7 +682,11 @@ void MainWindow::on_cutAction()
 
         copy_item = model->copyItem(index);//必须要有克隆的过程，否则粘贴出错
 
-        model->removeItem(index);
+        if (model->itemNotPlist(index))
+        {
+            QUndoCommand *removeCommand = new RemoveCommand(model, index);
+            undoGroup->activeStack()->push(removeCommand);
+        }
 
     }
 
@@ -695,17 +703,21 @@ void MainWindow::on_pasteAction()
     EditorTab *tab = tabWidget->getCurentTab();
     index = tab->currentIndex();
     model = tab->getModel();
-    //index = this->currentIndex();
-    //model = this->model;
-
-    const QModelIndex parent = index.parent();
 
     if(index.isValid())
     {
         //qDebug() << "粘贴的内容" << copy_item->getName();
-        model->pasteItem(parent, -1, NULL);
+
+        QUndoCommand *pasteCommand = new PasteCommand(tab->getModel(), index);
+        undoGroup->activeStack()->push(pasteCommand);
 
     }
+
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+
 
 }
 

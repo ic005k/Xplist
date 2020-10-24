@@ -85,8 +85,6 @@ private:
     void setRecentFiles(const QString &fileName);
     void updateRecentFiles();
 
-    QUndoGroup *undoGroup;
-
     int findCount = 0;
     QLabel * lblFindCount;
     bool find = false;
@@ -97,6 +95,7 @@ protected:
 
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H

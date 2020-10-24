@@ -17,6 +17,8 @@ extern QAction *copyAction;
 extern QAction *cutAction;
 extern QAction *pasteAction;
 
+extern QUndoGroup *undoGroup;
+
 EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EditorTab)
@@ -101,7 +103,6 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
     QAction *expandAction = new QAction(tr("Expand"), this);
     expandAction->setIcon(QIcon(":/new/toolbar/res/exp.png"));
-    expandAction->setShortcut(tr("ctrl+c"));
     menu.addAction(expandAction);
 
     QAction *collapseAction = new QAction(tr("Collapse"), this);
@@ -112,7 +113,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
     copyAction = new QAction(tr("Copy"), this);
     copyAction->setIcon(QIcon(":/new/toolbar/res/copy.png"));
-    copyAction->setShortcut(Qt::Key_Control & Qt::Key_C);
+    //copyAction->setShortcuts(QKeySequence::Copy);
     menu.addAction(copyAction);
 
     cutAction = new QAction(tr("Cut"), this);
@@ -358,10 +359,13 @@ void EditorTab::on_cutAction()
 
         copy_item = model->copyItem(index);//必须要有克隆的过程，否则粘贴出错
 
-        model->removeItem(index);
+        if (model->itemNotPlist(index))
+        {
+            QUndoCommand *removeCommand = new RemoveCommand(model, index);
+            undoGroup->activeStack()->push(removeCommand);
+        }
 
     }
-
 }
 
 void EditorTab::on_pasteAction()
@@ -372,18 +376,16 @@ void EditorTab::on_pasteAction()
 
     DomModel *model;
     QModelIndex index;
-    /*EditorTab *tab = tabWidget->getCurentTab();
+    EditorTab *tab = tabWidget->getCurentTab();
     index = tab->currentIndex();
-    model = tab->getModel();*/
-    index = this->currentIndex();
-    model = this->model;
-
-    const QModelIndex parent = index.parent();
+    model = tab->getModel();
 
     if(index.isValid())
     {
         //qDebug() << "粘贴的内容" << copy_item->getName();
-        model->pasteItem(parent, -1, NULL);
+
+        QUndoCommand *pasteCommand = new PasteCommand(tab->getModel(), index);
+        undoGroup->activeStack()->push(pasteCommand);
 
     }
 
