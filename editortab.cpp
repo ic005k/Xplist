@@ -69,11 +69,11 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     //view->header()->setDefaultSectionSize(150);//表头默认列宽
     view->setColumnWidth(0, 200);
     view->header()->setMinimumHeight(25);//表头高度
+    //view->setIconSize(QSize(12, 12));
 
     //view->header()->setDefaultAlignment(Qt::AlignCenter); //表头文字默认对齐方式
     //view->header()->setStretchLastSection(true);
     //view->header()->setSortIndicator(0,Qt::AscendingOrder);    //按第1列升序排序
-
     //view->setStyle(QStyleFactory::create("windows")); //连接的虚线
     //view->setSelectionBehavior(QAbstractItemView::SelectItems);//不选中一行，分单元格选择
 
@@ -127,11 +127,23 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
     pasteAction->setShortcut(tr("ctrl+v"));
     menu.addAction(pasteAction);
 
+    menu.addSeparator();
+
+    QAction *actionNewSibling = new QAction(tr("New Sibling"), this);
+    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
+    menu.addAction(actionNewSibling);
+
+    QAction *actionNewChild = new QAction(tr("New Child"), this);
+    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
+    menu.addAction(actionNewChild);
+
     connect(copyAction, &QAction::triggered, this, &EditorTab::on_copyAction);
     connect(cutAction, &QAction::triggered, this, &EditorTab::on_cutAction);
     connect(pasteAction, &QAction::triggered, this, &EditorTab::on_pasteAction);
     connect(expandAction, &QAction::triggered, this, &EditorTab::on_expandAction);
     connect(collapseAction, &QAction::triggered, this, &EditorTab::on_collapseAction);
+    connect(actionNewSibling, &QAction::triggered, this, &EditorTab::on_actionNewSibling);
+    connect(actionNewChild, &QAction::triggered, this, &EditorTab::on_actionNewChild);
 
     menu.exec(event->globalPos());
 
@@ -462,6 +474,7 @@ void EditorTab::on_expandAction()
     ui->treeView->expand(index);
     view_expand(index, model);
 }
+
 void EditorTab::on_collapseAction()
 {
     QModelIndex index = this->currentIndex();
@@ -470,5 +483,37 @@ void EditorTab::on_collapseAction()
 
 }
 
+void EditorTab::on_actionNewSibling()
+{
+    EditorTab *tab = tabWidget->getCurentTab();
+    const QModelIndex index = tab->currentIndex();
+    if(index.data().toString() == "plist")
+        return;
+
+    if (index.isValid())
+    {
+
+        QUndoCommand *addCommand = new AddCommand(tab->getModel(), index.parent());
+        undoGroup->activeStack()->push(addCommand);
+
+    }
+
+}
+
+void EditorTab::on_actionNewChild()
+{
+    EditorTab *tab = tabWidget->getCurentTab();
+    const QModelIndex index = tab->currentIndex();
+
+    if (index.isValid())
+    {
+
+        QUndoCommand *addCommand = new AddCommand(tab->getModel(), index);
+        undoGroup->activeStack()->push(addCommand);
+
+    }
+
+
+}
 
 

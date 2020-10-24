@@ -21,6 +21,8 @@
         <file>res/sub.png</file>
         <file>res/col.png</file>
         <file>res/exp.png</file>
+        <file>res/child.png</file>
+        <file>res/sibling.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

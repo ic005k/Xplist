@@ -107,6 +107,7 @@ QTreeView::branch:open:has-children:has-siblings  {
 }
 
 
+
 </string>
      </property>
      <property name="frameShape">

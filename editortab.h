@@ -73,10 +73,13 @@ private slots:
 
      void editorDataAboutToBeSet(const QModelIndex &index, QString val);
 
-
      void on_treeView_doubleClicked(const QModelIndex &index);
 
      void on_treeView_clicked(const QModelIndex &index);
+
+     void on_actionNewSibling();
+
+     void on_actionNewChild();
 
 private:
 
