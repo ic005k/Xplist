@@ -77,7 +77,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionRemove, &QAction::triggered, this, &MainWindow::actionRemove_activated);
     connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
 
-
     updateRecentFiles();
 
     ui->mainToolBar->removeAction(ui->actionAdd);
@@ -101,6 +100,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addAction(ui->actionAdd);
     ui->mainToolBar->addAction(ui->actionRemove);
     ui->mainToolBar->addAction(ui->actionExpand_all);
+
+    ui->mainToolBar->addSeparator();
+
+    QAction *actionMoveUp  = new QAction(tr("Move up"));
+    actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.png"));
+    actionMoveUp->setShortcut(tr("ctrl+u"));
+    ui->mainToolBar->addAction(actionMoveUp);
+    connect(actionMoveUp, &QAction::triggered, this, &MainWindow::on_actionMoveUp);
+
+    QAction *actionMoveDown  = new QAction(tr("Move down"));
+    actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.png"));
+    actionMoveDown->setShortcut(tr("ctrl+d"));
+    ui->mainToolBar->addAction(actionMoveDown);
+    connect(actionMoveDown, &QAction::triggered, this, &MainWindow::on_actionMoveDown);
 
     ui->mainToolBar->addSeparator();
 
@@ -227,6 +240,7 @@ void MainWindow::openPlist(QString filePath)
         QTreeView *treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
         treeView->resizeColumnToContents(0);
+
     }
 }
 
@@ -442,7 +456,7 @@ void MainWindow::tabWidget_currentChanged(int index)
 
 void MainWindow::onCleanChanged(bool clean)
 {
-    //this->setWindowModified(clean);//此处有问题？问题比较大？
+    this->setWindowModified(clean);//此处有问题？问题比较大？:目前已修复（Undo和Redo问题导致）
 }
 
 void MainWindow::setRecentFiles(const QString &fileName)
@@ -549,6 +563,7 @@ void MainWindow::on_Find()
         findCount = 0;
         find = false;
         treeView->collapseAll();
+
         if(index.isValid())
         {
             forEach(model, index, findEdit->text().trimmed());
@@ -578,6 +593,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
         {
 
             EditorTab *tab = tabWidget->getCurentTab();
+            //DomModel * model = tab->getModel();
             QTreeView *treeView = new QTreeView;
             treeView = (QTreeView*)tab->children().at(1);
 
@@ -587,12 +603,16 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
             find = true;
 
+            //treeView->expand(index);
+            //tab->view_expand(index.parent().parent(), model);
+
         }
         //搜索键
         if(name.toLower().contains(str.trimmed().toLower()) && str.trimmed() != "")
         {
 
             EditorTab *tab = tabWidget->getCurentTab();
+            //DomModel * model = tab->getModel();
             QTreeView *treeView = new QTreeView;
             treeView = (QTreeView*)tab->children().at(1);
 
@@ -601,6 +621,9 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             findCount ++;
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
             find = true;
+
+            //treeView->expand(index);
+            //tab->view_expand(index, model);
 
         }
 
@@ -645,71 +668,82 @@ void MainWindow::findEdit_returnPressed()
 void MainWindow::on_copyAction()
 {
 
-    DomModel *model;
-    QModelIndex index;
-    EditorTab *tab = tabWidget->getCurentTab();
-    index = tab->currentIndex();
-    model = tab->getModel();
-
-    if(index.isValid())
+    if (tabWidget->hasTabs())
     {
+        DomModel *model;
+        QModelIndex index;
+        EditorTab *tab = tabWidget->getCurentTab();
+        index = tab->currentIndex();
+        model = tab->getModel();
 
-        //当前节点
-        //DomItem *pCurItem;
-        //pCurItem = static_cast<DomItem*>(index.internalPointer());
+        if(index.isValid())
+        {
 
-        copy_item = NULL;
-        copy_item = model->copyItem(index);
+            copy_item = NULL;
+            copy_item = model->copyItem(index);
+
+        }
 
     }
+
+
 
 }
 
 void MainWindow::on_cutAction()
 {
 
-    DomModel *model;
-    QModelIndex index;
-    EditorTab *tab = tabWidget->getCurentTab();
-    index = tab->currentIndex();
-    model = tab->getModel();
-
-    if(index.parent().data().toString() == "") //最顶层不允许剪切
-        return;
-
-    if(index.isValid())
+    if (tabWidget->hasTabs())
     {
+        DomModel *model;
+        QModelIndex index;
+        EditorTab *tab = tabWidget->getCurentTab();
+        index = tab->currentIndex();
+        model = tab->getModel();
 
-        copy_item = model->copyItem(index);//必须要有克隆的过程，否则粘贴出错
+        if(index.parent().data().toString() == "") //最顶层不允许剪切
+            return;
 
-        if (model->itemNotPlist(index))
+        if(index.isValid())
         {
-            QUndoCommand *removeCommand = new RemoveCommand(model, index);
-            undoGroup->activeStack()->push(removeCommand);
+
+            copy_item = model->copyItem(index);//必须要有克隆的过程，否则粘贴出错
+
+            if (model->itemNotPlist(index))
+            {
+                QUndoCommand *removeCommand = new RemoveCommand(model, index);
+                undoGroup->activeStack()->push(removeCommand);
+            }
+
         }
 
     }
+
+
 
 }
 
 void MainWindow::on_pasteAction()
 {
 
-    if(copy_item == NULL)
-        return;
-
-    DomModel *model;
-    QModelIndex index;
-    EditorTab *tab = tabWidget->getCurentTab();
-    index = tab->currentIndex();
-    model = tab->getModel();
-
-    if(index.isValid())
+    if (tabWidget->hasTabs())
     {
-        //qDebug() << "粘贴的内容" << copy_item->getName();
+        if(copy_item == NULL)
+            return;
 
-        QUndoCommand *pasteCommand = new PasteCommand(tab->getModel(), index);
-        undoGroup->activeStack()->push(pasteCommand);
+        DomModel *model;
+        QModelIndex index;
+        EditorTab *tab = tabWidget->getCurentTab();
+        index = tab->currentIndex();
+        model = tab->getModel();
+
+        if(index.isValid())
+        {
+
+            QUndoCommand *pasteCommand = new PasteCommand(model, index);
+            undoGroup->activeStack()->push(pasteCommand);
+
+        }
 
     }
 
@@ -718,7 +752,105 @@ void MainWindow::on_pasteAction()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 
+    Q_UNUSED(event);
+}
 
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+
+    Q_UNUSED(event);
+    findEdit->setFocus();
+
+}
+
+void MainWindow::on_actionMoveUp()
+{
+    if (tabWidget->hasTabs())
+    {
+
+
+        EditorTab *tab = tabWidget->getCurentTab();
+        QTreeView *treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+        DomModel *model = tab->getModel();
+        QModelIndex index, index_bak;
+        index = tab->currentIndex();
+        index = model->index(index.row(), 0, index.parent());
+
+        index_bak = index;
+
+
+        DomItem *items = model->itemForIndex(index.parent());
+
+        if(index.row() == 0 || items->getType() == "array")
+            return;
+
+
+        ItemState *temp = model->saveItemState(index);
+
+        int row = index.row();
+
+        model->addItem(index.parent(), row  - 1, temp);
+
+        treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+        index = tab->currentIndex();
+        index = model->index(index.row(), 0, index.parent());
+        model->removeItem(index);
+        treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
+        showMsg();
+
+    }
+}
+void MainWindow::on_actionMoveDown()
+{
+    if (tabWidget->hasTabs())
+    {
+
+        EditorTab *tab = tabWidget->getCurentTab();
+        QModelIndex index, index_bak;
+        index = tab->currentIndex();
+        DomModel *model = tab->getModel();
+        index = model->index(index.row(), 0, index.parent());
+        index_bak = index;
+
+        DomItem *items = model->itemForIndex(index.parent());
+
+        if(index.row() == items->childCount() - 1 || items->getType() == "array")
+            return;
+
+        QTreeView *treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+
+        ItemState *temp = model->saveItemState(index);
+
+        int row = index.row() + 2;
+        model->addItem(index.parent(), row, temp);
+        model->removeItem(index_bak);
+
+        treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+        showMsg();
+
+    }
+
+}
+
+void MainWindow::showMsg()
+{
+    EditorTab *tab = tabWidget->getCurentTab();
+    QModelIndex index, index_bak;
+    index = tab->currentIndex();
+    index_bak = index;
+
+    QString str1, str2, str3, str4;
+    str1 = QObject::tr("Currently selected: ") + index.data().toString();
+    str2 = "      " + QObject::tr("Row: ") + QString::number(index.row() + 1);
+    str3 = "      " + QObject::tr("Column: ") + QString::number(index.column() + 1);
+    str4 = "      " + QObject::tr("Parent level：") + index.parent().data().toString();
+
+    //QString   top  =   getTopParent( c_index). data(). toString();
+    //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
+
+    myStatusBar->showMessage(str1 + str2 + str3 + str4);
 }
 
 

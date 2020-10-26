@@ -6,8 +6,6 @@
 #include <QContextMenuEvent>
 #include "editortab.h"
 
-
-
 class EditorTabsWidget : public QTabWidget
 {
 

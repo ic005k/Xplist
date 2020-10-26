@@ -22,7 +22,7 @@ void AddCommand::undo()
 void AddCommand::redo()
 {
 
-    //if (m_index.isValid()) m_model->addItem(m_parent, m_index.row());
+    //if (m_index.isValid()) m_model->addItem(m_parent, m_index.row() + 1);
     //    else m_index = m_model->addItem(m_parent);
 
     m_index = m_model->addItem(m_parent);
@@ -68,6 +68,8 @@ void RemoveCommand::redo()
 
 EditCommand::EditCommand(QString val, DomModel *model, const QModelIndex &index, QUndoCommand *parent)
 {
+    Q_UNUSED(parent);
+
     m_model = model;
     m_index = index;
     m_oldVal = model->data(index, Qt::DisplayRole).toString();
@@ -130,6 +132,6 @@ void PasteCommand::undo()
 void PasteCommand::redo()
 {
 
-    m_index = m_model->pasteItem(m_parent.parent(), -1, NULL);
+    m_index =  m_model->pasteItem(m_parent.parent(), m_parent.row(), NULL);
 
 }

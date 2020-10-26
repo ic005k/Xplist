@@ -1,9 +1,6 @@
 #include "editortab.h"
 #include "ui_editortab.h"
 
-#include "comboboxdelegate.h"
-#include "lineeditdelegate.h"
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -52,9 +49,11 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
 
     QTreeView *view = ui->treeView;
 
-    LineEditDelegate *delegate1 = new LineEditDelegate(view);
+    delegate1 = new LineEditDelegate(view);
 
-    ComboBoxDelegate *delegate2 = new ComboBoxDelegate(view);
+    delegate2 = new ComboBoxDelegate(view);
+
+    delegate_bool = new ComboBoxDelegateBool(view);
 
     view->setItemDelegateForColumn(0, delegate1);
 
@@ -69,7 +68,7 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     //view->header()->setDefaultSectionSize(150);//表头默认列宽
     view->setColumnWidth(0, 200);
     view->header()->setMinimumHeight(25);//表头高度
-    //view->setIconSize(QSize(12, 12));
+    //view->setIconSize(QSize(4, 4));
 
     //view->header()->setDefaultAlignment(Qt::AlignCenter); //表头文字默认对齐方式
     //view->header()->setStretchLastSection(true);
@@ -81,6 +80,8 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
 
     connect(delegate1, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex &, QString)));
     connect(delegate2, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex &, QString)));
+    connect(delegate_bool, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex &, QString)));
+
 
 }
 
@@ -118,13 +119,14 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
     cutAction = new QAction(tr("Cut"), this);
     cutAction->setIcon(QIcon(":/new/toolbar/res/cut.png"));
+
     menu.addAction(cutAction);
 
     menu.addSeparator();
 
     pasteAction = new QAction(tr("Paste"), this);
     pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
-    pasteAction->setShortcut(tr("ctrl+v"));
+    //pasteAction->setShortcut(tr("ctrl+v"));
     menu.addAction(pasteAction);
 
     menu.addSeparator();
@@ -152,7 +154,11 @@ void EditorTab::contextMenuEvent(QContextMenuEvent *event)
 
 void EditorTab::onItemAded(const QModelIndex &index)
 {
+    ui->treeView->resizeColumnToContents(0);
+
     ui->treeView->expand(index);
+    ui->treeView->doItemsLayout();//重要：刷新数据的显示
+
 }
 
 bool EditorTab::isExpanded()
@@ -201,7 +207,7 @@ void EditorTab::expand()
     on_treeView_expanded();
 
 }
-QModelIndex EditorTab::currentIndex()
+QModelIndex EditorTab::currentIndex() const
 {
     QModelIndex i = ui->treeView->currentIndex();
     return QModelIndex(i);
@@ -272,7 +278,12 @@ void EditorTab::editorDataAboutToBeSet(const QModelIndex &index, QString val)
 
 void EditorTab::on_treeView_doubleClicked(const QModelIndex &index)
 {
-    Q_UNUSED(index);
+    DomModel *model = this->model;
+    DomItem *item = model->itemForIndex(index);
+    if(item->getType() == "bool")
+        ui->treeView->setItemDelegateForColumn(2, delegate_bool);
+    else
+        ui->treeView->setItemDelegateForColumn(2, delegate1);
 
 }
 
@@ -297,6 +308,13 @@ void EditorTab::on_treeView_clicked(const QModelIndex &index)
     //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
 
     myStatusBar->showMessage(str1 + str2 + str3 + str4);
+
+    DomModel *model = this->model;
+    DomItem *item = model->itemForIndex(index);
+    if(item->getType() == "bool")
+        ui->treeView->setItemDelegateForColumn(2, delegate_bool);
+    else
+        ui->treeView->setItemDelegateForColumn(2, delegate1);
 
 }
 
@@ -342,10 +360,6 @@ void EditorTab::on_copyAction()
 
     if(index.isValid())
     {
-
-        //当前节点
-        //DomItem *pCurItem;
-        //pCurItem = static_cast<DomItem*>(index.internalPointer());
 
         copy_item = NULL;
         copy_item = model->copyItem(index);
@@ -394,9 +408,8 @@ void EditorTab::on_pasteAction()
 
     if(index.isValid())
     {
-        //qDebug() << "粘贴的内容" << copy_item->getName();
 
-        QUndoCommand *pasteCommand = new PasteCommand(tab->getModel(), index);
+        QUndoCommand *pasteCommand = new PasteCommand(model, index);
         undoGroup->activeStack()->push(pasteCommand);
 
     }
@@ -487,7 +500,8 @@ void EditorTab::on_actionNewSibling()
 {
     EditorTab *tab = tabWidget->getCurentTab();
     const QModelIndex index = tab->currentIndex();
-    if(index.data().toString() == "plist")
+
+    if(index.parent().data().toString() == "")
         return;
 
     if (index.isValid())
@@ -513,7 +527,11 @@ void EditorTab::on_actionNewChild()
 
     }
 
+}
 
+void EditorTab::setIcon()
+{
+    ui->treeView->setIconSize(QSize(6, 6));
 }
 
 

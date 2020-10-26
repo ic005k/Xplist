@@ -65,12 +65,12 @@
     parentItem->removeChild(row);
  }
 
- int DomItem::childCount()
+ int DomItem::childCount() const
  {
      return childItems.count();
  }
 
- int DomItem::row()
+ int DomItem::row() const
  {
     return rowNumber;
  }

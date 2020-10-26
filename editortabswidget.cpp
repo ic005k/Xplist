@@ -69,14 +69,23 @@ void EditorTabsWidget::contextMenuEvent(QContextMenuEvent * event)
         {
             setCurrentIndex(i);
 
-            createMenu();
+            //createMenu();
+            QMenu contextMenu(this);
+            contextMenu.addAction(tr("Close tab"), this, SLOT(closeTab()));
+            contextMenu.addAction(tr("Close tabs to the right"), this, SLOT(closeTabsToRight()));
+            contextMenu.addAction(tr("Close other tabs"), this, SLOT(closeOtherTabs()));
+            contextMenu.addAction(tr("Close all tabs"), this, SLOT(closeAllTabs()));
+            contextMenu.popup(event->globalPos());
+            //contextMenu.exec();
         }
+
+
     }
 }
 
 void EditorTabsWidget::createMenu()
 {
-    QMenu contextMenu;
+    QMenu contextMenu(this);
     contextMenu.addAction(tr("Close tab"), this, SLOT(closeTab()));
     contextMenu.addAction(tr("Close tabs to the right"), this, SLOT(closeTabsToRight()));
     contextMenu.addAction(tr("Close other tabs"), this, SLOT(closeOtherTabs()));

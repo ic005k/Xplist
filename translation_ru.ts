@@ -42,42 +42,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="104"/>
+        <location filename="editortab.cpp" line="105"/>
         <source>Expand</source>
         <translation type="unfinished">Развернуть</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="108"/>
+        <location filename="editortab.cpp" line="109"/>
         <source>Collapse</source>
         <translation type="unfinished">Свернуть</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="114"/>
+        <location filename="editortab.cpp" line="115"/>
         <source>Copy</source>
         <translation type="unfinished">копировать</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="119"/>
+        <location filename="editortab.cpp" line="120"/>
         <source>Cut</source>
         <translation type="unfinished">порез</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="125"/>
+        <location filename="editortab.cpp" line="127"/>
         <source>Paste</source>
         <translation type="unfinished">Вставить</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="127"/>
-        <source>ctrl+v</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="editortab.cpp" line="132"/>
+        <location filename="editortab.cpp" line="134"/>
         <source>New Sibling</source>
         <translation type="unfinished">Новый брат</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="135"/>
+        <location filename="editortab.cpp" line="138"/>
         <source>New Child</source>
         <translation type="unfinished">Новый ребенок</translation>
     </message>
@@ -90,22 +85,26 @@
         <translation type="unfinished">Новый файл %1</translation>
     </message>
     <message>
-        <location filename="editortabswidget.cpp" line="80"/>
+        <location filename="editortabswidget.cpp" line="74"/>
+        <location filename="editortabswidget.cpp" line="89"/>
         <source>Close tab</source>
         <translation>Закрыть вкладку</translation>
     </message>
     <message>
-        <location filename="editortabswidget.cpp" line="81"/>
+        <location filename="editortabswidget.cpp" line="75"/>
+        <location filename="editortabswidget.cpp" line="90"/>
         <source>Close tabs to the right</source>
         <translation>Закрыть вкладки справа</translation>
     </message>
     <message>
-        <location filename="editortabswidget.cpp" line="82"/>
+        <location filename="editortabswidget.cpp" line="76"/>
+        <location filename="editortabswidget.cpp" line="91"/>
         <source>Close other tabs</source>
         <translation>Закрыть другие вкладки</translation>
     </message>
     <message>
-        <location filename="editortabswidget.cpp" line="83"/>
+        <location filename="editortabswidget.cpp" line="77"/>
+        <location filename="editortabswidget.cpp" line="92"/>
         <source>Close all tabs</source>
         <translation>Закрыть все вкладки</translation>
     </message>
@@ -164,7 +163,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="175"/>
-        <location filename="mainwindow.cpp" line="246"/>
+        <location filename="mainwindow.cpp" line="261"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
@@ -175,7 +174,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="186"/>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.cpp" line="349"/>
         <source>Save as</source>
         <translation>Сохранить как</translation>
     </message>
@@ -196,7 +195,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="209"/>
-        <location filename="mainwindow.cpp" line="493"/>
+        <location filename="mainwindow.cpp" line="508"/>
         <source>Expand all</source>
         <translation>Развернуть</translation>
     </message>
@@ -306,33 +305,33 @@
         <translation type="unfinished">вставить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="130"/>
+        <location filename="mainwindow.cpp" line="145"/>
         <source>Count</source>
         <translation type="unfinished">общий итог</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="134"/>
-        <location filename="mainwindow.cpp" line="139"/>
+        <location filename="mainwindow.cpp" line="149"/>
+        <location filename="mainwindow.cpp" line="154"/>
         <source>Find</source>
         <translation type="unfinished">находить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="247"/>
+        <location filename="mainwindow.cpp" line="262"/>
         <source>Cancel</source>
         <translation type="unfinished">Отмена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="248"/>
+        <location filename="mainwindow.cpp" line="263"/>
         <source>Discard</source>
         <translation type="unfinished">Отменить</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="402"/>
+        <location filename="mainwindow.cpp" line="417"/>
         <source>Last modified: </source>
         <translation type="unfinished">Последнее изменение: </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="406"/>
+        <location filename="mainwindow.cpp" line="421"/>
         <source>Thanks: Yaroslav Sushkov (alpex92)</source>
         <oldsource>Thanks: Yaroslav Sushkov (alpex92)&lt;br&gt;</oldsource>
         <translation type="unfinished">Спасибо: Ярослав Сушков (alpex92)</translation>
@@ -342,22 +341,42 @@
         <translation type="obsolete">Открыть файл</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="195"/>
+        <location filename="mainwindow.cpp" line="210"/>
         <source>Select files to open</source>
         <translation>Выберите файлы для открытия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="334"/>
+        <location filename="mainwindow.cpp" line="349"/>
         <source>Property list (*.plist)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="243"/>
+        <location filename="mainwindow.cpp" line="258"/>
         <source>The document has been modified.</source>
         <translation>Документ был изменен.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="244"/>
+        <location filename="mainwindow.cpp" line="107"/>
+        <source>Move up</source>
+        <translation type="unfinished">Двигаться вверх</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="109"/>
+        <source>ctrl+u</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="113"/>
+        <source>Move down</source>
+        <translation type="unfinished">Двигаться вниз</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="115"/>
+        <source>ctrl+d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="259"/>
         <source>Do you want to save your changes?</source>
         <translation>Сохранить изменения?</translation>
     </message>
@@ -366,7 +385,7 @@
         <translation type="vanished">О PlistED</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="493"/>
+        <location filename="mainwindow.cpp" line="508"/>
         <source>Collapse all</source>
         <translation>Свернуть</translation>
     </message>
@@ -414,24 +433,28 @@
         <translation>Новый предмет</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="289"/>
+        <location filename="editortab.cpp" line="298"/>
+        <location filename="mainwindow.cpp" line="824"/>
         <source>Currently selected: </source>
         <translation type="unfinished">В настоящее время выбрано:  </translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="290"/>
+        <location filename="editortab.cpp" line="299"/>
+        <location filename="mainwindow.cpp" line="825"/>
         <source>Row: </source>
         <oldsource>      Row: </oldsource>
         <translation type="unfinished">Ряд:  </translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="291"/>
+        <location filename="editortab.cpp" line="300"/>
+        <location filename="mainwindow.cpp" line="826"/>
         <source>Column: </source>
         <oldsource>      Column: </oldsource>
         <translation type="unfinished">Колонка:  </translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="292"/>
+        <location filename="editortab.cpp" line="301"/>
+        <location filename="mainwindow.cpp" line="827"/>
         <source>Parent level：</source>
         <oldsource>      Parent level：</oldsource>
         <translation type="unfinished">Родительский уровень ：</translation>

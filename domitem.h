@@ -53,7 +53,7 @@
      ~DomItem();
      DomItem *child(int i);
      DomItem *parent();
-     int row();
+     int row() const;
 
      DomItem *addChild(int i = -1, DomItem *item = NULL);
      void removeChild(int i);
@@ -69,7 +69,7 @@
      void setValue(QString v);
      void setData(QString n, QString t, QString v);
 
-     int childCount();
+     int childCount() const;
 
      DomItem *clone();
 

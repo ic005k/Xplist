@@ -37,6 +37,8 @@ public:
 
 public slots:
     void on_Find();
+    void on_actionMoveUp();
+    void on_actionMoveDown();
 
 private slots:
 
@@ -89,6 +91,8 @@ private:
     QLabel * lblFindCount;
     bool find = false;
 
+    void showMsg();
+
     Ui::MainWindow *ui;
 
 protected:
@@ -96,6 +100,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
     void closeEvent(QCloseEvent *event);
+    void resizeEvent(QResizeEvent *event);
 };
 
 #endif // MAINWINDOW_H

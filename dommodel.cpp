@@ -68,7 +68,7 @@ extern bool paste;
     if (!index.isValid()) return false;
     else
     {
-        DomItem *item = itemForIndex(index);
+        DomItem *item = getItem(index);//itemForIndex(index);
 
         QString str = value.toString();
 
@@ -92,10 +92,16 @@ extern bool paste;
 
  Qt::ItemFlags DomModel::flags(const QModelIndex &index) const
  {
-     if (!index.isValid())
+     /*if (!index.isValid())
          return 0;
 
-     return Qt::ItemIsEnabled | Qt::ItemIsSelectable| Qt::ItemIsEditable;
+     return Qt::ItemIsEnabled | Qt::ItemIsSelectable| Qt::ItemIsEditable;*/
+
+     //新的
+     if (!index.isValid())
+             return Qt::NoItemFlags;
+
+         return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
  }
 
  QVariant DomModel::headerData(int section, Qt::Orientation orientation,
@@ -117,8 +123,8 @@ extern bool paste;
      return QVariant();
  }
 
- QModelIndex DomModel::index(int row, int column, const QModelIndex &parent)
-             const
+ QModelIndex DomModel::index(int row, int column, const QModelIndex &parent) const
+
  {
      if (!hasIndex(row, column, parent))
          return QModelIndex();
@@ -153,6 +159,8 @@ extern bool paste;
      if (parentItem) return createIndex(row, 0, parentItem);
 
      return QModelIndex();
+
+
  }
 
  int DomModel::rowCount(const QModelIndex &parent) const
@@ -168,6 +176,7 @@ extern bool paste;
          parentItem = itemForIndex(parent);
 
      return parentItem->childCount();
+
  }
 
  QModelIndex DomModel::addItem(const QModelIndex &parent, int row, ItemState *state)
@@ -175,7 +184,10 @@ extern bool paste;
 
      if (parent.isValid())
      {
-         QModelIndex index = this->index(parent.row(), 0, parent.parent());
+         //QModelIndex index = this->index(parent.row(), 0, parent.parent());
+         //DomItem *item = itemForIndex(index);
+
+         QModelIndex index = parent;
          DomItem *item = itemForIndex(index);
 
          if (row == -1) row = item->childCount();
@@ -190,25 +202,24 @@ extern bool paste;
          child = item->addChild(row, child);
 
          endInsertRows();
-         emit itemAdded(index);
 
-         EditorTab *tab = tabWidget->getCurentTab();
-         QTreeView *treeView = new QTreeView;
-         treeView = (QTreeView*)tab->children().at(1);
-         treeView->resizeColumnToContents(0);
+         emit itemAdded(index);//通知treeView自适应列宽和展开节点
 
          return this->index(child->row(), 0, index);
 
      }
+
+     //QAbstractItemView::viewport()->update();
+
 
     return QModelIndex();
  }
 
 DomItem *DomModel::copyItem(const QModelIndex &parent)
  {
-     QModelIndex index = this->index(parent.row(), 0, parent.parent());
+     const QModelIndex index = this->index(parent.row(), 0, parent.parent());
      DomItem *item = itemForIndex(index)->clone();
-     qDebug() << "被复制的条目" << item->getName() << "child个数" << item->childCount();
+
      return item;
  }
 
@@ -217,9 +228,16 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
 
     if (parent.isValid())
     {
-        const QModelIndex index = this->index(parent.row(), 0, parent.parent());
-        DomItem *item = itemForIndex(index);//这里指父级
-        qDebug() << item->getName() << index.data().toString();
+        //QModelIndex index = this->index(parent.row(), 0, parent.parent());
+        //DomItem *item = itemForIndex(index);
+
+        QModelIndex index = parent;
+        DomItem *item = itemForIndex(parent);//父级
+
+        QMessageBox box;
+        box.setText(item->getName() +"\n" + parent.data().toString());
+        //box.exec();
+
 
         if (row == -1) row = item->childCount();
 
@@ -320,12 +338,13 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
 
 
         endInsertRows();
-        emit itemAdded(index);
 
-        EditorTab *tab = tabWidget->getCurentTab();
-        QTreeView *treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
-        treeView->resizeColumnToContents(0);
+        emit itemAdded(index);//通知treeView自适应列宽和展开节点
+
+        //EditorTab *tab = tabWidget->getCurentTab();
+        //QTreeView *treeView = new QTreeView;
+        //treeView = (QTreeView*)tab->children().at(1);
+        //treeView->resizeColumnToContents(0);
 
         //this->resetInternalData();
 
@@ -351,10 +370,7 @@ void DomModel::removeItem(const QModelIndex &index)
 
      }
 
-     /*EditorTab *tab = tabWidget->getCurentTab();
-     QTreeView *treeView = new QTreeView;
-     treeView = (QTreeView*)tab->children().at(1);
-     treeView->resizeColumnToContents(0);*/
+     //emit itemAdded(index);//通知treeView自适应列宽和展开节点
 
 
  }
@@ -364,7 +380,7 @@ void DomModel::removeItem(const QModelIndex &index)
      return new ItemState(itemForIndex(index));
  }
 
- DomItem *DomModel::itemForIndex(const QModelIndex &index)
+ DomItem *DomModel::itemForIndex(const QModelIndex &index) const
  {
      return static_cast<DomItem*>(index.internalPointer());
  }
@@ -372,6 +388,16 @@ void DomModel::removeItem(const QModelIndex &index)
  bool DomModel::itemNotPlist(const QModelIndex &index)
  {
     return itemForIndex(QModelIndex(index))->getName() != "plist";
+ }
+
+ DomItem *DomModel::getItem(const QModelIndex &index) const
+ {
+     if (index.isValid()) {
+         DomItem *item = static_cast<DomItem*>(index.internalPointer());
+         if (item)
+             return item;
+     }
+     return rootItem;
  }
 
 

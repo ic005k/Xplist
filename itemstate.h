@@ -15,8 +15,6 @@ private:
     ItemState(DomItem *other);
     void setState(DomItem *other);
 
-
-
 private:
     DomItem *item;
 

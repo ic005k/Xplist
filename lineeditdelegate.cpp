@@ -10,6 +10,7 @@ extern EditorTabsWidget *tabWidget;
 LineEditDelegate::LineEditDelegate(QObject *parent)
 {
     Q_UNUSED(parent);
+
 }
 
 QWidget *LineEditDelegate::createEditor(QWidget *parent,
@@ -29,7 +30,13 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent,
     if(index.column() == 2 && (item->getType() == "array" || item->getType() == "dict"))
         return 0;
 
+    if(index.column() == 2 && (item->getType() == "bool"))
+    {
+
+    }
+
     QLineEdit *editor = new QLineEdit(parent);
+
     return editor;
 
 }
@@ -76,6 +83,7 @@ void LineEditDelegate::setModelData(QWidget *editor,
 void LineEditDelegate::updateEditorGeometry(QWidget *editor,
     const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     editor->setGeometry(option.rect);
 }
 
@@ -104,3 +112,13 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
     }
     return ok;
 }
+
+//行高(以此为准)
+QSize LineEditDelegate::sizeHint ( const QStyleOptionViewItem & option,  const QModelIndex & index ) const
+{
+    QSize size = QItemDelegate::sizeHint(option, index);
+    size.setHeight( size.height() + 4 );
+
+    return size;
+}
+

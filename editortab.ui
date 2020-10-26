@@ -39,62 +39,20 @@
        <pointsize>14</pointsize>
       </font>
      </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+     <property name="tabletTracking">
+      <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
      <property name="styleSheet">
-      <string notr="true">
-/*QTreeView::branch:closed:has-children{
-    image: url(:/new/toolbar/res/main.png);
-}
-QTreeView::branch:open:has-children{
-    image: url(:/new/toolbar/res/sub.png);
-}*/
-
-/*QTreeView::branch {
-    background: palette(base);
-}*/
- 
-/*QTreeView::branch:has-siblings:!adjoins-item {
-    background: cyan;
-}*/
- 
-/*QTreeView::branch:has-siblings:adjoins-item {
-    background: red;
-}
- 
-QTreeView::branch:!has-children:!has-siblings:adjoins-item {
-    background: blue;
-}*/
- 
-/*QTreeView::branch:closed:has-children:has-siblings {
-    background: pink;
-}*/
- 
-/*QTreeView::branch:has-children:!has-siblings:closed {
-    background: gray;
-}*/
- 
-/*QTreeView::branch:open:has-children:has-siblings {
-    background: magenta;
-}*/
- 
-/*QTreeView::branch:open:has-children:!has-siblings {
-    background: green;
-}*/
-
-
-
-/*QTreeView::branch:has-siblings:!adjoins-item {
-    border-image: url(:/new/toolbar/res/Add.png) 0;
-}*/
- 
-/*QTreeView::branch:has-siblings:adjoins-item {
-    border-image: url(:/new/toolbar/res/Add.png) 0;
-}
- 
-QTreeView::branch:!has-children:!has-siblings:adjoins-item {
-    border-image: url(:/new/toolbar/res/Remove.png) 0;
-}*/
- 
-QTreeView::branch:has-children:!has-siblings:closed,
+      <string notr="true">QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
     border-image: none;
     image: url(:/new/toolbar/res/main.png);
@@ -106,8 +64,10 @@ QTreeView::branch:open:has-children:has-siblings  {
     image: url(:/new/toolbar/res/sub.png);
 }
 
-
-
+/*QTreeView::item {
+        height: 30px;
+        width:30px
+    }*/
 </string>
      </property>
      <property name="frameShape">
@@ -120,7 +80,16 @@ QTreeView::branch:open:has-children:has-siblings  {
       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
      </property>
      <property name="showDropIndicator" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="dragEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="dragDropOverwriteMode">
       <bool>false</bool>
+     </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::InternalMove</enum>
      </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
@@ -131,6 +100,9 @@ QTreeView::branch:open:has-children:has-siblings  {
      <property name="autoExpandDelay">
       <number>-1</number>
      </property>
+     <property name="indentation">
+      <number>20</number>
+     </property>
      <property name="rootIsDecorated">
       <bool>true</bool>
      </property>
@@ -139,6 +111,9 @@ QTreeView::branch:open:has-children:has-siblings  {
      </property>
      <property name="itemsExpandable">
       <bool>true</bool>
+     </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
      </property>
      <property name="animated">
       <bool>false</bool>
@@ -156,6 +131,9 @@ QTreeView::branch:open:has-children:has-siblings  {
       <number>100</number>
      </attribute>
      <attribute name="headerHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="headerShowSortIndicator" stdset="0">
       <bool>false</bool>
      </attribute>
     </widget>

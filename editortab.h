@@ -16,6 +16,9 @@
 
 #include "dommodel.h"
 #include "commands.h"
+#include "comboboxdelegatebool.h"
+#include "lineeditdelegate.h"
+#include "comboboxdelegate.h"
 
 namespace Ui {
 class EditorTab;
@@ -42,13 +45,19 @@ public:
     QString getFileName();
     void setPath(QString p);
 
-    QModelIndex currentIndex();
+    QModelIndex currentIndex() const;
 
     QUndoStack *getUndoStack();
 
     void view_collapse(const QModelIndex index, DomModel *model);
 
     void view_expand(const QModelIndex index, DomModel *model);
+
+    ComboBoxDelegateBool *delegate_bool;
+    LineEditDelegate *delegate1;
+    ComboBoxDelegate *delegate2;
+
+    void setIcon();
 
 
 protected:
@@ -63,6 +72,7 @@ public slots:
      void onItemAded(const QModelIndex &index);
      void on_treeView_expanded();
      void on_treeView_collapsed();
+
      void on_copyAction();
      void on_cutAction();
      void on_pasteAction();
