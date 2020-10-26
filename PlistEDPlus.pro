@@ -4,7 +4,7 @@
 # 开始升级于2020.10.15
 #-------------------------------------------------
 
-QT       += core gui xml
+QT += core gui xml
 QT += widgets
 
 ICON = my.icns
@@ -17,6 +17,7 @@ TRANSLATIONS = translation_ru.ts \
                translation_cn.ts
 
 SOURCES += main.cpp\
+    comboboxdelegatebool.cpp \
     mainwindow.cpp \
     domparser.cpp \
     dommodel.cpp \
@@ -29,6 +30,7 @@ SOURCES += main.cpp\
     itemstate.cpp
 
 HEADERS  += mainwindow.h \
+    comboboxdelegatebool.h \
     domparser.h \
     dommodel.h \
     domitem.h \
