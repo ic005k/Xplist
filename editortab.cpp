@@ -68,13 +68,24 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     //view->header()->setDefaultSectionSize(150);//表头默认列宽
     view->setColumnWidth(0, 200);
     view->header()->setMinimumHeight(25);//表头高度
-    //view->setIconSize(QSize(4, 4));
+
 
     //view->header()->setDefaultAlignment(Qt::AlignCenter); //表头文字默认对齐方式
     //view->header()->setStretchLastSection(true);
     //view->header()->setSortIndicator(0,Qt::AscendingOrder);    //按第1列升序排序
     //view->setStyle(QStyleFactory::create("windows")); //连接的虚线
     //view->setSelectionBehavior(QAbstractItemView::SelectItems);//不选中一行，分单元格选择
+
+    view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+                                        "QTreeView::branch:open:has-children:!has-siblings,"
+                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+                                        "QTreeView::branch:has-children:!has-siblings:closed,"
+                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+                                        //"QTreeView::item:hover {background-color:rgb(8,52,127);}"
+                                        //"QTreeView::item:selected {background-color:rgb(8,52,127);border:1px solid #08347F;}"
+                        );
+    const QSize size(4, 4);
+    view->setIconSize(size);
 
     connect(model, SIGNAL(itemAdded(const QModelIndex&)), this, SLOT(onItemAded(const QModelIndex&)));
 
@@ -295,19 +306,6 @@ void EditorTab::mousePressEvent(QMouseEvent *e)
 
 void EditorTab::on_treeView_clicked(const QModelIndex &index)
 {
-    QModelIndex cindex = index;//this->currentIndex();
-    //DomModel *model = this->getModel();
-
-    QString str1, str2, str3, str4;
-    str1 = QObject::tr("Currently selected: ") + cindex.data().toString();
-    str2 = "      " + QObject::tr("Row: ") + QString::number(cindex.row() + 1);
-    str3 = "      " + QObject::tr("Column: ") + QString::number(cindex.column() + 1);
-    str4 = "      " + QObject::tr("Parent level：") + cindex.parent().data().toString();
-
-    //QString   top  =   getTopParent( c_index). data(). toString();
-    //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
-
-    myStatusBar->showMessage(str1 + str2 + str3 + str4);
 
     DomModel *model = this->model;
     DomItem *item = model->itemForIndex(index);
@@ -315,6 +313,18 @@ void EditorTab::on_treeView_clicked(const QModelIndex &index)
         ui->treeView->setItemDelegateForColumn(2, delegate_bool);
     else
         ui->treeView->setItemDelegateForColumn(2, delegate1);
+
+    QString str1, str2, str3, str4, str5;
+    str1 = QObject::tr("Currently selected: ") + index.data().toString();
+    str2 = "      " + QObject::tr("Row: ") + QString::number(index.row() + 1);
+    str3 = "      " + QObject::tr("Column: ") + QString::number(index.column() + 1);
+    str4 = "      " + QObject::tr("Parent level：") + index.parent().data().toString();
+    str5 = "      " + QObject::tr("Children: ") + QString::number(item->childCount());
+
+    //QString   top  =   getTopParent( c_index). data(). toString();
+    //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
+
+    myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
 
 }
 

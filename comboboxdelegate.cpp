@@ -2,7 +2,7 @@
 #include <QDebug>
 
 QComboBox *comboBox;
-
+extern int red;
 ComboBoxDelegate::ComboBoxDelegate(QObject *parent)
 {
     Q_UNUSED(parent);
@@ -28,6 +28,17 @@ void ComboBoxDelegate::setEditorData(QWidget *editor,
 {
 
     comboBox = static_cast<QComboBox*>(editor);
+
+    if(red < 55)  //mac = 50
+    {
+        comboBox->setStyleSheet("QComboBox {border:none;background:rgba(50,50,50,255);}");
+
+    }
+    else
+    {
+        //comboBox->setStyleSheet("QComboBox {border:none;background:rgba(255,255,255,255);color:rgba(0,0,0,255);}");
+    }
+
     //connect(comboBox, &QComboBox::currentIndexChanged, this, &ComboBoxDelegate::on_comboBox_currentIndexChanged);
     QString value = index.data().toString();
     int n = comboBox->findText(value);
@@ -59,8 +70,8 @@ void ComboBoxDelegate::updateEditorGeometry(QWidget *editor,
 {
     Q_UNUSED(index);
     QRect r;
-    r.setTop(option.rect.top() + 1);
-    r.setBottom(option.rect.bottom());
+    r.setTop(option.rect.top() + 0);
+    r.setBottom(option.rect.bottom() - 0);
     r.setRight(option.rect.right());
     r.setLeft(option.rect.left());
 

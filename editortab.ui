@@ -52,7 +52,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">QTreeView::branch:has-children:!has-siblings:closed,
+      <string notr="true">/*QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
     border-image: none;
     image: url(:/new/toolbar/res/main.png);
@@ -62,7 +62,7 @@ QTreeView::branch:open:has-children:!has-siblings,
 QTreeView::branch:open:has-children:has-siblings  {
     border-image: none;
     image: url(:/new/toolbar/res/sub.png);
-}
+}*/
 
 /*QTreeView::item {
         height: 30px;

@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QPalette>
 
 #include "domparser.h"
 #include "editortabswidget.h"
@@ -34,6 +35,9 @@ public:
 
     void forEach(QAbstractItemModel* model, QModelIndex parent, QString str);
 
+    void openPlist(QString filePath = "");
+
+    int close_flag = -1;
 
 public slots:
     void on_Find();
@@ -81,7 +85,6 @@ private:
     void openFiles(QStringList list = QStringList());
 
     void savePlist(QString filePath);
-    void openPlist(QString filePath = "");
 
     enum { MaxRecentFiles = 10 };
     void setRecentFiles(const QString &fileName);
@@ -93,6 +96,8 @@ private:
 
     void showMsg();
 
+    void reg_win();
+
     Ui::MainWindow *ui;
 
 protected:
@@ -101,6 +106,7 @@ protected:
     void dropEvent(QDropEvent *event);
     void closeEvent(QCloseEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void paintEvent(QPaintEvent *event);
 };
 
 #endif // MAINWINDOW_H

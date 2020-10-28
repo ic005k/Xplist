@@ -52,10 +52,10 @@ void ComboBoxDelegateBool::setEditorData(QWidget *editor,
     p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
     chkBox->setPalette(p);
 
-    if(value == "")
-        chkBox->setText("false");
-    else
-        chkBox->setText(value);
+    //if(value == "")
+    //    chkBox->setText("false");
+    //else
+    //    chkBox->setText(value);
 
 }
 
@@ -120,7 +120,7 @@ void ComboBoxDelegateBool::on_chkBox_clicked()
 
     }
 
-    chkBox->setText(val);
+    //chkBox->setText(val);
 
 
 }

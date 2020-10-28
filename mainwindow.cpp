@@ -17,6 +17,11 @@ QAction *pasteAction;
 
 QUndoGroup *undoGroup;
 
+QString fileName;
+QVector<QString> filelist;
+
+int red = 0;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -31,8 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.1");
+    setWindowTitle("PlistEDPlus V1.0.2");
     QApplication::setOrganizationName("PlistED");
+
+    //获取背景色
+    QPalette pal = this->palette();
+    QBrush brush = pal.window();
+    red = brush.color().red();
 
     undoGroup = new QUndoGroup(this);
 
@@ -153,6 +163,44 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addAction(findAction);
     connect(findAction, &QAction::triggered, this, &MainWindow::on_Find);
 
+#ifdef Q_OS_WIN32
+
+   reg_win();
+
+#endif
+
+#ifdef Q_OS_LINUX
+
+#endif
+
+#ifdef Q_OS_MAC
+
+#endif
+
+
+   QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
+   QFileInfo fi(qfile);
+   if(fi.exists())
+   {
+       QSettings Reg(qfile, QSettings::IniFormat);
+       int count = Reg.value("count").toInt();
+
+       for(int i = 0; i < count; i ++)
+       {
+           QString file = Reg.value(QString::number(i) + "/file").toString();
+
+           QFileInfo fi(file);
+           if(fi.exists())
+           {
+               openPlist(file);
+
+           }
+       }
+   }
+
+
+
+
 }
 
 MainWindow::~MainWindow()
@@ -246,15 +294,17 @@ void MainWindow::openPlist(QString filePath)
 
 void MainWindow::onTabCloseRequest(int i)
 {
+    if (i != -1) tabWidget->setCurrentIndex(i);
+
     if (!undoGroup->isClean())
     {
         // make tab active
-        if (i != -1) tabWidget->setCurrentIndex(i);
-
+        //if (i != -1) tabWidget->setCurrentIndex(i);
+        QString fn = tabWidget->getCurentTab()->getFileName();
         // messageobox for save
         QMessageBox msgBox(this);
         msgBox.setIcon(QMessageBox::Question);
-        msgBox.setText(tr("The document has been modified."));
+        msgBox.setText(tr("The document has been modified.") + "\n" + fn);
         msgBox.setInformativeText(tr("Do you want to save your changes?"));
         msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
         msgBox.setButtonText (QMessageBox::Save,QString(tr("Save")));
@@ -267,14 +317,17 @@ void MainWindow::onTabCloseRequest(int i)
         {
            case QMessageBox::Cancel:
                 // Cancel was clicked
+                close_flag = 0;
            return;
 
            case QMessageBox::Save:
+                close_flag = 1;
                actionSave_activated();
            break;
 
            case QMessageBox::Discard:
                // Don't Save was clicked
+                close_flag = 2;
            break;
         }
     }
@@ -686,8 +739,6 @@ void MainWindow::on_copyAction()
 
     }
 
-
-
 }
 
 void MainWindow::on_cutAction()
@@ -718,9 +769,6 @@ void MainWindow::on_cutAction()
         }
 
     }
-
-
-
 }
 
 void MainWindow::on_pasteAction()
@@ -751,8 +799,91 @@ void MainWindow::on_pasteAction()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    if (tabWidget->hasTabs())
+    {
 
-    Q_UNUSED(event);
+        int count = tabWidget->count();
+        //记录当前文件
+        QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
+        QFile file(qfile);
+        QSettings Reg(qfile, QSettings::IniFormat);
+        Reg.setValue("count", count);
+
+        for(int i = 0; i < count; i++)
+        {
+            tabWidget->setCurrentIndex(i);
+            QString fn = tabWidget->getCurentTab()->getPath();
+            Reg.setValue(QString::number(i) + "/" + "file", fn);
+
+        }
+
+
+        for(int i = 0; i < count; i ++)
+        {
+            tabWidget->setCurrentIndex(0);
+
+            emit tabWidget->tabCloseRequested(0);
+            if(close_flag == 0)//0取消、1保存、2放弃标志，为后面新增功能预留
+            {
+                event->ignore();
+                close_flag = -1;
+                break; //如果第一个标签页选择取消，则直接终止关闭
+            }
+            if(close_flag == 1)
+            {
+
+                event->ignore();
+                close_flag = -1;
+            }
+            if(close_flag == 2)
+            {
+                event->ignore();
+                close_flag = -1;
+            }
+
+        }
+
+        if(tabWidget->count() == 0)
+            event->accept();
+    }
+
+
+}
+
+void MainWindow::reg_win()
+{
+        QString appPath = qApp->applicationFilePath();
+
+        QString dir = qApp->applicationDirPath();
+        // 注意路径的替换
+        appPath.replace("/", "\\");
+        QString type = "PlistEDPlus";
+        QSettings *regType = new QSettings("HKEY_CLASSES_ROOT\\.plist", QSettings::NativeFormat);
+        QSettings *regIcon = new QSettings("HKEY_CLASSES_ROOT\\.plist\\DefaultIcon", QSettings::NativeFormat);
+        QSettings *regShell = new QSettings("HKEY_CLASSES_ROOT\\QtOpenCoreConfig\\shell\\open\\command", QSettings::NativeFormat);
+
+        regType->remove("Default");
+        regType->setValue("Default", type);
+
+        regIcon->remove("Default");
+        // 0 使用当前程序内置图标
+        regIcon->setValue("Default", appPath + ",1");
+
+         // 百分号问题
+        QString shell = "\"" + appPath + "\" ";
+        shell = shell + "\"%1\"";
+
+        regShell->remove("Default");
+        regShell->setValue("Default", shell);
+
+        delete regIcon;
+        delete regShell;
+        delete regType;
+
+        // 通知系统刷新
+#ifdef Q_OS_WIN32
+        //::SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST|SHCNF_FLUSH, 0, 0);
+#endif
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -768,19 +899,20 @@ void MainWindow::on_actionMoveUp()
     if (tabWidget->hasTabs())
     {
 
-
         EditorTab *tab = tabWidget->getCurentTab();
         QTreeView *treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
         DomModel *model = tab->getModel();
         QModelIndex index, index_bak;
         index = tab->currentIndex();
-        index = model->index(index.row(), 0, index.parent());
-
         index_bak = index;
 
+        if(!index.isValid())
+            return;
 
         DomItem *items = model->itemForIndex(index.parent());
+        if(items == NULL)
+            return;
 
         if(index.row() == 0 || items->getType() == "array")
             return;
@@ -807,21 +939,26 @@ void MainWindow::on_actionMoveDown()
     {
 
         EditorTab *tab = tabWidget->getCurentTab();
+        QTreeView *treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+        DomModel *model = tab->getModel();
         QModelIndex index, index_bak;
         index = tab->currentIndex();
-        DomModel *model = tab->getModel();
-        index = model->index(index.row(), 0, index.parent());
         index_bak = index;
 
+        if(!index.isValid())
+            return;
+
         DomItem *items = model->itemForIndex(index.parent());
+
+        if(items == NULL)
+            return;
 
         if(index.row() == items->childCount() - 1 || items->getType() == "array")
             return;
 
-        QTreeView *treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
-
         ItemState *temp = model->saveItemState(index);
+
 
         int row = index.row() + 2;
         model->addItem(index.parent(), row, temp);
@@ -837,20 +974,38 @@ void MainWindow::on_actionMoveDown()
 void MainWindow::showMsg()
 {
     EditorTab *tab = tabWidget->getCurentTab();
-    QModelIndex index, index_bak;
+    QModelIndex index;
     index = tab->currentIndex();
-    index_bak = index;
+    DomModel *model = tab->getModel();
+    DomItem *item = model->itemForIndex(index);
 
-    QString str1, str2, str3, str4;
+    QString str1, str2, str3, str4, str5;
     str1 = QObject::tr("Currently selected: ") + index.data().toString();
     str2 = "      " + QObject::tr("Row: ") + QString::number(index.row() + 1);
     str3 = "      " + QObject::tr("Column: ") + QString::number(index.column() + 1);
     str4 = "      " + QObject::tr("Parent level：") + index.parent().data().toString();
+    str5 = "      " + QObject::tr("Children: ") + QString::number(item->childCount());
 
-    //QString   top  =   getTopParent( c_index). data(). toString();
-    //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
-
-    myStatusBar->showMessage(str1 + str2 + str3 + str4);
+    myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
 }
+
+void MainWindow::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event);
+
+    //获取背景色
+    QPalette pal = this->palette();
+    QBrush brush = pal.window();
+    int c_red = brush.color().red();
+    if(c_red != red)
+    {
+        red = c_red;
+        //qDebug() << "repaint";
+    }
+
+
+}
+
+
 
 

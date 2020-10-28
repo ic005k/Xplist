@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 QT += core gui xml
-QT += widgets
+//QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 ICON = my.icns
 RC_FILE += myapp.rc
@@ -27,7 +28,8 @@ SOURCES += main.cpp\
     editortab.cpp \
     editortabswidget.cpp \
     commands.cpp \
-    itemstate.cpp
+    itemstate.cpp \
+    myapp.cpp
 
 HEADERS  += mainwindow.h \
     comboboxdelegatebool.h \
@@ -39,7 +41,8 @@ HEADERS  += mainwindow.h \
     editortab.h \
     editortabswidget.h \
     commands.h \
-    itemstate.h
+    itemstate.h \
+    myapp.h
 
 FORMS    += mainwindow.ui \
     editortab.ui

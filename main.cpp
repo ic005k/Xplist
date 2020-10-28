@@ -2,10 +2,16 @@
 #include <QTranslator>
 #include <QLibraryInfo>
 #include "mainwindow.h"
+#include "myapp.h"
+
+extern QString fileName;
+MainWindow * mw_one;
+
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    //QApplication a(argc, argv);
+    MyApplication *a = new MyApplication(argc, argv);
 
     static QTranslator translator;  //注意：使translator一直生效
     static QTranslator translator0;
@@ -42,8 +48,35 @@ int main(int argc, char *argv[])
         }
     }
 
-    MainWindow w;
-    w.show();
+#ifdef Q_OS_WIN32
+
+   fileName = QString::fromLocal8Bit(argv[1]);//解决乱码
+
+#endif
+
+#ifdef Q_OS_LINUX
+
+#endif
+
+#ifdef Q_OS_MAC
+
+#endif
+
+    if(!fileName.isEmpty())
+    {
+        a->new_win();
+    }
+
+    else
+    {
+
+        mw_one = new MainWindow();
+        mw_one->show();
+
+    }
+
+    //MainWindow w;
+    //w.show();
     
-    return a.exec();
+    return a->exec();
 }

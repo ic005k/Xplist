@@ -226,6 +226,8 @@ DomItem *DomModel::copyItem(const QModelIndex &parent)
 QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *state)
  {
 
+    Q_UNUSED(state);
+
     if (parent.isValid())
     {
         //QModelIndex index = this->index(parent.row(), 0, parent.parent());
@@ -234,26 +236,41 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
         QModelIndex index = parent;
         DomItem *item = itemForIndex(parent);//父级
 
-        QMessageBox box;
-        box.setText(item->getName() +"\n" + parent.data().toString());
-        //box.exec();
-
-
         if (row == -1) row = item->childCount();
+
+        int total = 0;  //查重
+        bool re = false;
+        int child_count = item->childCount();
+        for(int i = 0; i < child_count; i ++)
+        {
+            QString str = this->index(i, 0, index).data().toString();
+            if(str == copy_item->getName()) re = true;
+
+        }
+
+        if(re)
+        {
+            for(int i = 0; i < child_count; i ++)
+            {
+                QString str = this->index(i, 0, index).data().toString();
+                if(str.contains(copy_item->getName()))
+                {
+                    total ++;
+                }
+
+            }
+
+        }
 
         DomItem * child = NULL;
 
         beginInsertRows(index, row, row);
 
-        if (state != NULL)
-        {
-            child = state->getState()->clone();
-            child->setName(child->getName() + "--" + QTime::currentTime().toString());
-
-        }
-
         child = item->addChild(row, child);
-        child->setData(copy_item->getName() + "--" + QTime::currentTime().toString(), copy_item->getType(), copy_item->getValue());
+        if(!re)
+            child->setData(copy_item->getName(), copy_item->getType(), copy_item->getValue());
+        else
+            child->setData(copy_item->getName() + "-" + QString::number(total), copy_item->getType(), copy_item->getValue());
 
         DomItem *item0 = NULL;
         DomItem *item1 = NULL;
@@ -341,13 +358,7 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
 
         emit itemAdded(index);//通知treeView自适应列宽和展开节点
 
-        //EditorTab *tab = tabWidget->getCurentTab();
-        //QTreeView *treeView = new QTreeView;
-        //treeView = (QTreeView*)tab->children().at(1);
-        //treeView->resizeColumnToContents(0);
-
         //this->resetInternalData();
-
         return this->index(child->row(), 0, index);
 
     }
