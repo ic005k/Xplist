@@ -116,8 +116,9 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
     DomModel *model = tab->getModel();
     const QModelIndex index = tab->currentIndex();
     DomItem *item = model->itemForIndex(index.parent());
-    if(item->getType() == "array")
+    if(item->getType() == "array" && col == 0)
     {
+
         QString str = val.mid(4, val.length() - 4);
         //qDebug() << str;
         if(val.mid(0, 5) != "Item " || !str.toInt() || str.toInt() == 0)
