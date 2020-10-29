@@ -264,6 +264,10 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
 
         DomItem * child = NULL;
 
+        //if(copy_item->getName().contains("Item "))
+        //    row = child_count; //如果原始数据是数组，则直接放在最后面
+
+
         beginInsertRows(index, row, row);
 
         child = item->addChild(row, child);
@@ -271,6 +275,13 @@ QModelIndex DomModel::pasteItem(const QModelIndex &parent, int row, ItemState *s
             child->setData(copy_item->getName(), copy_item->getType(), copy_item->getValue());
         else
             child->setData(copy_item->getName() + "-" + QString::number(total), copy_item->getType(), copy_item->getValue());
+
+        if(copy_item->getName().contains("Item "))
+        {
+            child->setData("Item " + QString::number(child_count + 1), copy_item->getType(), copy_item->getValue());
+
+        }
+
 
         DomItem *item0 = NULL;
         DomItem *item1 = NULL;

@@ -22,6 +22,8 @@ QVector<QString> filelist;
 
 int red = 0;
 
+bool defaultIcon = false;
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -36,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.2");
+    setWindowTitle("PlistEDPlus V1.0.3");
     QApplication::setOrganizationName("PlistED");
 
     //获取背景色
@@ -183,20 +185,31 @@ MainWindow::MainWindow(QWidget *parent) :
    if(fi.exists())
    {
        QSettings Reg(qfile, QSettings::IniFormat);
-       int count = Reg.value("count").toInt();
-
-       for(int i = 0; i < count; i ++)
+       defaultIcon = Reg.value("DefaultIcon").toBool();
+       ui->actionDefaultNodeIcon->setChecked(defaultIcon);
+       bool restore = Reg.value("restore").toBool();
+       ui->actionRestoreScene->setChecked(restore);
+       if(restore)
        {
-           QString file = Reg.value(QString::number(i) + "/file").toString();
+           int count = Reg.value("count").toInt();
 
-           QFileInfo fi(file);
-           if(fi.exists())
+           for(int i = 0; i < count; i ++)
            {
-               openPlist(file);
+               QString file = Reg.value(QString::number(i) + "/file").toString();
 
+               QFileInfo fi(file);
+               if(fi.exists())
+               {
+                   openPlist(file);
+
+               }
            }
+
        }
+
+
    }
+
 
 
 
@@ -264,8 +277,20 @@ void MainWindow::openPlist(QString filePath)
 {
     if (!filePath.isEmpty())
     {
+
+        bool opened = false;
+        for(int i = 0; i < tabWidget->tabBar()->count(); i ++)
+        {
+            if(filePath == tabWidget->getTab(i)->getPath())
+            {
+                tabWidget->tabBar()->setCurrentIndex(i);
+                opened = true;
+            }
+        }
+
+
         QFile file(filePath);
-        if (file.open(QIODevice::ReadOnly))
+        if (file.open(QIODevice::ReadOnly) && !opened)
         {
             QDomDocument document;
 
@@ -288,6 +313,8 @@ void MainWindow::openPlist(QString filePath)
         QTreeView *treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
         treeView->resizeColumnToContents(0);
+
+        //tab->expand();
 
     }
 }
@@ -807,6 +834,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
         QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
         QFile file(qfile);
         QSettings Reg(qfile, QSettings::IniFormat);
+        Reg.setValue("restore", ui->actionRestoreScene->isChecked());
+        Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
         Reg.setValue("count", count);
 
         for(int i = 0; i < count; i++)
@@ -845,6 +874,14 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
         if(tabWidget->count() == 0)
             event->accept();
+    }
+    else
+    {
+        QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
+        QFile file(qfile);
+        QSettings Reg(qfile, QSettings::IniFormat);
+        Reg.setValue("restore", ui->actionRestoreScene->isChecked());
+        Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
     }
 
 
@@ -927,7 +964,9 @@ void MainWindow::on_actionMoveUp()
         treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
         index = tab->currentIndex();
         index = model->index(index.row(), 0, index.parent());
+
         model->removeItem(index);
+
         treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
         showMsg();
 

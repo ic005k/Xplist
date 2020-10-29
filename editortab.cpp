@@ -16,6 +16,8 @@ extern QAction *pasteAction;
 
 extern QUndoGroup *undoGroup;
 
+extern bool defaultIcon;
+
 EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EditorTab)
@@ -75,7 +77,7 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     //view->header()->setSortIndicator(0,Qt::AscendingOrder);    //按第1列升序排序
     //view->setStyle(QStyleFactory::create("windows")); //连接的虚线
     //view->setSelectionBehavior(QAbstractItemView::SelectItems);//不选中一行，分单元格选择
-
+    if(!defaultIcon)
     view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
                                         "QTreeView::branch:open:has-children:!has-siblings,"
                                         "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"

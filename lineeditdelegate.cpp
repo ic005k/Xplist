@@ -23,8 +23,8 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent,
     const QModelIndex index = tab->currentIndex();
     DomItem *item = model->itemForIndex(index);
     //数组编号不允许编辑
-    if(index.column() == 0 && item->parent()->getType() == "array" && item->getName().mid(0, 4) == "Item")
-        return 0;
+    //if(index.column() == 0 && item->parent()->getType() == "array" && item->getName().mid(0, 4) == "Item")
+    //    return 0;
 
     //父节点的数组和字典值，不允许编辑
     if(index.column() == 2 && (item->getType() == "array" || item->getType() == "dict"))
@@ -110,6 +110,22 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
             }
         }
     }
+
+    //数组元素数据检查
+    EditorTab *tab = tabWidget->getCurentTab();
+    DomModel *model = tab->getModel();
+    const QModelIndex index = tab->currentIndex();
+    DomItem *item = model->itemForIndex(index.parent());
+    if(item->getType() == "array")
+    {
+        QString str = val.mid(4, val.length() - 4);
+        //qDebug() << str;
+        if(val.mid(0, 5) != "Item " || !str.toInt() || str.toInt() == 0)
+            return 0;
+
+    }
+
+
     return ok;
 }
 
