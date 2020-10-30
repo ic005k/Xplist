@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.3");
+    setWindowTitle("PlistEDPlus V1.0.5");
     QApplication::setOrganizationName("PlistED");
 
     //获取背景色
@@ -204,6 +204,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
                }
            }
+
+           int index = Reg.value("index").toInt();
+           if(index >= 0 && index < tabWidget->tabBar()->count())
+               tabWidget->setCurrentIndex(index);
+           if(index >= tabWidget->tabBar()->count())
+               tabWidget->setCurrentIndex(tabWidget->tabBar()->count() - 1);
 
        }
 
@@ -837,6 +843,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         Reg.setValue("restore", ui->actionRestoreScene->isChecked());
         Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
         Reg.setValue("count", count);
+        Reg.setValue("index", tabWidget->tabBar()->currentIndex());
 
         for(int i = 0; i < count; i++)
         {
@@ -951,8 +958,15 @@ void MainWindow::on_actionMoveUp()
         if(items == NULL)
             return;
 
-        if(index.row() == 0 || items->getType() == "array")
+        if(index.row() == 0)
             return;
+
+        bool array = false;
+        if(items->getType() == "array")
+        {
+            items->setType("dict");
+            array = true;
+        }
 
 
         ItemState *temp = model->saveItemState(index);
@@ -966,6 +980,8 @@ void MainWindow::on_actionMoveUp()
         index = model->index(index.row(), 0, index.parent());
 
         model->removeItem(index);
+
+        if(array) items->setType("array");
 
         treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
         showMsg();
@@ -993,8 +1009,15 @@ void MainWindow::on_actionMoveDown()
         if(items == NULL)
             return;
 
-        if(index.row() == items->childCount() - 1 || items->getType() == "array")
+        if(index.row() == items->childCount() - 1)
             return;
+
+        bool array = false;
+        if(items->getType() == "array")
+        {
+            items->setType("dict");
+            array = true;
+        }
 
         ItemState *temp = model->saveItemState(index);
 
@@ -1002,6 +1025,8 @@ void MainWindow::on_actionMoveDown()
         int row = index.row() + 2;
         model->addItem(index.parent(), row, temp);
         model->removeItem(index_bak);
+
+        if(array) items->setType("array");
 
         treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
         showMsg();

@@ -61,6 +61,11 @@ void ComboBoxDelegate::setModelData(QWidget *editor,
     //comboBox = static_cast<QComboBox*>(editor);
     QString val = comboBox->currentText();
 
+    if(val == "date")
+    {
+
+    }
+
     // model->setData(index, val, Qt::EditRole);
     emit ComboBoxDelegate::dataChanged(QModelIndex(index), val);
 }

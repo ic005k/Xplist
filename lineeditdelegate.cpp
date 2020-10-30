@@ -6,6 +6,7 @@
 #include "domitem.h"
 
 extern EditorTabsWidget *tabWidget;
+QLineEdit *lineEdit;
 
 LineEditDelegate::LineEditDelegate(QObject *parent)
 {
@@ -44,9 +45,24 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent,
 void LineEditDelegate::setEditorData(QWidget *editor,
     const QModelIndex &index) const
 {
-    QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+    lineEdit = static_cast<QLineEdit*>(editor);
     QString value = index.data().toString();
+
+    EditorTab *tab = tabWidget->getCurentTab();
+    DomModel *model = tab->getModel();
+    //const QModelIndex index = tab->currentIndex();
+    DomItem *item = model->itemForIndex(index);
+    if(item->getType() == "date" && index.column() == 2)
+    {
+        if(value == "")//目前格式待定
+        //value = QDateTime::currentDateTime().toString("MMM dd,  yyyy at hh:mm:ss");
+        value = QDate::currentDate().toString("yyyy-MM-ddT")+ QTime::currentTime().toString("hh:mm:ssZ");
+
+    }
+
     lineEdit->setText(value);
+
+
 
     /*
     if (!index.parent().isValid()) lineEdit->setEnabled(false);
@@ -57,8 +73,9 @@ void LineEditDelegate::setEditorData(QWidget *editor,
 void LineEditDelegate::setModelData(QWidget *editor,
     QAbstractItemModel *model, const QModelIndex &index) const
 {
+    Q_UNUSED(editor);
     // get editor
-    QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+    //QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
 
     // get old val form the model
     QString oldVal = model->data(index).toString();
@@ -107,6 +124,7 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
             {
                 // we shouldn`t edit values of a dict or array
                 ok = ((type == "array" || type == "dict") && col == 2) ? false : true;
+
             }
         }
     }
@@ -123,6 +141,16 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
         //qDebug() << str;
         if(val.mid(0, 5) != "Item " || !str.toInt() || str.toInt() == 0)
             return 0;
+
+    }
+
+    if(type == "date")
+    {
+        QDateTime date = QDateTime::fromString(val);
+        if(!date.isValid())
+        {
+              //return 0;
+        }
 
     }
 

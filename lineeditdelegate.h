@@ -3,6 +3,9 @@
 
 #include <QLineEdit>
 #include <QItemDelegate>
+#include <QDateTime>
+#include <QDate>
+#include <QTime>
 
 class LineEditDelegate : public QItemDelegate
 {
