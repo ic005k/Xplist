@@ -77,6 +77,9 @@ private slots:
     void on_cutAction();
     void on_pasteAction();
 
+    void on_expandAction();
+    void on_collapseAction();
+
 
 private:
 
@@ -100,6 +103,8 @@ private:
 
     Ui::MainWindow *ui;
 
+
+
 protected:
 
     void dragEnterEvent(QDragEnterEvent *event);
@@ -107,6 +112,7 @@ protected:
     void closeEvent(QCloseEvent *event);
     void resizeEvent(QResizeEvent *event);
     void paintEvent(QPaintEvent *event);
+
 };
 
 #endif // MAINWINDOW_H

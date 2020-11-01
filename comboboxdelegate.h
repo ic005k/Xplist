@@ -3,6 +3,13 @@
 
 #include <QComboBox>
 #include <QItemDelegate>
+#include <QListView>
+#include <QStyledItemDelegate>
+#include <QHBoxLayout>
+
+#include <domitem.h>
+#include <dommodel.h>
+
 
 class ComboBoxDelegate : public QItemDelegate
 {

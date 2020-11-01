@@ -7,6 +7,7 @@
 
 QStatusBar *myStatusBar;
 QToolBar *myToolBar;
+
 EditorTabsWidget *tabWidget;
 ItemState *copy_state;
 DomItem *copy_item;
@@ -30,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+
     myToolBar = ui->mainToolBar;
     myStatusBar = ui->statusBar;
 
@@ -38,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.5");
+    setWindowTitle("PlistEDPlus V1.0.6");
     QApplication::setOrganizationName("PlistED");
 
     //获取背景色
@@ -111,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->mainToolBar->addAction(ui->actionAdd);
     ui->mainToolBar->addAction(ui->actionRemove);
+    ui->actionRemove->setShortcut(Qt::Key_Delete);
     ui->mainToolBar->addAction(ui->actionExpand_all);
 
     ui->mainToolBar->addSeparator();
@@ -130,7 +133,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainToolBar->addSeparator();
 
     ui->actionCopy->setIcon(QIcon(":/new/toolbar/res/copy.png"));
-    //ui->actionCopy->setShortcut(tr("ctrl+c"));
+    //ui->actionCopy->setShortcut(tr("space"));
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
 
@@ -164,6 +167,21 @@ MainWindow::MainWindow(QWidget *parent) :
     QAction *findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr("Find"), this);
     ui->mainToolBar->addAction(findAction);
     connect(findAction, &QAction::triggered, this, &MainWindow::on_Find);
+
+    ui->menuEdit->addSeparator();
+    QAction *expandAction = new QAction(tr("Expand") + "/" + tr("Collapse"), this);
+    expandAction->setIcon(QIcon(":/new/toolbar/res/ec.png"));
+    expandAction->setShortcut(tr("space"));
+    ui->menuEdit->addAction(expandAction);
+    connect(expandAction, &QAction::triggered, this, &MainWindow::on_expandAction);
+
+
+    QAction *collapseAction = new QAction(tr("Collapse"), this);
+    collapseAction->setIcon(QIcon(":/new/toolbar/res/col.png"));
+    //collapseAction->setShortcut(tr("space"));
+    //ui->menuEdit->addAction(collapseAction);
+    connect(collapseAction, &QAction::triggered, this, &MainWindow::on_collapseAction);
+
 
 #ifdef Q_OS_WIN32
 
@@ -754,79 +772,21 @@ void MainWindow::findEdit_returnPressed()
 void MainWindow::on_copyAction()
 {
 
-    if (tabWidget->hasTabs())
-    {
-        DomModel *model;
-        QModelIndex index;
-        EditorTab *tab = tabWidget->getCurentTab();
-        index = tab->currentIndex();
-        model = tab->getModel();
-
-        if(index.isValid())
-        {
-
-            copy_item = NULL;
-            copy_item = model->copyItem(index);
-
-        }
-
-    }
+    if (tabWidget->hasTabs()) tabWidget->getCurentTab()->on_copyAction();
 
 }
 
 void MainWindow::on_cutAction()
 {
 
-    if (tabWidget->hasTabs())
-    {
-        DomModel *model;
-        QModelIndex index;
-        EditorTab *tab = tabWidget->getCurentTab();
-        index = tab->currentIndex();
-        model = tab->getModel();
+    if (tabWidget->hasTabs()) tabWidget->getCurentTab()->on_cutAction();
 
-        if(index.parent().data().toString() == "") //最顶层不允许剪切
-            return;
-
-        if(index.isValid())
-        {
-
-            copy_item = model->copyItem(index);//必须要有克隆的过程，否则粘贴出错
-
-            if (model->itemNotPlist(index))
-            {
-                QUndoCommand *removeCommand = new RemoveCommand(model, index);
-                undoGroup->activeStack()->push(removeCommand);
-            }
-
-        }
-
-    }
 }
 
 void MainWindow::on_pasteAction()
 {
 
-    if (tabWidget->hasTabs())
-    {
-        if(copy_item == NULL)
-            return;
-
-        DomModel *model;
-        QModelIndex index;
-        EditorTab *tab = tabWidget->getCurentTab();
-        index = tab->currentIndex();
-        model = tab->getModel();
-
-        if(index.isValid())
-        {
-
-            QUndoCommand *pasteCommand = new PasteCommand(model, index);
-            undoGroup->activeStack()->push(pasteCommand);
-
-        }
-
-    }
+    if (tabWidget->hasTabs()) tabWidget->getCurentTab()->on_pasteAction();
 
 }
 
@@ -934,7 +894,7 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 {
 
     Q_UNUSED(event);
-    findEdit->setFocus();
+    //findEdit->setFocus();
 
 }
 
@@ -1070,6 +1030,55 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
 }
 
+void MainWindow::on_expandAction()
+{
 
+    if (tabWidget->hasTabs())
+    {
+
+        EditorTab *tab = tabWidget->getCurentTab();
+        QModelIndex index;
+        index = tab->currentIndex();
+        DomModel *model = tab->getModel();
+
+        QTreeView *treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+
+        if(!treeView->isExpanded(index))
+        {
+            treeView->expand(index);
+            //tab->view_expand(index, model);
+
+        }
+        else if(treeView->isExpanded(index))
+        {
+            QModelIndex index1 = model->index(index.row(), 0, index.parent());
+            tab->view_collapse(index1.parent(), model);
+            //treeView->setExpanded(index1, false);
+
+        }
+    }
+
+
+}
+
+void MainWindow::on_collapseAction()
+{
+
+    if (tabWidget->hasTabs())
+    {
+
+        EditorTab *tab = tabWidget->getCurentTab();
+        QModelIndex index;
+        index = tab->currentIndex();
+        DomModel *model = tab->getModel();
+
+        QTreeView *treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+
+        tab->view_collapse(index.parent(), model);
+    }
+
+}
 
 

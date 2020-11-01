@@ -1,11 +1,15 @@
 #include "comboboxdelegate.h"
+#include <editortabswidget.h>
 #include <QDebug>
 
 QComboBox *comboBox;
 extern int red;
+extern EditorTabsWidget *tabWidget;
+
 ComboBoxDelegate::ComboBoxDelegate(QObject *parent)
 {
     Q_UNUSED(parent);
+
 }
 
 QWidget *ComboBoxDelegate::createEditor(QWidget *parent,
@@ -15,6 +19,7 @@ QWidget *ComboBoxDelegate::createEditor(QWidget *parent,
     Q_UNUSED(index);
 
     QComboBox *editor = new QComboBox(parent);
+    editor = new QComboBox(parent);
 
     QStringList list;
     list << "array" << "dict" << "integer" << "real" << "string" << "data" << "bool" << "date";
@@ -29,6 +34,9 @@ void ComboBoxDelegate::setEditorData(QWidget *editor,
 
     comboBox = static_cast<QComboBox*>(editor);
 
+    //QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
+    //comboBox->setItemDelegate(itemDelegate);
+
     if(red < 55)  //mac = 50
     {
         comboBox->setStyleSheet("QComboBox {border:none;background:rgba(50,50,50,255);}");
@@ -37,6 +45,7 @@ void ComboBoxDelegate::setEditorData(QWidget *editor,
     else
     {
         //comboBox->setStyleSheet("QComboBox {border:none;background:rgba(255,255,255,255);color:rgba(0,0,0,255);}");
+        //comboBox->setStyleSheet("QComboBox {border:none;}");
     }
 
     //connect(comboBox, &QComboBox::currentIndexChanged, this, &ComboBoxDelegate::on_comboBox_currentIndexChanged);
@@ -44,7 +53,7 @@ void ComboBoxDelegate::setEditorData(QWidget *editor,
     int n = comboBox->findText(value);
     comboBox->setCurrentIndex(n);
 
-    //comboBox->showPopup();
+    comboBox->showPopup();
 
 
     //if (!index.parent().isValid()) comboBox->setEnabled(false);
@@ -61,10 +70,22 @@ void ComboBoxDelegate::setModelData(QWidget *editor,
     //comboBox = static_cast<QComboBox*>(editor);
     QString val = comboBox->currentText();
 
-    if(val == "date")
+    if(val == "bool")
     {
+        DomItem *item;
+        DomModel *mymodel = tabWidget->getCurentTab()->getModel();
+        item = mymodel->itemForIndex(index);
+        if(item->getValue() == "" || (item->getValue() != "true" && item->getValue() != "false"))
+        {
+            item->setValue("false");
+            QTreeView *treeView = new QTreeView;
+            treeView = (QTreeView*)tabWidget->getCurentTab()->children().at(1);
+            treeView->doItemsLayout();
+        }
 
     }
+
+    comboBox->clear();
 
     // model->setData(index, val, Qt::EditRole);
     emit ComboBoxDelegate::dataChanged(QModelIndex(index), val);

@@ -193,9 +193,9 @@ void DomParser::parseItem(DomItem *item, QDomElement &n, QDomDocument &doc)
             QDomElement val;
             if(type == "bool") //新增：bool类型
             {
-                if(value == "true")
+                if(value.trimmed() == "true")
                     val = doc.createElement(QStringLiteral("true"));
-                if(value == "false")
+                if(value.trimmed() == "false")
                     val = doc.createElement(QStringLiteral("false"));
             }
             else

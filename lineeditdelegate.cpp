@@ -31,10 +31,14 @@ QWidget *LineEditDelegate::createEditor(QWidget *parent,
     if(index.column() == 2 && (item->getType() == "array" || item->getType() == "dict"))
         return 0;
 
-    if(index.column() == 2 && (item->getType() == "bool"))
-    {
+    if(index.column() == 2 && item->getType() == "bool")
+        return 0;
 
-    }
+    if(index.column() == 1)
+        return 0;
+
+    if(index.data().toString() == "plist")
+        return 0;
 
     QLineEdit *editor = new QLineEdit(parent);
 
@@ -162,7 +166,21 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
 QSize LineEditDelegate::sizeHint ( const QStyleOptionViewItem & option,  const QModelIndex & index ) const
 {
     QSize size = QItemDelegate::sizeHint(option, index);
-    size.setHeight( size.height() + 4 );
+
+#ifdef Q_OS_WIN32
+   size.setHeight( size.height() + 4);
+
+#endif
+
+#ifdef Q_OS_LINUX
+   size.setHeight( size.height() + 4);
+
+#endif
+
+#ifdef Q_OS_MAC
+   size.setHeight( size.height() + 5);
+
+#endif
 
     return size;
 }

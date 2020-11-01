@@ -62,6 +62,7 @@ public:
 
 protected:
         void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+
 #ifndef QT_NO_CONTEXTMENU
         void contextMenuEvent(QContextMenuEvent *event) override;
 #endif // QT_NO_CONTEXTMENU
@@ -91,6 +92,9 @@ private slots:
 
      void on_actionNewChild();
 
+     void on_chkBox();
+
+
 private:
 
     QUndoStack *undoStack;
@@ -104,6 +108,13 @@ private:
 
     QStandardItem* getTopParent(QStandardItem* item);
     QModelIndex getTopParent(QModelIndex itemIndex);
+
+    QCheckBox *chkBox;
+    QModelIndex index_bool_bak;
+    QString val_bool;
+    DomItem *item_bool;
+
+    QComboBox *comBox;
 
 
 };

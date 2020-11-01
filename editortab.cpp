@@ -22,7 +22,11 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EditorTab)
 {
+
     ui->setupUi(this);
+
+    chkBox = new QCheckBox(this);
+    chkBox->setVisible(false);
 
     QFont font;
 #ifdef Q_OS_WIN32
@@ -94,7 +98,6 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     connect(delegate1, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex &, QString)));
     connect(delegate2, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex &, QString)));
     connect(delegate_bool, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex &, QString)));
-
 
 }
 
@@ -293,10 +296,49 @@ void EditorTab::on_treeView_doubleClicked(const QModelIndex &index)
 {
     DomModel *model = this->model;
     DomItem *item = model->itemForIndex(index);
-    if(item->getType() == "bool")
-        ui->treeView->setItemDelegateForColumn(2, delegate_bool);
-    else
-        ui->treeView->setItemDelegateForColumn(2, delegate1);
+
+    if(item->getType() == "bool" && index.column() == 2)
+    {
+         //connect(chkBox, &QCheckBox::stateChanged, this, &EditorTab::on_chkBox);
+        if(!chkBox->isChecked())
+        {
+            //val_bool = "false";
+            //item->setValue("     " + val_bool);
+
+        }
+         return;
+    }
+
+
+    //if(item->getType() == "bool")
+    //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
+    //else
+    //    ui->treeView->setItemDelegateForColumn(2, delegate1);
+
+
+    /*if(index != index_bool_bak)
+    {
+        if(index_bool_bak.isValid())
+            ui->treeView->setIndexWidget(index_bool_bak, NULL);
+    }
+
+    if(index.column() == 1)
+    {
+        comBox = new QComboBox;
+        QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
+        comBox->setItemDelegate(itemDelegate);
+
+        //comBox->setMaximumHeight(16);
+        QStringList list;
+        list << "array" << "dict" << "integer" << "real" << "string" << "data" << "bool" << "date";
+        comBox->insertItems(0, list);
+        ui->treeView->setIndexWidget(index, comBox);
+        index_bool_bak = index;
+        QString value = index.data().toString();
+        int n = comBox->findText(value);
+        comBox->setCurrentIndex(n);
+        comBox->showPopup();
+    }*/
 
 }
 
@@ -311,10 +353,11 @@ void EditorTab::on_treeView_clicked(const QModelIndex &index)
 
     DomModel *model = this->model;
     DomItem *item = model->itemForIndex(index);
-    if(item->getType() == "bool")
-        ui->treeView->setItemDelegateForColumn(2, delegate_bool);
-    else
-        ui->treeView->setItemDelegateForColumn(2, delegate1);
+
+    //if(item->getType() == "bool")
+    //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
+    //else
+    //    ui->treeView->setItemDelegateForColumn(2, delegate1);
 
     QString str1, str2, str3, str4, str5;
     str1 = QObject::tr("Currently selected: ") + index.data().toString();
@@ -327,6 +370,71 @@ void EditorTab::on_treeView_clicked(const QModelIndex &index)
     //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
 
     myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
+
+    if(index != index_bool_bak)
+    {
+
+        if(index_bool_bak.isValid())
+        {
+            item_bool  = model->itemForIndex(index_bool_bak);
+            item_bool->setValue(val_bool.trimmed());
+            //editorDataAboutToBeSet(index_bool_bak, val_bool.trimmed());
+            ui->treeView->setIndexWidget(index_bool_bak, NULL);
+
+
+        }
+
+    }
+
+
+
+    if(item->getType() == "bool")
+    {
+
+        chkBox = new QCheckBox(this);
+        ui->treeView->setFocus();
+
+        connect(chkBox, &QCheckBox::clicked, this, &EditorTab::on_chkBox);
+        QModelIndex index_m = model->index(index.row(), 2, index.parent());
+
+        ui->treeView->setIndexWidget(index_m, chkBox);
+        chkBox->setGeometry(chkBox->x() + 100, chkBox->y(), chkBox->width(), chkBox->height());
+        val_bool = item->getValue();
+
+        QPalette p = chkBox->palette();
+        p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
+        p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
+        chkBox->setPalette(p);
+
+
+        if(item->getValue() == "false")
+        {
+            chkBox->setChecked(false);
+
+            item->setValue("     " + val_bool);
+
+        }
+        else if(item->getValue() == "true")
+        {
+            chkBox->setChecked(true);
+            item->setValue("     " + val_bool);
+
+
+        }
+
+        chkBox->setText("          ");
+
+
+        index_bool_bak = index_m;
+
+        if(item->getValue().trimmed() == "true" && index.column() == 2)
+        {
+
+            chkBox->setChecked(true);
+
+        }
+    }
+
 
 }
 
@@ -545,5 +653,49 @@ void EditorTab::setIcon()
 {
     ui->treeView->setIconSize(QSize(6, 6));
 }
+
+void EditorTab::on_chkBox()
+{
+    /*QPalette p = chkBox->palette();
+    p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
+    p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
+    chkBox->setPalette(p);*/
+
+    if(chkBox->isChecked())
+    {
+        val_bool = "true";
+        //chkBox->setText("    ");
+
+    }
+    else //if(!chkBox->isChecked())
+    {
+        val_bool = "false";
+        //chkBox->setText("     ");
+
+
+    }
+
+    chkBox->setText("          ");
+
+    DomModel *model = this->model;
+    QModelIndex index = this->currentIndex();
+
+
+    QModelIndex index_m = model->index(index.row(), 2, index.parent());
+    DomItem *item = model->itemForIndex(index_m);
+
+    item->setValue("     " + val_bool);
+    //editorDataAboutToBeSet(index, val_bool.trimmed());
+    QTreeView *treeView = new QTreeView;
+    treeView = (QTreeView*)tabWidget->getCurentTab()->children().at(1);
+    treeView->doItemsLayout();
+
+
+
+}
+
+
+
+
 
 

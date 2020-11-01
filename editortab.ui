@@ -79,6 +79,9 @@ QTreeView::branch:open:has-children:has-siblings  {
      <property name="editTriggers">
       <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
      </property>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
      <property name="showDropIndicator" stdset="0">
       <bool>true</bool>
      </property>
@@ -93,6 +96,9 @@ QTreeView::branch:open:has-children:has-siblings  {
      </property>
      <property name="alternatingRowColors">
       <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
      </property>
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
