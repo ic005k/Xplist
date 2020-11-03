@@ -54,7 +54,6 @@ void LineEditDelegate::setEditorData(QWidget *editor,
 
     EditorTab *tab = tabWidget->getCurentTab();
     DomModel *model = tab->getModel();
-    //const QModelIndex index = tab->currentIndex();
     DomItem *item = model->itemForIndex(index);
     if(item->getType() == "date" && index.column() == 2)
     {
@@ -66,12 +65,6 @@ void LineEditDelegate::setEditorData(QWidget *editor,
 
     lineEdit->setText(value);
 
-
-
-    /*
-    if (!index.parent().isValid()) lineEdit->setEnabled(false);
-    else lineEdit->setEnabled(true);
-    */
 }
 
 void LineEditDelegate::setModelData(QWidget *editor,
@@ -98,7 +91,8 @@ void LineEditDelegate::setModelData(QWidget *editor,
 
     // set data
     //model->setData(index, val, Qt::EditRole);
-    emit dataChanged(index, val);
+    if(newVal != oldVal)
+        emit dataChanged(index, val);
 }
 
 void LineEditDelegate::updateEditorGeometry(QWidget *editor,
@@ -157,6 +151,9 @@ bool LineEditDelegate::checkInput(const QString &type, const QString &val, int c
         }
 
     }
+
+    if(val.trimmed() == "plist")
+        return 0;
 
 
     return ok;

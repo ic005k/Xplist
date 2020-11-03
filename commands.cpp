@@ -1,5 +1,8 @@
 #include "commands.h"
 
+extern QCheckBox *chkBox;
+extern bool chk_null;
+
 AddCommand::AddCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)
 {
 
@@ -98,7 +101,14 @@ EditCommand::EditCommand(QString val, DomModel *model, const QModelIndex &index,
 
 void EditCommand::undo()
 {
-    m_model->setData(m_index, m_oldVal);
+    m_model->setData(m_index, m_oldVal.trimmed());
+
+    if(!chk_null)
+    {
+        if(chkBox->isVisible()) chkBox->setVisible(false);
+    }
+
+
 }
 
 void EditCommand::redo()
@@ -106,7 +116,15 @@ void EditCommand::redo()
     if(!m_index.isValid())
         return;
 
-    m_model->setData(m_index, m_newVal);
+    m_model->setData(m_index, m_newVal.trimmed());
+
+    if(!chk_null)
+    {
+        if(chkBox->isVisible()) chkBox->setVisible(false);
+    }
+
+
+
 }
 
 PasteCommand::PasteCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)

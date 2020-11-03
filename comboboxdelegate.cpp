@@ -3,6 +3,7 @@
 #include <QDebug>
 
 QComboBox *comboBox;
+QString oldValue;
 extern int red;
 extern EditorTabsWidget *tabWidget;
 
@@ -52,12 +53,8 @@ void ComboBoxDelegate::setEditorData(QWidget *editor,
     QString value = index.data().toString();
     int n = comboBox->findText(value);
     comboBox->setCurrentIndex(n);
-
+    oldValue = value;
     comboBox->showPopup();
-
-
-    //if (!index.parent().isValid()) comboBox->setEnabled(false);
-    //else comboBox->setEnabled(true);
 
 }
 
@@ -70,17 +67,58 @@ void ComboBoxDelegate::setModelData(QWidget *editor,
     //comboBox = static_cast<QComboBox*>(editor);
     QString val = comboBox->currentText();
 
-    if(val == "bool")
+    if(oldValue != val)
     {
+
         DomItem *item;
-        DomModel *mymodel = tabWidget->getCurentTab()->getModel();
+        EditorTab *tab = tabWidget->getCurentTab();
+        DomModel *mymodel = tab->getModel();
         item = mymodel->itemForIndex(index);
-        if(item->getValue() == "" || (item->getValue() != "true" && item->getValue() != "false"))
+        QTreeView *treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+
+        if(item->getName() != "plist")
         {
-            item->setValue("false");
-            QTreeView *treeView = new QTreeView;
-            treeView = (QTreeView*)tabWidget->getCurentTab()->children().at(1);
+
+            if(val == "bool")
+            {
+
+                if(item->getValue() == "" || (item->getValue() != "true" && item->getValue() != "false"))
+                {
+
+                    QString value = "false";
+                    item->setValue(value);
+
+                }
+
+            }
+
+            if(val == "string" || val == "array" || val == "dict" || val == "data")
+            {
+                QString value = "";
+                item->setValue(value);
+
+
+            }
+
+
+            if(val == "integer" || val == "real")
+            {
+                QString value = "0";
+                item->setValue(value);
+            }
+
+
+            if(val == "date")
+            {
+                QString value = QDate::currentDate().toString("yyyy-MM-ddT")+ QTime::currentTime().toString("hh:mm:ssZ");
+                item->setValue(value);
+
+            }
+
             treeView->doItemsLayout();
+            treeView->setFocus();
+
         }
 
     }
@@ -88,7 +126,9 @@ void ComboBoxDelegate::setModelData(QWidget *editor,
     comboBox->clear();
 
     // model->setData(index, val, Qt::EditRole);
-    emit ComboBoxDelegate::dataChanged(QModelIndex(index), val);
+    if(oldValue != val)
+        emit ComboBoxDelegate::dataChanged(QModelIndex(index), val);
+
 }
 
 void ComboBoxDelegate::updateEditorGeometry(QWidget *editor,
@@ -97,19 +137,12 @@ void ComboBoxDelegate::updateEditorGeometry(QWidget *editor,
     Q_UNUSED(index);
     QRect r;
     r.setTop(option.rect.top() + 0);
-    r.setBottom(option.rect.bottom() - 0);
+    r.setBottom(option.rect.bottom() + 0);
     r.setRight(option.rect.right());
     r.setLeft(option.rect.left());
 
     editor->setGeometry(r);
 }
-
-/*QSize ComboBoxDelegate::sizeHint ( const QStyleOptionViewItem & option,  const QModelIndex & index ) const
-{
-    QSize size = QItemDelegate::sizeHint(option, index);
-    size.setHeight( size.height() + 5 );
-    eturn size;
-}*/
 
 void ComboBoxDelegate::on_comboBox_currentIndexChanged(int index)
 {

@@ -1,7 +1,7 @@
 #include "comboboxdelegatebool.h"
 #include <QDebug>
 
-QCheckBox *chkBox;
+QCheckBox *chkBoxBool;
 
 ComboBoxDelegateBool::ComboBoxDelegateBool(QObject *parent)
 {
@@ -32,25 +32,25 @@ void ComboBoxDelegateBool::setEditorData(QWidget *editor,
     //int n = comboBox->findText(value);
     //comboBox->setCurrentIndex(n);
 
-    chkBox = static_cast<QCheckBox*>(editor);
-    connect(chkBox, &QCheckBox::clicked, this, &ComboBoxDelegateBool::on_chkBox_clicked);
-    chkBox->setGeometry(editor->x() + 60, editor->y(), 100, editor->height());
+    chkBoxBool = static_cast<QCheckBox*>(editor);
+    connect(chkBoxBool, &QCheckBox::clicked, this, &ComboBoxDelegateBool::on_chkBox_clicked);
+    chkBoxBool->setGeometry(editor->x() + 60, editor->y(), 100, editor->height());
 
     if(value == "true")
     {
-        chkBox->setChecked(true);
+        chkBoxBool->setChecked(true);
 
     }
     else
     {
-        chkBox->setChecked(false);
+        chkBoxBool->setChecked(false);
 
     }
 
-    QPalette p = chkBox->palette();
+    QPalette p = chkBoxBool->palette();
     p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
     p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
-    chkBox->setPalette(p);
+    chkBoxBool->setPalette(p);
 
     //if(value == "")
     //    chkBox->setText("false");
@@ -68,9 +68,9 @@ void ComboBoxDelegateBool::setModelData(QWidget *editor,
     //QString val = comboBox->currentText();
 
     //QCheckBox *chkBox = static_cast<QCheckBox*>(editor);
-    chkBox->setGeometry(editor->x() + 60, editor->y(), 100, editor->height());
+    chkBoxBool->setGeometry(editor->x() + 60, editor->y(), 100, editor->height());
     QString val;
-    if(chkBox->isChecked())
+    if(chkBoxBool->isChecked())
     {
         val = "true";
 
@@ -103,13 +103,13 @@ void ComboBoxDelegateBool::updateEditorGeometry(QWidget *editor,
 void ComboBoxDelegateBool::on_chkBox_clicked()
 {
 
-    QPalette p = chkBox->palette();
+    QPalette p = chkBoxBool->palette();
     p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
     p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
-    chkBox->setPalette(p);
+    chkBoxBool->setPalette(p);
 
     QString val;
-    if(chkBox->isChecked())
+    if(chkBoxBool->isChecked())
     {
         val = "true";
 

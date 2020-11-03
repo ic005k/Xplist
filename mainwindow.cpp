@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.6");
+    setWindowTitle("PlistEDPlus V1.0.7");
     QApplication::setOrganizationName("PlistED");
 
     //获取背景色
@@ -792,14 +792,20 @@ void MainWindow::on_pasteAction()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+
+    //记录当前文件
+    QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
+    QFile file(qfile);
+    QSettings Reg(qfile, QSettings::IniFormat);
+
+    Reg.setValue("restore", ui->actionRestoreScene->isChecked());
+    Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
+
     if (tabWidget->hasTabs())
     {
 
         int count = tabWidget->count();
-        //记录当前文件
-        QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
-        QFile file(qfile);
-        QSettings Reg(qfile, QSettings::IniFormat);
+
         Reg.setValue("restore", ui->actionRestoreScene->isChecked());
         Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
         Reg.setValue("count", count);
@@ -844,11 +850,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
     else
     {
-        QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
-        QFile file(qfile);
-        QSettings Reg(qfile, QSettings::IniFormat);
-        Reg.setValue("restore", ui->actionRestoreScene->isChecked());
-        Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
+        Reg.setValue("count", 0);
+
     }
 
 

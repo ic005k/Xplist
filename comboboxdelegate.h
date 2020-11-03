@@ -29,13 +29,14 @@ public:
     void updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    //QSize sizeHint ( const QStyleOptionViewItem & option,  const QModelIndex & index ) const;
-
 signals:
     void dataChanged(const QModelIndex&, QString) const;
 
 private slots:
     void on_comboBox_currentIndexChanged(int index);
+
+private:
+
 };
 
 

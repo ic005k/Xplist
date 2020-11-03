@@ -7,6 +7,7 @@
 #include <QModelIndex>
 #include <QDebug>
 #include <QMessageBox>
+#include <QCheckBox>
 
 class AddCommand : public QUndoCommand
 {

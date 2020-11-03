@@ -18,6 +18,9 @@ extern QUndoGroup *undoGroup;
 
 extern bool defaultIcon;
 
+QCheckBox *chkBox;
+bool chk_null = true;
+
 EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::EditorTab)
@@ -28,20 +31,47 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     chkBox = new QCheckBox(this);
     chkBox->setVisible(false);
 
+    QTreeView *view = ui->treeView;
+
+
     QFont font;
 #ifdef Q_OS_WIN32
 
     font.setPointSize(9);
+    if(!defaultIcon)
+    view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+                                        "QTreeView::branch:open:has-children:!has-siblings,"
+                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+                                        "QTreeView::branch:has-children:!has-siblings:closed,"
+                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+
+                        );
 
 #endif
 
 #ifdef Q_OS_LINUX
     font.setPointSize(11);
+    if(!defaultIcon)
+    view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+                                        "QTreeView::branch:open:has-children:!has-siblings,"
+                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+                                        "QTreeView::branch:has-children:!has-siblings:closed,"
+                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+
+                        );
 
 #endif
 
 #ifdef Q_OS_MAC
     font.setPointSize(13);
+    if(!defaultIcon)
+    view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+                                        "QTreeView::branch:open:has-children:!has-siblings,"
+                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/submac.png);}"
+                                        "QTreeView::branch:has-children:!has-siblings:closed,"
+                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/mainmac.png);}"
+
+                        );
 
 #endif
 
@@ -52,8 +82,6 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     setModel(m);
 
     undoStack = new QUndoStack();
-
-    QTreeView *view = ui->treeView;
 
     delegate1 = new LineEditDelegate(view);
 
@@ -81,17 +109,7 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     //view->header()->setSortIndicator(0,Qt::AscendingOrder);    //按第1列升序排序
     //view->setStyle(QStyleFactory::create("windows")); //连接的虚线
     //view->setSelectionBehavior(QAbstractItemView::SelectItems);//不选中一行，分单元格选择
-    if(!defaultIcon)
-    view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-                                        "QTreeView::branch:open:has-children:!has-siblings,"
-                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-                                        "QTreeView::branch:has-children:!has-siblings:closed,"
-                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
-                                        //"QTreeView::item:hover {background-color:rgb(8,52,127);}"
-                                        //"QTreeView::item:selected {background-color:rgb(8,52,127);border:1px solid #08347F;}"
-                        );
-    const QSize size(4, 4);
-    view->setIconSize(size);
+
 
     connect(model, SIGNAL(itemAdded(const QModelIndex&)), this, SLOT(onItemAded(const QModelIndex&)));
 
@@ -377,11 +395,13 @@ void EditorTab::on_treeView_clicked(const QModelIndex &index)
         if(index_bool_bak.isValid())
         {
             item_bool  = model->itemForIndex(index_bool_bak);
-            item_bool->setValue(val_bool.trimmed());
-            //editorDataAboutToBeSet(index_bool_bak, val_bool.trimmed());
+
+            if(item_bool->getType() == "bool")
+                item_bool->setValue(val_bool.trimmed());
+
             ui->treeView->setIndexWidget(index_bool_bak, NULL);
-
-
+            chk_null = true;
+            index_bool_bak = QModelIndex();
         }
 
     }
@@ -392,19 +412,20 @@ void EditorTab::on_treeView_clicked(const QModelIndex &index)
     {
 
         chkBox = new QCheckBox(this);
+        chk_null = false;
         ui->treeView->setFocus();
 
         connect(chkBox, &QCheckBox::clicked, this, &EditorTab::on_chkBox);
         QModelIndex index_m = model->index(index.row(), 2, index.parent());
 
         ui->treeView->setIndexWidget(index_m, chkBox);
-        chkBox->setGeometry(chkBox->x() + 100, chkBox->y(), chkBox->width(), chkBox->height());
+        //chkBox->setGeometry(chkBox->x() + 100, chkBox->y(), chkBox->width(), chkBox->height());
         val_bool = item->getValue();
 
-        QPalette p = chkBox->palette();
-        p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
-        p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
-        chkBox->setPalette(p);
+        //QPalette p = chkBox->palette();
+        //p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
+        //p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
+        //chkBox->setPalette(p);
 
 
         if(item->getValue() == "false")
@@ -664,14 +685,11 @@ void EditorTab::on_chkBox()
     if(chkBox->isChecked())
     {
         val_bool = "true";
-        //chkBox->setText("    ");
 
     }
     else //if(!chkBox->isChecked())
     {
         val_bool = "false";
-        //chkBox->setText("     ");
-
 
     }
 
@@ -684,13 +702,14 @@ void EditorTab::on_chkBox()
     QModelIndex index_m = model->index(index.row(), 2, index.parent());
     DomItem *item = model->itemForIndex(index_m);
 
+    editorDataAboutToBeSet(index, val_bool);
+
     item->setValue("     " + val_bool);
-    //editorDataAboutToBeSet(index, val_bool.trimmed());
+
     QTreeView *treeView = new QTreeView;
     treeView = (QTreeView*)tabWidget->getCurentTab()->children().at(1);
     treeView->doItemsLayout();
-
-
+    treeView->setFocus();
 
 }
 

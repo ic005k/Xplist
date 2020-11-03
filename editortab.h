@@ -80,9 +80,10 @@ public slots:
      void on_expandAction();
      void on_collapseAction();
 
+     void editorDataAboutToBeSet(const QModelIndex &index, QString val);
+
 private slots:
 
-     void editorDataAboutToBeSet(const QModelIndex &index, QString val);
 
      void on_treeView_doubleClicked(const QModelIndex &index);
 
@@ -109,7 +110,7 @@ private:
     QStandardItem* getTopParent(QStandardItem* item);
     QModelIndex getTopParent(QModelIndex itemIndex);
 
-    QCheckBox *chkBox;
+
     QModelIndex index_bool_bak;
     QString val_bool;
     DomItem *item_bool;
