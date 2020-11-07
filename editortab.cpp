@@ -702,7 +702,7 @@ void EditorTab::on_chkBox()
     QModelIndex index_m = model->index(index.row(), 2, index.parent());
     DomItem *item = model->itemForIndex(index_m);
 
-    editorDataAboutToBeSet(index, val_bool);
+    editorDataAboutToBeSet(index_m, val_bool);
 
     item->setValue("     " + val_bool);
 

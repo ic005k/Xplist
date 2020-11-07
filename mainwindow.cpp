@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.7");
+    setWindowTitle("PlistEDPlus V1.0.8");
     QApplication::setOrganizationName("PlistED");
 
     //获取背景色
