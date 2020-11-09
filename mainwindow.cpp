@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "filesystemwatcher.h"
 
 #include <QMessageBox>
 #include <QSettings>
@@ -20,10 +21,13 @@ QUndoGroup *undoGroup;
 
 QString fileName;
 QVector<QString> filelist;
+QVector<QString> openFileList;
 
 int red = 0;
 
 bool defaultIcon = false;
+
+bool SelfSaved = false;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,7 +44,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    setWindowTitle("PlistEDPlus V1.0.8");
+    ver = "PlistEDPlus V1.0.9      ";
+    setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 
     //获取背景色
@@ -194,6 +199,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
 #ifdef Q_OS_MAC
+   ui->mainToolBar->setIconSize(QSize(28, 28));
 
 #endif
 
@@ -302,7 +308,7 @@ void MainWindow::openPlist(QString filePath)
     if (!filePath.isEmpty())
     {
 
-        bool opened = false;
+        /*bool opened = false;
         for(int i = 0; i < tabWidget->tabBar()->count(); i ++)
         {
             if(filePath == tabWidget->getTab(i)->getPath())
@@ -310,11 +316,20 @@ void MainWindow::openPlist(QString filePath)
                 tabWidget->tabBar()->setCurrentIndex(i);
                 opened = true;
             }
+        }*/
+
+        for(int i = 0; i < tabWidget->tabBar()->count(); i ++)
+        {
+            if(filePath == tabWidget->getTab(i)->getPath())
+            {
+                tabWidget->closeTab(i);
+                break;
+            }
         }
 
 
         QFile file(filePath);
-        if (file.open(QIODevice::ReadOnly) && !opened)
+        if (file.open(QIODevice::ReadOnly))// && !opened)
         {
             QDomDocument document;
 
@@ -331,6 +346,15 @@ void MainWindow::openPlist(QString filePath)
 
         setRecentFiles(filePath);
         updateRecentFiles();
+
+        FileSystemWatcher::addWatchPath(filePath);//监控这个文件的变化
+
+        bool re = false;
+        for(int i = 0; i < openFileList.count(); i ++)
+        {
+            if(openFileList.at(i) == filePath) re = true;
+        }
+        if(!re) openFileList.append(filePath);
 
         //列宽自动适应最长的条目
         EditorTab *tab = tabWidget->getCurentTab();
@@ -389,6 +413,19 @@ void MainWindow::onTabCloseRequest(int i)
     // remove stack from group
     undoGroup->removeStack(stack);
 
+    QString file = tabWidget->getTab(i)->getPath();
+    //qDebug() << file;
+    FileSystemWatcher::removeWatchPath(file);
+    for(int i = 0; i < openFileList.count(); i ++)
+    {
+        if(file == openFileList.at(i))
+        {
+            openFileList.remove(i);
+            break;
+        }
+
+    }
+
     // close tab
     tabWidget->closeTab();
 }
@@ -430,6 +467,18 @@ void MainWindow::savePlist(QString filePath)
         // set stack clean
         undoGroup->activeStack()->clear();
         //undoGroup->activeStack()->setClean();
+
+        SelfSaved = true;
+
+        FileSystemWatcher::addWatchPath(filePath);//监控这个文件的变化
+
+        bool re = false;
+        for(int i = 0; i < openFileList.count(); i ++)
+        {
+            if(openFileList.at(i) == filePath) re = true;
+        }
+        if(!re) openFileList.append(filePath);
+
     }
 }
 
@@ -439,8 +488,12 @@ void MainWindow::actionSave_activated()
    {
        EditorTab *tab = tabWidget->getCurentTab();
        QString path = tab->getPath();
-       if (!path.isEmpty()) savePlist(path);
-       else actionSave_as_activated();
+       if (!path.isEmpty())
+           savePlist(path);
+       else
+           actionSave_as_activated();
+
+
    }
 }
 
@@ -448,10 +501,27 @@ void MainWindow::actionSave_as_activated()
 {
     if (tabWidget->hasTabs())
     {
+        QString cfile = tabWidget->getCurentTab()->getPath();
+
         QString str =  QFileDialog::getSaveFileName(
                     this, tr("Save as"), "", tr("Property list (*.plist)"));
 
-        if (!str.isEmpty()) savePlist(str);
+        if (!str.isEmpty())
+        {
+
+            FileSystemWatcher::removeWatchPath(cfile);
+            for(int i = 0; i < openFileList.count(); i ++)
+            {
+                if(cfile == openFileList.at(i))
+                {
+                    openFileList.removeOne(cfile);
+                    break;
+                }
+            }
+
+            FileSystemWatcher::addWatchPath(str);
+            savePlist(str);
+        }
     }
 }
 
@@ -541,7 +611,8 @@ void MainWindow::tabWidget_currentChanged(int index)
             setExpandText(tab);
 
             // set window title to filename
-            this->setWindowFilePath(tabWidget->tabText(tabWidget->indexOf(tab)));
+            //this->setWindowFilePath(tabWidget->tabText(tabWidget->indexOf(tab)) + "[*]");
+            this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
 
             // get undo stack
             QUndoStack *stack = tab->getUndoStack();
@@ -552,6 +623,7 @@ void MainWindow::tabWidget_currentChanged(int index)
 
             undoGroup->setActiveStack(stack);
 
+
         }
         //?
         //else this->setWindowFilePath(" ");
@@ -560,7 +632,8 @@ void MainWindow::tabWidget_currentChanged(int index)
 
 void MainWindow::onCleanChanged(bool clean)
 {
-    this->setWindowModified(clean);//此处有问题？问题比较大？:目前已修复（Undo和Redo问题导致）
+
+   this->setWindowModified(!clean);
 }
 
 void MainWindow::setRecentFiles(const QString &fileName)

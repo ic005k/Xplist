@@ -73,6 +73,7 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
 
                         );
 
+
 #endif
 
     treeExpanded = false;

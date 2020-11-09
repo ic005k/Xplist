@@ -101,6 +101,8 @@ private:
 
     void reg_win();
 
+    QString ver;
+
     Ui::MainWindow *ui;
 
 

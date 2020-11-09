@@ -19,6 +19,7 @@ TRANSLATIONS = translation_ru.ts \
 
 SOURCES += main.cpp\
     comboboxdelegatebool.cpp \
+    filesystemwatcher.cpp \
     mainwindow.cpp \
     domparser.cpp \
     dommodel.cpp \
@@ -37,6 +38,7 @@ HEADERS  += mainwindow.h \
     dommodel.h \
     domitem.h \
     comboboxdelegate.h \
+    filesystemwatcher.h \
     lineeditdelegate.h \
     editortab.h \
     editortabswidget.h \
