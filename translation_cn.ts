@@ -34,37 +34,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="118"/>
+        <location filename="editortab.cpp" line="140"/>
         <source>Expand</source>
         <translation type="unfinished">展开条目</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="122"/>
+        <location filename="editortab.cpp" line="144"/>
         <source>Collapse</source>
         <translation type="unfinished">折叠条目</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="128"/>
+        <location filename="editortab.cpp" line="150"/>
         <source>Copy</source>
         <translation type="unfinished">拷贝条目</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="133"/>
+        <location filename="editortab.cpp" line="155"/>
         <source>Cut</source>
         <translation type="unfinished">剪切条目</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="140"/>
+        <location filename="editortab.cpp" line="162"/>
         <source>Paste</source>
         <translation type="unfinished">粘贴条目</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="147"/>
+        <location filename="editortab.cpp" line="169"/>
         <source>New Sibling</source>
         <translation type="unfinished">增加同级项</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="151"/>
+        <location filename="editortab.cpp" line="173"/>
         <source>New Child</source>
         <translation type="unfinished">增加子项</translation>
     </message>
@@ -99,6 +99,24 @@
         <location filename="editortabswidget.cpp" line="92"/>
         <source>Close all tabs</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>FileSystemWatcher</name>
+    <message>
+        <location filename="filesystemwatcher.cpp" line="124"/>
+        <source>The file has been modified by another program. Do you want to reload?</source>
+        <translation type="unfinished">这个文件已被其他程序修改，是否重新装入？</translation>
+    </message>
+    <message>
+        <location filename="filesystemwatcher.cpp" line="126"/>
+        <source>Yes</source>
+        <translation type="unfinished">是</translation>
+    </message>
+    <message>
+        <location filename="filesystemwatcher.cpp" line="127"/>
+        <source>No</source>
+        <translation type="unfinished">否</translation>
     </message>
 </context>
 <context>
@@ -160,7 +178,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="183"/>
-        <location filename="mainwindow.cpp" line="361"/>
+        <location filename="mainwindow.cpp" line="384"/>
         <source>Save</source>
         <translation type="unfinished">保存</translation>
     </message>
@@ -171,7 +189,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="194"/>
-        <location filename="mainwindow.cpp" line="452"/>
+        <location filename="mainwindow.cpp" line="504"/>
         <source>Save as</source>
         <translation type="unfinished">另存</translation>
     </message>
@@ -192,7 +210,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="217"/>
-        <location filename="mainwindow.cpp" line="611"/>
+        <location filename="mainwindow.cpp" line="663"/>
         <source>Expand all</source>
         <translation type="unfinished">展开所有</translation>
     </message>
@@ -287,12 +305,12 @@
         <translation type="unfinished">默认的节点图标</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="54"/>
+        <location filename="mainwindow.cpp" line="58"/>
         <source>Undo</source>
         <translation type="unfinished">撤销</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="55"/>
+        <location filename="mainwindow.cpp" line="59"/>
         <source>Redo</source>
         <translation type="unfinished">恢复</translation>
     </message>
@@ -312,95 +330,95 @@
         <translation type="unfinished">粘贴条目</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="121"/>
+        <location filename="mainwindow.cpp" line="125"/>
         <source>Move up</source>
         <translation type="unfinished">条目上移</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="123"/>
+        <location filename="mainwindow.cpp" line="127"/>
         <source>ctrl+u</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="127"/>
+        <location filename="mainwindow.cpp" line="131"/>
         <source>Move down</source>
         <translation type="unfinished">条目下移</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="129"/>
+        <location filename="mainwindow.cpp" line="133"/>
         <source>ctrl+d</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="158"/>
+        <location filename="mainwindow.cpp" line="162"/>
         <source>Count</source>
         <translation type="unfinished">计数</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="162"/>
-        <location filename="mainwindow.cpp" line="167"/>
+        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="171"/>
         <source>Find</source>
         <translation type="unfinished">查找</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="172"/>
+        <location filename="mainwindow.cpp" line="176"/>
         <source>Expand</source>
         <translation type="unfinished">展开条目</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="172"/>
-        <location filename="mainwindow.cpp" line="179"/>
+        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="183"/>
         <source>Collapse</source>
         <translation type="unfinished">折叠条目</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="174"/>
+        <location filename="mainwindow.cpp" line="178"/>
         <source>space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="293"/>
+        <location filename="mainwindow.cpp" line="298"/>
         <source>Select files to open</source>
         <translation type="unfinished">选择一个打开的文件</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="358"/>
+        <location filename="mainwindow.cpp" line="381"/>
         <source>The document has been modified.</source>
         <translation type="unfinished">文件内容已修改。</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="359"/>
+        <location filename="mainwindow.cpp" line="382"/>
         <source>Do you want to save your changes?</source>
         <translation type="unfinished">是否保存？</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="362"/>
+        <location filename="mainwindow.cpp" line="385"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="363"/>
+        <location filename="mainwindow.cpp" line="386"/>
         <source>Discard</source>
         <translation type="unfinished">放弃</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="452"/>
+        <location filename="mainwindow.cpp" line="504"/>
         <source>Property list (*.plist)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="520"/>
+        <location filename="mainwindow.cpp" line="572"/>
         <source>Last modified: </source>
         <translation type="unfinished">最后修改：</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="524"/>
+        <location filename="mainwindow.cpp" line="576"/>
         <source>Thanks: Yaroslav Sushkov (alpex92)</source>
         <oldsource>Thanks: Yaroslav Sushkov (alpex92)&lt;br&gt;</oldsource>
         <translation type="unfinished">致谢：Yaroslav Sushkov(alpex92)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="611"/>
+        <location filename="mainwindow.cpp" line="663"/>
         <source>Collapse all</source>
         <translation type="unfinished">折叠所有</translation>
     </message>
@@ -408,37 +426,37 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="commands.cpp" line="13"/>
+        <location filename="commands.cpp" line="16"/>
         <source>Add new item</source>
         <translation type="unfinished">增加新条目</translation>
     </message>
     <message>
-        <location filename="commands.cpp" line="47"/>
+        <location filename="commands.cpp" line="50"/>
         <source>Remove %1</source>
         <translation type="unfinished">移除 %1</translation>
     </message>
     <message>
-        <location filename="commands.cpp" line="84"/>
+        <location filename="commands.cpp" line="87"/>
         <source>key</source>
         <translation type="unfinished">键</translation>
     </message>
     <message>
-        <location filename="commands.cpp" line="88"/>
+        <location filename="commands.cpp" line="91"/>
         <source>type</source>
         <translation type="unfinished">数据类型</translation>
     </message>
     <message>
-        <location filename="commands.cpp" line="92"/>
+        <location filename="commands.cpp" line="95"/>
         <source>value</source>
         <translation type="unfinished">值</translation>
     </message>
     <message>
-        <location filename="commands.cpp" line="95"/>
+        <location filename="commands.cpp" line="98"/>
         <source>Edit item %1</source>
         <translation type="unfinished">编辑的条目 %1</translation>
     </message>
     <message>
-        <location filename="commands.cpp" line="122"/>
+        <location filename="commands.cpp" line="140"/>
         <source>Paste entry</source>
         <translation type="unfinished">粘贴条目</translation>
     </message>
@@ -452,35 +470,35 @@
         <translation>新条目</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="320"/>
-        <location filename="mainwindow.cpp" line="1065"/>
+        <location filename="editortab.cpp" line="382"/>
+        <location filename="mainwindow.cpp" line="1062"/>
         <source>Currently selected: </source>
         <translation>当前：</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="321"/>
-        <location filename="mainwindow.cpp" line="1066"/>
+        <location filename="editortab.cpp" line="383"/>
+        <location filename="mainwindow.cpp" line="1063"/>
         <source>Row: </source>
         <oldsource>      Row: </oldsource>
         <translation type="unfinished">行：</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="322"/>
-        <location filename="mainwindow.cpp" line="1067"/>
+        <location filename="editortab.cpp" line="384"/>
+        <location filename="mainwindow.cpp" line="1064"/>
         <source>Column: </source>
         <oldsource>      Column: </oldsource>
         <translation type="unfinished">列：</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="323"/>
-        <location filename="mainwindow.cpp" line="1068"/>
+        <location filename="editortab.cpp" line="385"/>
+        <location filename="mainwindow.cpp" line="1065"/>
         <source>Parent level：</source>
         <oldsource>      Parent level：</oldsource>
         <translation type="unfinished">父级：</translation>
     </message>
     <message>
-        <location filename="editortab.cpp" line="324"/>
-        <location filename="mainwindow.cpp" line="1069"/>
+        <location filename="editortab.cpp" line="386"/>
+        <location filename="mainwindow.cpp" line="1066"/>
         <source>Children: </source>
         <translation type="unfinished">子项：</translation>
     </message>
