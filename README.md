@@ -27,7 +27,7 @@ Plist editor
 
 ...
 
-github下载加速器：https://toolwa.com/github/
+国内建议使用github加速器下载：https://toolwa.com/github/
 
 讨论区：
 
