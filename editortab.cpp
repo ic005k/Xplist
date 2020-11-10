@@ -67,9 +67,9 @@ EditorTab::EditorTab(DomModel *m, QWidget *parent) :
     if(!defaultIcon)
     view->setStyleSheet(//"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
                                         "QTreeView::branch:open:has-children:!has-siblings,"
-                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/submac.png);}"
+                                        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
                                         "QTreeView::branch:has-children:!has-siblings:closed,"
-                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/mainmac.png);}"
+                                        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
 
                         );
 
