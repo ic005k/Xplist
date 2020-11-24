@@ -93,12 +93,12 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
 
                 if (oldValue == "real") {
                     double a = CurrentValue.toDouble();
-                    int b = a;
+                    qlonglong b = a;
                     CurrentValue = QString::number(b);
                 }
 
-                bool v = CurrentValue.toInt();
-                if (v == 0)
+                bool v = CurrentValue.toULongLong();
+                if (v <= 0)
                     NewValue = "false";
                 else
                     NewValue = "true";
@@ -126,14 +126,34 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
                 NewValue = CurrentValue.toUtf8().toHex().toUpper();
 
             if (oldValue == "integer") {
-                int dec = CurrentValue.toInt();
+                qulonglong dec = CurrentValue.toULongLong();
                 NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper(); // 保留四位，不足补零
             }
 
             if (oldValue == "real") {
-                double r = CurrentValue.toDouble();
-                int dec = r;
+                qreal r = CurrentValue.toDouble();
+                qulonglong dec = r;
                 NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper(); // 保留四位，不足补零
+            }
+
+            if (oldValue == "bool") {
+                int dec;
+                if (CurrentValue.trimmed() == "true") {
+                    dec = 1;
+                }
+                if (CurrentValue.trimmed() == "false") {
+                    dec = 0;
+                }
+
+                NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper();
+            }
+
+            if (oldValue == "dict" || oldValue == "array") {
+                NewValue = "";
+            }
+
+            if (oldValue == "date") {
+                NewValue = CurrentValue.toUtf8().toHex().toUpper();
             }
         }
 
@@ -145,20 +165,19 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
                 CurrentValue = "1";
 
             if (oldValue == "real") {
-                double nv = CurrentValue.toDouble();
-                qDebug() << nv;
-                int ni = nv;
+                float nv = CurrentValue.toFloat();
+                qulonglong ni = nv;
                 CurrentValue = QString::number(ni);
             }
 
             if (oldValue == "data") {
                 bool ok;
                 QString hex = CurrentValue;
-                int dec = hex.toInt(&ok, 16);
+                qulonglong dec = hex.toULongLong(&ok, 16);
                 CurrentValue = QString::number(dec);
             }
 
-            NewValue = QString::number(CurrentValue.toInt());
+            NewValue = QString::number(CurrentValue.toULongLong());
         }
 
         if (val == "real") {
@@ -169,7 +188,7 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
             if (oldValue == "data") {
                 bool ok;
                 QString hex = CurrentValue;
-                int dec = hex.toInt(&ok, 16);
+                qulonglong dec = hex.toULongLong(&ok, 16);
                 CurrentValue = QString::number(dec);
             }
 

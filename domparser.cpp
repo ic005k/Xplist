@@ -77,7 +77,7 @@ void DomParser::parseElement(QDomElement& n, DomItem* item)
         while (!element.isNull()) {
             QString tagName = element.tagName();
 
-            if (tagName == "key" || tagName == "array" || tagName == "dict" || tagName == "string") {
+            if (tagName == "key" || tagName == "array" || tagName == "dict" || tagName == "string" || tagName == "integer" || tagName == "real" || tagName == "data" || tagName == "date" || tagName == "bool") {
 
                 // create child
                 DomItem* domItem = item->addChild();
@@ -105,9 +105,7 @@ void DomParser::parseElement(QDomElement& n, DomItem* item)
                     }
 
                     if (eType == "data") {
-
                         QByteArray bytes = QByteArray::fromBase64(eValue.toUtf8());
-
                         eValue = ByteToHexStr(bytes);
                     }
 
@@ -123,7 +121,13 @@ void DomParser::parseElement(QDomElement& n, DomItem* item)
                     //新增：数组类型key为空的情况
                     QString eName = element.firstChild().nodeValue();
                     QString eType = element.tagName();
+
                     QString eValue = element.firstChild().nodeValue();
+                    if (eType == "data") {
+                        QByteArray bytes = QByteArray::fromBase64(eValue.toUtf8());
+                        eValue = ByteToHexStr(bytes);
+                    }
+
                     domItem->setData(eName, eType, eValue);
 
                     domItem->setName(QString("Item %1").arg(nC++));
@@ -154,7 +158,16 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
 
         // item without key
         if (rp.exactMatch(name)) {
+
             QDomElement container = doc.createElement(type);
+
+            if (type == "bool")
+                value = value.trimmed();
+
+            if (type == "data") {
+                QString v = value.remove(QRegExp("\\s")); //16进制去除所有空格
+                value = QString::fromLatin1(HexStrToByte(v).toBase64());
+            }
 
             QDomText keyText = doc.createTextNode(value); //新增：解决数组无键值的情况
             container.appendChild(keyText); //新增：同上
@@ -191,7 +204,6 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
                 if (type == "data") //新增：解决16进制字串转换问题
                 {
                     value = value.remove(QRegExp("\\s")); //16进制去除所有空格
-
                     valText = doc.createTextNode(QString::fromLatin1(HexStrToByte(value).toBase64()));
                 } else {
 
