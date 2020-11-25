@@ -11,7 +11,7 @@ Plist editor
 
 1.开源、跨平台（目前支持win、mac、linux）
 
-2.人性化的搜索功能（a.在展开的节点范围内，键、数据类型、值各列的键盘首字符搜索;b.搜索框全局搜索）
+2.人性化的搜索功能（a.在展开的节点范围内，键、数据类型、值各列的键盘首字符搜索; b.搜索框全局搜索，一次性展示搜索结果）
 
 3.完全遵循并符合plist文件技术规范，数据类型显示与plist文本完全一致，不做任何转义
 
@@ -25,6 +25,10 @@ Plist editor
 
 8.展开和折叠条目的右键菜单，在不同的列，有不同的效果
 
+9.对于data格式的值，悬浮窗自动显示对应的ASCII和Base64的值
+
+10.更改数据类型时，其值会自动随之转换
+
 ...
 
 国内建议使用github加速器下载：https://toolwa.com/github/
@@ -34,3 +38,5 @@ Plist editor
 远景pcbeta: http://bbs.pcbeta.com/viewthread-1873474-1-1.html
 
 insanelymac: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
+
+备注：此项目开始于2020年10月
