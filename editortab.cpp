@@ -15,6 +15,7 @@ extern QAction* cutAction;
 extern QAction* pasteAction;
 
 extern QUndoGroup* undoGroup;
+extern MainWindow* mw_one;
 
 extern bool defaultIcon;
 
@@ -370,6 +371,20 @@ QByteArray EditorTab::HexStrToByte(QString value)
     return ba;
 }
 
+int EditorTab::hex_to_ascii(QString str)
+{
+    int ch = str.toInt(0, 16);
+    if ((ch >= '0') && (ch <= '9')) {
+        return ch - 0x30;
+    } else if ((ch >= 'A') && (ch <= 'F')) {
+        return ch - 'A' + 10;
+    } else if ((ch >= 'a') && (ch <= 'f')) {
+        return ch - 'a' + 10;
+    } else {
+        return (-1);
+    }
+}
+
 void EditorTab::on_treeView_clicked(const QModelIndex& index)
 {
 
@@ -384,9 +399,9 @@ void EditorTab::on_treeView_clicked(const QModelIndex& index)
     QString str, str0, str1, str2, str3, str4, str5;
     if (item->getType() == "data" && index.column() == 2) {
         str = item->getValue().remove(QRegExp("\\s")); //16进制去除所有空格
-        str0 = str + " (" + HexStrToByte(str) + ")";
+        str0 = QString::fromLocal8Bit(HexStrToByte(str));
         ui->treeView->setToolTip(str + "\nASCII: " + HexStrToByte(str) + "\nBase64: " + HexStrToByte(str).toBase64());
-        ui->treeView->toolTip();
+        //qDebug() << str0;
     } else {
         str = index.data().toString();
         ui->treeView->setToolTip("");
@@ -624,14 +639,16 @@ void EditorTab::on_actionNewSibling()
 
 void EditorTab::on_actionNewChild()
 {
-    EditorTab* tab = tabWidget->getCurentTab();
+    /*EditorTab* tab = tabWidget->getCurentTab();
     const QModelIndex index = tab->currentIndex();
 
     if (index.isValid()) {
 
         QUndoCommand* addCommand = new AddCommand(tab->getModel(), index);
         undoGroup->activeStack()->push(addCommand);
-    }
+    }*/
+
+    mw_one->actionAdd_activated();
 }
 
 void EditorTab::setIcon()

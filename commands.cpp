@@ -1,9 +1,9 @@
 #include "commands.h"
 
-extern QCheckBox *chkBox;
+extern QCheckBox* chkBox;
 extern bool chk_null;
 
-AddCommand::AddCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)
+AddCommand::AddCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
 {
 
     Q_UNUSED(parent);
@@ -20,20 +20,21 @@ void AddCommand::undo()
 {
     // remove item
     m_model->removeItem(m_index);
+    qDebug() << "del";
 }
 
 void AddCommand::redo()
 {
 
-    //if (m_index.isValid()) m_model->addItem(m_parent, m_index.row() + 1);
-    //    else m_index = m_model->addItem(m_parent);
+    /*if (m_index.isValid())
+        m_model->addItem(m_parent, m_index.row() + 1);
+    else
+        m_index = m_model->addItem(m_parent);*/
 
     m_index = m_model->addItem(m_parent);
-
-
 }
 
-RemoveCommand::RemoveCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)
+RemoveCommand::RemoveCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
 {
     Q_UNUSED(parent);
 
@@ -59,17 +60,15 @@ void RemoveCommand::undo()
 {
     // copy to new item
     m_model->addItem(m_parent, m_row, m_state);
-
 }
 
 void RemoveCommand::redo()
 {
     // remove item
     m_model->removeItem(m_index);
-
 }
 
-EditCommand::EditCommand(QString val, DomModel *model, const QModelIndex &index, QUndoCommand *parent)
+EditCommand::EditCommand(QString val, DomModel* model, const QModelIndex& index, QUndoCommand* parent)
 {
     Q_UNUSED(parent);
 
@@ -81,53 +80,46 @@ EditCommand::EditCommand(QString val, DomModel *model, const QModelIndex &index,
 
     QString subject;
 
-    switch (index.column())
-    {
-        case 0:
-            subject = QObject::tr("key");
+    switch (index.column()) {
+    case 0:
+        subject = QObject::tr("key");
         break;
 
-        case 1:
-            subject = QObject::tr("type");
+    case 1:
+        subject = QObject::tr("type");
         break;
 
-        case 2:
-            subject = QObject::tr("value");
+    case 2:
+        subject = QObject::tr("value");
     };
 
     setText(QObject::tr("Edit item %1").arg(subject));
-
 }
 
 void EditCommand::undo()
 {
     m_model->setData(m_index, m_oldVal.trimmed());
 
-    if(!chk_null)
-    {
-        if(chkBox->isVisible()) chkBox->setVisible(false);
+    if (!chk_null) {
+        if (chkBox->isVisible())
+            chkBox->setVisible(false);
     }
-
-
 }
 
 void EditCommand::redo()
 {
-    if(!m_index.isValid())
+    if (!m_index.isValid())
         return;
 
     m_model->setData(m_index, m_newVal.trimmed());
 
-    if(!chk_null)
-    {
-        if(chkBox->isVisible()) chkBox->setVisible(false);
+    if (!chk_null) {
+        if (chkBox->isVisible())
+            chkBox->setVisible(false);
     }
-
-
-
 }
 
-PasteCommand::PasteCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent)
+PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
 {
 
     Q_UNUSED(parent);
@@ -138,7 +130,6 @@ PasteCommand::PasteCommand(DomModel *model, const QModelIndex &index, QUndoComma
 
     // maybe we should create permanent index?
     setText(QObject::tr("Paste entry"));
-
 }
 
 void PasteCommand::undo()
@@ -150,6 +141,5 @@ void PasteCommand::undo()
 void PasteCommand::redo()
 {
 
-    m_index =  m_model->pasteItem(m_parent.parent(), m_parent.row(), NULL);
-
+    m_index = m_model->pasteItem(m_parent.parent(), m_parent.row(), NULL);
 }
