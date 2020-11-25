@@ -346,7 +346,7 @@
         <location filename="mainwindow.cpp" line="166"/>
         <location filename="mainwindow.cpp" line="171"/>
         <source>Find</source>
-        <translation type="unfinished">находить</translation>
+        <translation type="unfinished">найти</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="176"/>
@@ -372,7 +372,7 @@
     <message>
         <location filename="mainwindow.cpp" line="386"/>
         <source>Discard</source>
-        <translation type="unfinished">Отменить</translation>
+        <translation type="unfinished">Не сохранять</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="572"/>
