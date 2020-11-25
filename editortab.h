@@ -110,6 +110,7 @@ private:
     QComboBox* comBox;
 
     QByteArray HexStrToByte(QString value);
+    int hex_to_ascii(QString str);
 };
 
 #endif // EDITORTAB_H
