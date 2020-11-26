@@ -195,6 +195,14 @@ QModelIndex DomModel::addItem(const QModelIndex& parent, int row, ItemState* sta
 
         endInsertRows();
 
+        if (item->getType() == "array") {
+
+            for (int i = 0; i < item->childCount(); i++) {
+
+                item->child(i)->setName("Item " + QString::number(i + 1));
+            }
+        }
+
         emit itemAdded(index); //通知treeView自适应列宽和展开节点
 
         return this->index(child->row(), 0, index);
@@ -257,8 +265,15 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
         else
             child->setData(copy_item->getName() + "-" + QString::number(total), copy_item->getType(), copy_item->getValue());
 
-        if (copy_item->getName().contains("Item ")) {
+        //if (copy_item->getName().contains("Item "))
+        if (item->getType() == "array") {
+
             child->setData("Item " + QString::number(child_count + 1), copy_item->getType(), copy_item->getValue());
+
+            for (int i = 0; i < item->childCount(); i++) {
+
+                item->child(i)->setName("Item " + QString::number(i + 1));
+            }
         }
 
         DomItem* item0 = NULL;
@@ -343,12 +358,22 @@ void DomModel::removeItem(const QModelIndex& index)
 {
 
     if (index.isValid()) {
+
         DomItem* item = itemForIndex(index);
         int row = index.row();
         QModelIndex parent = index.parent();
         beginRemoveRows(parent, row, row);
         item->removeFromParent(index.row());
         endRemoveRows();
+
+        item = itemForIndex(index.parent());
+        if (item->getType() == "array") {
+
+            for (int i = 0; i < item->childCount(); i++) {
+
+                item->child(i)->setName("Item " + QString::number(i + 1));
+            }
+        }
     }
 
     //emit itemAdded(index);//通知treeView自适应列宽和展开节点
