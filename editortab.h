@@ -76,6 +76,10 @@ public slots:
     void on_expandAction();
     void on_collapseAction();
 
+    void on_actionNewSibling();
+
+    void on_actionNewChild();
+
     void editorDataAboutToBeSet(const QModelIndex& index, QString val);
 
 private slots:
@@ -83,10 +87,6 @@ private slots:
     void on_treeView_doubleClicked(const QModelIndex& index);
 
     void on_treeView_clicked(const QModelIndex& index);
-
-    void on_actionNewSibling();
-
-    void on_actionNewChild();
 
     void on_chkBox();
 
