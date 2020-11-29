@@ -1,7 +1,11 @@
 #include "commands.h"
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+
 extern QCheckBox* chkBox;
 extern bool chk_null;
+extern MainWindow* mw_one;
 
 AddCommand::AddCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
 {
@@ -13,14 +17,15 @@ AddCommand::AddCommand(DomModel* model, const QModelIndex& index, QUndoCommand* 
     m_parent = index;
 
     // maybe we should create permanent index?
-    setText(QObject::tr("Add new item"));
+    //setText(QObject::tr("Add new item"));
+    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Add new item"));
+    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Add new item"));
 }
 
 void AddCommand::undo()
 {
     // remove item
     m_model->removeItem(m_index);
-    qDebug() << "del";
 }
 
 void AddCommand::redo()
@@ -48,7 +53,9 @@ RemoveCommand::RemoveCommand(DomModel* model, const QModelIndex& index, QUndoCom
     const QModelIndex nameIndex = model->index(m_row, 0, m_parent);
     QString name = model->data(nameIndex, Qt::DisplayRole).toString();
 
-    setText(QObject::tr("Remove %1").arg(name));
+    //setText(QObject::tr("Remove %1").arg(name));
+    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Remove %1").arg(name));
+    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Remove %1").arg(name));
 }
 
 RemoveCommand::~RemoveCommand()
@@ -93,7 +100,9 @@ EditCommand::EditCommand(QString val, DomModel* model, const QModelIndex& index,
         subject = QObject::tr("value");
     };
 
-    setText(QObject::tr("Edit item %1").arg(subject));
+    //setText(QObject::tr("Edit item %1").arg(subject));
+    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Edit item %1").arg(subject));
+    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Edit item %1").arg(subject));
 }
 
 void EditCommand::undo()
@@ -129,7 +138,9 @@ PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, QUndoComma
     m_parent = index;
 
     // maybe we should create permanent index?
-    setText(QObject::tr("Paste entry"));
+    //setText(QObject::tr("Paste entry"));
+    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Paste entry"));
+    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Paste entry"));
 }
 
 void PasteCommand::undo()

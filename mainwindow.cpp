@@ -16,6 +16,8 @@ DomItem* copy_item;
 QAction* copyAction;
 QAction* cutAction;
 QAction* pasteAction;
+QAction* actionNewSibling;
+QAction* actionNewChild;
 
 QUndoGroup* undoGroup;
 
@@ -44,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.14      ";
+    ver = "PlistEDPlus V1.0.15      ";
     setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 
@@ -56,8 +58,8 @@ MainWindow::MainWindow(QWidget* parent)
     undoGroup = new QUndoGroup(this);
 
     // create undo and redo actions
-    QAction* actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
-    QAction* actionRedo = undoGroup->createRedoAction(this, tr("Redo"));
+    actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
+    actionRedo = undoGroup->createRedoAction(this, tr("Redo"));
 
     // set shortcuts
     actionUndo->setShortcuts(QKeySequence::Undo);
@@ -116,10 +118,22 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->mainToolBar->addSeparator();
 
-    ui->mainToolBar->addAction(ui->actionAdd);
+    //ui->mainToolBar->addAction(ui->actionAdd);
+
+    actionNewSibling = new QAction(tr("New Sibling"), this);
+    ui->mainToolBar->addAction(actionNewSibling);
+    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
+    connect(actionNewSibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
+
+    actionNewChild = new QAction(tr("New Child"), this);
+    ui->mainToolBar->addAction(actionNewChild);
+    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
+    connect(actionNewChild, &QAction::triggered, this, &MainWindow::on_actionNewChild);
+
     ui->mainToolBar->addAction(ui->actionRemove);
     ui->actionRemove->setShortcut(Qt::Key_Delete);
     ui->mainToolBar->addAction(ui->actionExpand_all);
+    ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
 
     ui->mainToolBar->addSeparator();
 
@@ -189,6 +203,7 @@ MainWindow::MainWindow(QWidget* parent)
 #ifdef Q_OS_WIN32
 
     reg_win();
+    this->resize(QSize(1350, 750));
 
 #endif
 
@@ -198,6 +213,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
+    this->resize(QSize(1050, 600));
 
 #endif
 
@@ -636,6 +652,12 @@ void MainWindow::setExpandText(EditorTab* tab)
 {
     QString text = (!tab->isExpanded()) ? tr("Expand all") : tr("Collapse all");
     ui->actionExpand_all->setIconText(text);
+
+    if (ui->actionExpand_all->iconText() == tr("Expand all"))
+        ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+
+    if (ui->actionExpand_all->iconText() == tr("Collapse all"))
+        ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/col.png"));
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
@@ -1059,4 +1081,16 @@ void MainWindow::on_collapseAction()
 
         tab->view_collapse(index.parent(), model);
     }
+}
+
+void MainWindow::on_actionNewSibling()
+{
+    EditorTab* tab = tabWidget->getCurentTab();
+    tab->on_actionNewSibling();
+}
+
+void MainWindow::on_actionNewChild()
+{
+    EditorTab* tab = tabWidget->getCurentTab();
+    tab->on_actionNewChild();
 }

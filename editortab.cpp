@@ -13,6 +13,8 @@ extern DomItem* copy_item;
 extern QAction* copyAction;
 extern QAction* cutAction;
 extern QAction* pasteAction;
+extern QAction* actionNewSibling;
+extern QAction* actionNewChild;
 
 extern QUndoGroup* undoGroup;
 extern MainWindow* mw_one;
@@ -162,11 +164,11 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
 
     menu.addSeparator();
 
-    QAction* actionNewSibling = new QAction(tr("New Sibling"), this);
+    actionNewSibling = new QAction(tr("New Sibling"), this);
     actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
     menu.addAction(actionNewSibling);
 
-    QAction* actionNewChild = new QAction(tr("New Child"), this);
+    actionNewChild = new QAction(tr("New Child"), this);
     actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
     menu.addAction(actionNewChild);
 
@@ -209,12 +211,15 @@ void EditorTab::expand()
         if (index.isValid()) {
 
             view_expand(index, model); //性能好
+            mw_one->ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/col.png"));
         }
 
     } else //if(treeExpanded)
     {
         treeExpanded = false;
         ui->treeView->expandToDepth(0); //性能好些
+
+        mw_one->ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
 
         EditorTab* tab = tabWidget->getCurentTab();
         DomModel* model = tab->getModel();
@@ -578,6 +583,7 @@ void EditorTab::view_collapse(const QModelIndex index, DomModel* model)
     //qDebug() << childCount;
     for (int childNo = 0; childNo < childCount; childNo++) {
         QModelIndex childIndex = index.child(childNo, 0);
+
         if (model->rowCount(childIndex) > 0) {
             if (ui->treeView->isExpanded(childIndex)) {
                 ui->treeView->setExpanded(childIndex, false);

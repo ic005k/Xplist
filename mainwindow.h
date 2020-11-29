@@ -30,6 +30,8 @@ public:
     explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
+    Ui::MainWindow* ui;
+
     QLineEdit* findEdit;
 
     void forEach(QAbstractItemModel* model, QModelIndex parent, QString str);
@@ -37,6 +39,10 @@ public:
     void openPlist(QString filePath = "");
 
     int close_flag = -1;
+
+    QAction* actionUndo;
+
+    QAction* actionRedo;
 
 public slots:
     void on_Find();
@@ -78,6 +84,10 @@ private slots:
     void on_expandAction();
     void on_collapseAction();
 
+    void on_actionNewSibling();
+
+    void on_actionNewChild();
+
 private:
     void setExpandText(EditorTab* tab);
 
@@ -98,8 +108,6 @@ private:
     void reg_win();
 
     QString ver;
-
-    Ui::MainWindow* ui;
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
