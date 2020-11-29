@@ -31,8 +31,6 @@ Plist editor
 
 ...
 
-截图：https://github.com/ic005k/PlistEDPlus/blob/main/plist.png
-
 ![image](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
 
 国内建议使用github加速器下载：https://toolwa.com/github/
