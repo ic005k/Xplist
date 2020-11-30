@@ -213,6 +213,45 @@ QModelIndex DomModel::addItem(const QModelIndex& parent, int row, ItemState* sta
     return QModelIndex();
 }
 
+QModelIndex DomModel::addMoveItem(const QModelIndex& parent, int row, ItemState* state)
+{
+
+    if (parent.isValid()) {
+        //QModelIndex index = this->index(parent.row(), 0, parent.parent()); //原始
+        QModelIndex index = parent; //单独用来移动条目
+        DomItem* item = itemForIndex(index);
+
+        if (row == -1)
+            row = item->childCount();
+        DomItem* child = NULL;
+
+        beginInsertRows(index, row, row);
+
+        if (state != NULL) {
+            child = state->getState()->clone();
+        }
+        child = item->addChild(row, child);
+
+        endInsertRows();
+
+        if (item->getType() == "array") {
+
+            for (int i = 0; i < item->childCount(); i++) {
+
+                item->child(i)->setName("Item " + QString::number(i + 1));
+            }
+        }
+
+        emit itemAdded(index); //通知treeView自适应列宽和展开节点
+
+        return this->index(child->row(), 0, index);
+    }
+
+    //QAbstractItemView::viewport()->update();
+
+    return QModelIndex();
+}
+
 DomItem* DomModel::copyItem(const QModelIndex& parent)
 {
     const QModelIndex index = this->index(parent.row(), 0, parent.parent());

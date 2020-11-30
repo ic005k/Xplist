@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.15      ";
+    ver = "PlistEDPlus V1.0.16      ";
     setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 
@@ -951,7 +951,7 @@ void MainWindow::on_actionMoveUp()
 
         int row = index.row();
 
-        model->addItem(index.parent(), row - 1, temp);
+        model->addMoveItem(index.parent(), row - 1, temp);
 
         treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
         index = tab->currentIndex();
@@ -998,7 +998,7 @@ void MainWindow::on_actionMoveDown()
         ItemState* temp = model->saveItemState(index);
 
         int row = index.row() + 2;
-        model->addItem(index.parent(), row, temp);
+        model->addMoveItem(index.parent(), row, temp);
         model->removeItem(index_bak);
 
         if (array)

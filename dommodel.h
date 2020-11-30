@@ -1,4 +1,4 @@
- /****************************************************************************
+/****************************************************************************
  **
  ** Copyright (C) 2012 Nokia Corporation and/or its subsidiary(-ies).
  ** All rights reserved.
@@ -42,71 +42,68 @@
 #define DOMMODEL_H
 
 #include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QVariant>
 #include <QMessageBox>
+#include <QModelIndex>
 #include <QTreeView>
+#include <QVariant>
 
 #include "domitem.h"
 #include "itemstate.h"
 
-
 class ItemState;
 
- class DomModel : public QAbstractItemModel
- {
-     Q_OBJECT
+class DomModel : public QAbstractItemModel {
+    Q_OBJECT
 
- public:
-     DomModel(QObject *parent = 0);
-     ~DomModel();
+public:
+    DomModel(QObject* parent = 0);
+    ~DomModel();
 
-     DomItem *getRoot();
+    DomItem* getRoot();
 
-     DomItem *itemForIndex(const QModelIndex &index) const;
+    DomItem* itemForIndex(const QModelIndex& index) const;
 
-     // reimplemented for model - vew usage
-     QVariant data(const QModelIndex &index, int role) const override;
+    // reimplemented for model - vew usage
+    QVariant data(const QModelIndex& index, int role) const override;
 
-     bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole) override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
-     Qt::ItemFlags flags(const QModelIndex &index) const override;
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;
 
-     QModelIndex parent(const QModelIndex &child) const override;
+    QModelIndex parent(const QModelIndex& child) const override;
 
-     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const override;
 
-     // add / remove
-     QModelIndex addItem(const QModelIndex &parent, int row = -1, ItemState *state = NULL);
-     void removeItem(const QModelIndex &index);
+    // add / remove
+    QModelIndex addItem(const QModelIndex& parent, int row = -1, ItemState* state = NULL);
+    void removeItem(const QModelIndex& index);
 
-     // item state
-     ItemState *saveItemState(const QModelIndex &index);
+    QModelIndex addMoveItem(const QModelIndex& parent, int row = -1, ItemState* state = NULL);
 
-     bool itemNotPlist(const QModelIndex &index);
+    // item state
+    ItemState* saveItemState(const QModelIndex& index);
 
-     DomItem *copyItem(const QModelIndex &parent);
+    bool itemNotPlist(const QModelIndex& index);
 
-     QModelIndex pasteItem(const QModelIndex &parent, int row, ItemState *state);
+    DomItem* copyItem(const QModelIndex& parent);
 
-     DomItem *getItem(const QModelIndex &index) const;
+    QModelIndex pasteItem(const QModelIndex& parent, int row, ItemState* state);
+
+    DomItem* getItem(const QModelIndex& index) const;
 
 signals:
 
-     void itemAdded(const QModelIndex &index);
+    void itemAdded(const QModelIndex& index);
 
- private:
+private:
+    DomItem* rootItem;
+    bool changed;
+};
 
-     DomItem *rootItem;
-     bool changed;
-
-
- };
-
- #endif
+#endif
