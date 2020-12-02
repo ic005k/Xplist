@@ -136,40 +136,40 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
     QMenu menu(treeView);
 
     QAction* expandAction = new QAction(tr("Expand"), this);
-    expandAction->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+    //expandAction->setIcon(QIcon(":/new/toolbar/res/exp.png"));
     menu.addAction(expandAction);
 
     QAction* collapseAction = new QAction(tr("Collapse"), this);
-    collapseAction->setIcon(QIcon(":/new/toolbar/res/col.png"));
+    //collapseAction->setIcon(QIcon(":/new/toolbar/res/col.png"));
     menu.addAction(collapseAction);
 
     menu.addSeparator();
 
     copyAction = new QAction(tr("Copy"), this);
-    copyAction->setIcon(QIcon(":/new/toolbar/res/copy.png"));
+    //copyAction->setIcon(QIcon(":/new/toolbar/res/copy.png"));
     //copyAction->setShortcuts(QKeySequence::Copy);
     menu.addAction(copyAction);
 
     cutAction = new QAction(tr("Cut"), this);
-    cutAction->setIcon(QIcon(":/new/toolbar/res/cut.png"));
+    //cutAction->setIcon(QIcon(":/new/toolbar/res/cut.png"));
 
     menu.addAction(cutAction);
 
     menu.addSeparator();
 
     pasteAction = new QAction(tr("Paste"), this);
-    pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
+    //pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
     //pasteAction->setShortcut(tr("ctrl+v"));
     menu.addAction(pasteAction);
 
     menu.addSeparator();
 
     actionNewSibling = new QAction(tr("New Sibling"), this);
-    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
+    //actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
     menu.addAction(actionNewSibling);
 
     actionNewChild = new QAction(tr("New Child"), this);
-    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
+    //actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
     menu.addAction(actionNewChild);
 
     connect(copyAction, &QAction::triggered, this, &EditorTab::on_copyAction);

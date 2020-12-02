@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.16      ";
+    ver = "PlistEDPlus V1.0.17      ";
     setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 
@@ -64,6 +64,8 @@ MainWindow::MainWindow(QWidget* parent)
     // set shortcuts
     actionUndo->setShortcuts(QKeySequence::Undo);
     actionRedo->setShortcuts(QKeySequence::Redo);
+    actionUndo->setIconVisibleInMenu(false);
+    actionRedo->setIconVisibleInMenu(false);
 
     // add actions to menu
     ui->menuEdit->addAction(actionUndo);
@@ -100,12 +102,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     updateRecentFiles();
 
-    ui->mainToolBar->removeAction(ui->actionAdd);
-    ui->mainToolBar->removeAction(ui->actionRemove);
-    ui->mainToolBar->removeAction(ui->actionExpand_all);
-
-    ui->mainToolBar->addAction(ui->actionNew);
     ui->actionNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
+    ui->mainToolBar->addAction(ui->actionNew);
 
     ui->mainToolBar->addAction(ui->actionOpen);
     ui->actionOpen->setIcon(QIcon(":/new/toolbar/res/open.png"));
@@ -114,11 +112,10 @@ MainWindow::MainWindow(QWidget* parent)
     ui->actionSave->setIcon(QIcon(":/new/toolbar/res/save.png"));
 
     ui->mainToolBar->addAction(ui->actionSave_as);
+    ui->actionSave_as->setIconVisibleInMenu(false);
     ui->actionSave_as->setIcon(QIcon(":/new/toolbar/res/saveas.png"));
 
     ui->mainToolBar->addSeparator();
-
-    //ui->mainToolBar->addAction(ui->actionAdd);
 
     actionNewSibling = new QAction(tr("New Sibling"), this);
     ui->mainToolBar->addAction(actionNewSibling);
@@ -151,20 +148,14 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->mainToolBar->addSeparator();
 
-    ui->actionCopy->setIcon(QIcon(":/new/toolbar/res/copy.png"));
-    //ui->actionCopy->setShortcut(tr("space"));
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
 
-    ui->actionPaste->setIcon(QIcon(":/new/toolbar/res/paste.png"));
     ui->actionPaste->setShortcuts(QKeySequence::Paste);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
 
-    ui->actionCut->setIcon(QIcon(":/new/toolbar/res/cut.png"));
     ui->actionCut->setShortcuts(QKeySequence::Cut);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
-
-    //ui->mainToolBar->addSeparator();
 
     actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.png"));
     ui->mainToolBar->addAction(actionUndo);
@@ -183,21 +174,18 @@ MainWindow::MainWindow(QWidget* parent)
     connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
     connect(findEdit, &QLineEdit::textChanged, this, &MainWindow::findEdit_textChanged);
 
-    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr("Find"), this);
+    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
+    findAction->setToolTip(tr("Find"));
     ui->mainToolBar->addAction(findAction);
     connect(findAction, &QAction::triggered, this, &MainWindow::on_Find);
 
     ui->menuEdit->addSeparator();
     QAction* expandAction = new QAction(tr("Expand") + "/" + tr("Collapse"), this);
-    expandAction->setIcon(QIcon(":/new/toolbar/res/ec.png"));
     expandAction->setShortcut(tr("space"));
     ui->menuEdit->addAction(expandAction);
     connect(expandAction, &QAction::triggered, this, &MainWindow::on_expandAction);
 
     QAction* collapseAction = new QAction(tr("Collapse"), this);
-    collapseAction->setIcon(QIcon(":/new/toolbar/res/col.png"));
-    //collapseAction->setShortcut(tr("space"));
-    //ui->menuEdit->addAction(collapseAction);
     connect(collapseAction, &QAction::triggered, this, &MainWindow::on_collapseAction);
 
 #ifdef Q_OS_WIN32
@@ -653,11 +641,15 @@ void MainWindow::setExpandText(EditorTab* tab)
     QString text = (!tab->isExpanded()) ? tr("Expand all") : tr("Collapse all");
     ui->actionExpand_all->setIconText(text);
 
-    if (ui->actionExpand_all->iconText() == tr("Expand all"))
+    if (ui->actionExpand_all->iconText() == tr("Expand all")) {
         ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+        ui->actionExpand_all->setToolTip(tr("Expand all"));
+    }
 
-    if (ui->actionExpand_all->iconText() == tr("Collapse all"))
+    if (ui->actionExpand_all->iconText() == tr("Collapse all")) {
         ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/col.png"));
+        ui->actionExpand_all->setToolTip(tr("Collapse all"));
+    }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* event)
@@ -935,6 +927,13 @@ void MainWindow::on_actionMoveUp()
             return;
 
         DomItem* items = model->itemForIndex(index.parent());
+
+        DomItem* currentItem = model->itemForIndex(index);
+        if (currentItem->getType() == "bool") {
+            QString strBool = currentItem->getValue().trimmed();
+            currentItem->setValue(strBool);
+        }
+
         if (items == NULL)
             return;
 
@@ -982,6 +981,12 @@ void MainWindow::on_actionMoveDown()
             return;
 
         DomItem* items = model->itemForIndex(index.parent());
+
+        DomItem* currentItem = model->itemForIndex(index);
+        if (currentItem->getType() == "bool") {
+            QString strBool = currentItem->getValue().trimmed();
+            currentItem->setValue(strBool);
+        }
 
         if (items == NULL)
             return;
