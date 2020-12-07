@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.17      ";
+    ver = "PlistEDPlus V1.0.18      ";
     setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 
@@ -493,6 +493,8 @@ void MainWindow::actionSave_as_activated()
 
             FileSystemWatcher::addWatchPath(str);
             savePlist(str);
+
+            this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
         }
     }
 }
@@ -700,20 +702,20 @@ void MainWindow::on_Find()
 
         QTreeView* treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
+        treeView->setFocus();
+        //treeView->collapseAll();
+        treeView->expandToDepth(0);
 
-        //treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
+        treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
         index = model->index(0, 0);
 
         findCount = 0;
         find = false;
-        treeView->collapseAll();
 
         if (index.isValid()) {
             forEach(model, index, findEdit->text().trimmed());
         } else
             qDebug() << "index is no valid";
-
-        treeView->setFocus();
     }
 }
 
