@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.18      ";
+    ver = "PlistEDPlus V1.0.19      ";
     setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 
@@ -397,8 +397,9 @@ void MainWindow::onTabCloseRequest(int i)
     undoGroup->removeStack(stack);
 
     QString file = tabWidget->getTab(i)->getPath();
-    //qDebug() << file;
-    FileSystemWatcher::removeWatchPath(file);
+    QFileInfo fi(file);
+    if (fi.exists())
+        FileSystemWatcher::removeWatchPath(file);
     for (int i = 0; i < openFileList.count(); i++) {
         if (file == openFileList.at(i)) {
             openFileList.remove(i);
@@ -482,8 +483,9 @@ void MainWindow::actionSave_as_activated()
             this, tr("Save as"), "", tr("Property list (*.plist)"));
 
         if (!str.isEmpty()) {
-
-            FileSystemWatcher::removeWatchPath(cfile);
+            QFileInfo fi(cfile);
+            if (fi.exists())
+                FileSystemWatcher::removeWatchPath(cfile);
             for (int i = 0; i < openFileList.count(); i++) {
                 if (cfile == openFileList.at(i)) {
                     openFileList.removeOne(cfile);
@@ -1092,12 +1094,16 @@ void MainWindow::on_collapseAction()
 
 void MainWindow::on_actionNewSibling()
 {
-    EditorTab* tab = tabWidget->getCurentTab();
-    tab->on_actionNewSibling();
+    if (tabWidget->hasTabs()) {
+        EditorTab* tab = tabWidget->getCurentTab();
+        tab->on_actionNewSibling();
+    }
 }
 
 void MainWindow::on_actionNewChild()
 {
-    EditorTab* tab = tabWidget->getCurentTab();
-    tab->on_actionNewChild();
+    if (tabWidget->hasTabs()) {
+        EditorTab* tab = tabWidget->getCurentTab();
+        tab->on_actionNewChild();
+    }
 }
