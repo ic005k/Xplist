@@ -46,7 +46,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.19      ";
+    ver = "PlistEDPlus V1.0.20      ";
     setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
 

@@ -159,7 +159,7 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
         // item without key
         if (rp.exactMatch(name)) {
 
-            QDomElement container = doc.createElement(type);
+            //QDomElement container = doc.createElement(type);
 
             if (type == "bool")
                 value = value.trimmed();
@@ -169,54 +169,56 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
                 value = QString::fromLatin1(HexStrToByte(v).toBase64());
             }
 
-            QDomText keyText = doc.createTextNode(value); //新增：解决数组无键值的情况
-            container.appendChild(keyText); //新增：同上
+            //n.appendChild(container);
+            //element = container;
 
-            n.appendChild(container);
+        } //else {
 
-            element = container;
+        QDomElement key;
+        QDomText keyText;
+
+        if (name.trimmed().mid(0, 4) == "Item") {
+            keyText = doc.createTextNode(value); //新增：解决数组无键值的情况
         } else {
-
-            QDomElement key = doc.createElement("key");
-            QDomText keyText = doc.createTextNode(name);
-
-            key.appendChild(keyText);
-            n.appendChild(key);
-
-            QDomElement val;
-            if (type == "bool") //新增：bool类型
-            {
-                if (value.trimmed() == "true")
-                    val = doc.createElement(QStringLiteral("true"));
-                if (value.trimmed() == "false")
-                    val = doc.createElement(QStringLiteral("false"));
-            } else {
-                val = doc.createElement(type);
-            }
-
-            //qDebug() << val.nodeValue();
-
-            n.appendChild(val);
-
-            if (type != "array" && type != "dict" && type != "bool") {
-                QDomText valText;
-
-                if (type == "data") //新增：解决16进制字串转换问题
-                {
-                    value = value.remove(QRegExp("\\s")); //16进制去除所有空格
-                    valText = doc.createTextNode(QString::fromLatin1(HexStrToByte(value).toBase64()));
-                } else {
-
-                    valText = doc.createTextNode(value);
-                }
-
-                //qDebug() << valText.nodeValue();
-
-                val.appendChild(valText);
-            }
-
-            element = val;
+            key = doc.createElement("key");
+            keyText = doc.createTextNode(name);
         }
+
+        key.appendChild(keyText);
+        n.appendChild(key);
+
+        QDomElement val;
+        if (type == "bool") //新增：bool类型
+        {
+            if (value.trimmed() == "true")
+                val = doc.createElement(QStringLiteral("true"));
+            if (value.trimmed() == "false")
+                val = doc.createElement(QStringLiteral("false"));
+        } else {
+            val = doc.createElement(type);
+        }
+
+        n.appendChild(val);
+
+        if (type != "array" && type != "dict" && type != "bool") {
+            QDomText valText;
+
+            if (type == "data") //新增：解决16进制字串转换问题
+            {
+                value = value.remove(QRegExp("\\s")); //16进制去除所有空格
+                valText = doc.createTextNode(QString::fromLatin1(HexStrToByte(value).toBase64()));
+            } else {
+
+                valText = doc.createTextNode(value);
+            }
+
+            //qDebug() << valText.nodeValue();
+
+            val.appendChild(valText);
+        }
+
+        element = val;
+        //}
 
     } else
         element = n;
