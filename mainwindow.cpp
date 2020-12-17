@@ -48,9 +48,12 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.21";
+    CurVerison = "1.0.22";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
+
+    QDir dir;
+    if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) { }
 
     //获取背景色
     QPalette pal = this->palette();
@@ -209,7 +212,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->actionCheck_Update->setEnabled(true);
 #endif
 
-    QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
+    QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QFileInfo fi(qfile);
     if (fi.exists()) {
         QSettings Reg(qfile, QSettings::IniFormat);
@@ -835,7 +838,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 {
 
     //记录当前文件
-    QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
+    QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QFile file(qfile);
     QSettings Reg(qfile, QSettings::IniFormat);
 
