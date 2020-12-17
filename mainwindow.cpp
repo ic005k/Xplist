@@ -46,9 +46,11 @@ MainWindow::MainWindow(QWidget* parent)
     ui->centralWidget->layout()->addWidget(tabWidget);
 
     QApplication::setApplicationName("PlistEDPlus");
-    ver = "PlistEDPlus V1.0.20      ";
-    setWindowTitle(ver);
     QApplication::setOrganizationName("PlistED");
+
+    CurVerison = "1.0.21";
+    ver = "PlistEDPlus  V" + CurVerison + "        ";
+    setWindowTitle(ver);
 
     //获取背景色
     QPalette pal = this->palette();
@@ -94,6 +96,8 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->actionSave_as, &QAction::triggered, this, &MainWindow::actionSave_as_activated);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::actionClose_activated);
     connect(ui->actionClose_all, &QAction::triggered, this, &MainWindow::actionClose_all_activated);
+
+    connect(ui->actionCheck_Update, &QAction::triggered, this, &MainWindow::CheckUpdate);
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::actionAbout_activated);
 
     connect(ui->actionAdd, &QAction::triggered, this, &MainWindow::actionAdd_activated);
@@ -189,20 +193,20 @@ MainWindow::MainWindow(QWidget* parent)
     connect(collapseAction, &QAction::triggered, this, &MainWindow::on_collapseAction);
 
 #ifdef Q_OS_WIN32
-
     reg_win();
     this->resize(QSize(1350, 750));
-
+    win = true;
 #endif
 
 #ifdef Q_OS_LINUX
-
+    linuxOS = true;
 #endif
 
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1050, 600));
-
+    mac = true;
+    ui->actionCheck_Update->setEnabled(true);
 #endif
 
     QString qfile = QDir::homePath() + "/PlistEDPlus.ini";
@@ -232,6 +236,9 @@ MainWindow::MainWindow(QWidget* parent)
                 tabWidget->setCurrentIndex(tabWidget->tabBar()->count() - 1);
         }
     }
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 }
 
 MainWindow::~MainWindow()
@@ -319,7 +326,7 @@ void MainWindow::openPlist(QString filePath)
             QDomDocument document;
 
             if (document.setContent(&file)) {
-                qDebug() << QString("File %1 opened").arg(filePath);
+                //qDebug() << QString("File %1 opened").arg(filePath);
 
                 DomModel* model = DomParser::fromDom(document);
 
@@ -346,6 +353,9 @@ void MainWindow::openPlist(QString filePath)
         QTreeView* treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
         treeView->resizeColumnToContents(0);
+
+        QFileInfo fi(filePath);
+        tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
 
         //tab->expand();
     }
@@ -459,6 +469,9 @@ void MainWindow::savePlist(QString filePath)
         }
         if (!re)
             openFileList.append(filePath);
+
+        QFileInfo fi(filePath);
+        tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
     }
 }
 
@@ -1106,4 +1119,79 @@ void MainWindow::on_actionNewChild()
         EditorTab* tab = tabWidget->getCurentTab();
         tab->on_actionNewChild();
     }
+}
+
+void MainWindow::CheckUpdate()
+{
+
+    QNetworkRequest quest;
+    quest.setUrl(QUrl("https://api.github.com/repos/ic005k/PlistEDPlus/releases/latest"));
+    quest.setHeader(QNetworkRequest::UserAgentHeader, "RT-Thread ART");
+    manager->get(quest);
+}
+
+void MainWindow::replyFinished(QNetworkReply* reply)
+{
+    QString str = reply->readAll();
+    QMessageBox box;
+    box.setText(str);
+    //box.exec();
+    //qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
+
+    parse_UpdateJSON(str);
+
+    reply->deleteLater();
+}
+
+int MainWindow::parse_UpdateJSON(QString str)
+{
+
+    QJsonParseError err_rpt;
+    QJsonDocument root_Doc = QJsonDocument::fromJson(str.toUtf8(), &err_rpt);
+
+    if (err_rpt.error != QJsonParseError::NoError) {
+        QMessageBox::critical(this, "", tr("Network error!"));
+        return -1;
+    }
+    if (root_Doc.isObject()) {
+        QJsonObject root_Obj = root_Doc.object();
+
+        QString macUrl, winUrl, linuxUrl;
+        QVariantList list = root_Obj.value("assets").toArray().toVariantList();
+        for (int i = 0; i < list.count(); i++) {
+            QVariantMap map = list[i].toMap();
+            QFileInfo file(map["name"].toString());
+            if (file.suffix().toLower() == "zip")
+                macUrl = map["browser_download_url"].toString();
+
+            if (file.suffix().toLower() == "7z")
+                winUrl = map["browser_download_url"].toString();
+
+            if (file.suffix() == "AppImage")
+                linuxUrl = map["browser_download_url"].toString();
+        }
+
+        QJsonObject PulseValue = root_Obj.value("assets").toObject();
+        QString Verison = root_Obj.value("tag_name").toString();
+        QString Url;
+        if (mac)
+            Url = macUrl;
+        if (win)
+            Url = winUrl;
+        if (linuxOS)
+            Url = linuxUrl;
+
+        QString UpdateTime = root_Obj.value("published_at").toString();
+        QString ReleaseNote = root_Obj.value("body").toString();
+
+        if (Verison > CurVerison) {
+            QString warningStr = tr("New version detected!") + "\n" + tr("Version: ") + "V" + Verison + "\n" + tr("Published at: ") + UpdateTime + "\n" + tr("Release Notes: ") + "\n" + ReleaseNote;
+            int ret = QMessageBox::warning(this, "", warningStr, tr("Download"), tr("Cancel"));
+            if (ret == 0) {
+                QDesktopServices::openUrl(QUrl(Url));
+            }
+        } else
+            QMessageBox::information(this, "", tr("It is currently the latest version!"));
+    }
+    return 0;
 }

@@ -21,7 +21,7 @@ FileSystemWatcher::FileSystemWatcher(QObject* parent)
 // 监控文件或目录
 void FileSystemWatcher::addWatchPath(QString path)
 {
-    qDebug() << QString("Add to watch: %1").arg(path);
+    //qDebug() << QString("Add to watch: %1").arg(path);
 
     if (m_pInstance == NULL) {
         m_pInstance = new FileSystemWatcher();
@@ -59,10 +59,10 @@ void FileSystemWatcher::directoryUpdated(const QString& path)
 
     QStringList newEntryList = dir.entryList(QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files, QDir::DirsFirst);
 
-    //QSet<QString> newDirSet = QSet<QString>::fromList(newEntryList);
-    QSet<QString> newDirSet = QSet<QString>(newEntryList.begin(), newEntryList.end());
-    //QSet<QString> currentDirSet = QSet<QString>::fromList(currEntryList);
-    QSet<QString> currentDirSet = QSet<QString>(currEntryList.begin(), currEntryList.end());
+    QSet<QString> newDirSet = QSet<QString>::fromList(newEntryList);
+    //QSet<QString> newDirSet = QSet<QString>(newEntryList.begin(), newEntryList.end());
+    QSet<QString> currentDirSet = QSet<QString>::fromList(currEntryList);
+    //QSet<QString> currentDirSet = QSet<QString>(currEntryList.begin(), currEntryList.end());
 
     // 添加了文件
     QSet<QString> newFiles = newDirSet - currentDirSet;

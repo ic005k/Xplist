@@ -2,9 +2,9 @@
 # Project created by QtCreator 2012-10-06T16:37:20
 # 开始升级于2020.10.15
 #-------------------------------------------------
-
 QT       += core gui
 QT       += xml
+QT       += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

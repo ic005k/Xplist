@@ -3,6 +3,7 @@
 
 #include <QDateTime>
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDropEvent>
 #include <QFileDialog>
 #include <QFileInfo>
@@ -15,6 +16,15 @@
 #include <QStandardItemModel>
 #include <QTreeView>
 #include <QUndoGroup>
+
+//网络相关头文件
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+//JSON相关头文件
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "domparser.h"
 #include "editortabswidget.h"
@@ -88,7 +98,17 @@ private slots:
 
     void on_actionNewChild();
 
+    void replyFinished(QNetworkReply* reply);
+    void CheckUpdate();
+
 private:
+    QNetworkAccessManager* manager;
+    int parse_UpdateJSON(QString str);
+    bool mac = false;
+    bool win = false;
+    bool linuxOS = false;
+    QString CurVerison = "V1.0";
+
     void setExpandText(EditorTab* tab);
 
     void openFiles(QStringList list = QStringList());
