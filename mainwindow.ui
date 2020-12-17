@@ -51,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>1100</width>
-     <height>24</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -99,6 +99,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionCheck_Update"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
@@ -172,7 +173,7 @@
     <bool>false</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionClose">
@@ -203,7 +204,7 @@
     <bool>false</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionSave_as">
@@ -217,7 +218,7 @@
     <string>Ctrl+Alt+S</string>
    </property>
    <property name="shortcutVisibleInContextMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionQuit">
@@ -254,7 +255,7 @@
     <bool>false</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionAbout">
@@ -390,6 +391,11 @@
    </property>
    <property name="text">
     <string>DefaultNodeIcon</string>
+   </property>
+  </action>
+  <action name="actionCheck_Update">
+   <property name="text">
+    <string>Check Update</string>
    </property>
   </action>
  </widget>
