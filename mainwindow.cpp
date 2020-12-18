@@ -13,6 +13,8 @@ EditorTabsWidget* tabWidget;
 ItemState* copy_state;
 DomItem* copy_item;
 
+ItemState* AddMoveTemp;
+
 QAction* copyAction;
 QAction* cutAction;
 QAction* pasteAction;
@@ -928,7 +930,6 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 {
 
     Q_UNUSED(event);
-    //findEdit->setFocus();
 }
 
 void MainWindow::on_actionMoveUp()
@@ -966,17 +967,19 @@ void MainWindow::on_actionMoveUp()
             array = true;
         }
 
-        ItemState* temp = model->saveItemState(index);
+        on_cutAction();
+        treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
+        on_pasteAction();
 
-        int row = index.row();
-
-        model->addMoveItem(index.parent(), row - 1, temp);
+        //之前的老方法
+        /*AddMoveTemp = model->saveItemState(index);
+        model->addMoveItem(index.parent(), index.row() - 1, AddMoveTemp);
 
         treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
         index = tab->currentIndex();
         index = model->index(index.row(), 0, index.parent());
 
-        model->removeItem(index);
+        model->removeItem(index);*/
 
         if (array)
             items->setType("array");
@@ -1020,11 +1023,32 @@ void MainWindow::on_actionMoveDown()
             array = true;
         }
 
-        ItemState* temp = model->saveItemState(index);
+        //倒数第三行及以前
+        if (index.row() <= items->childCount() - 3) {
+            on_cutAction();
+            treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+            on_pasteAction();
+        }
 
+        //倒数第二行
+        if (index.row() == items->childCount() - 2) {
+
+            QUndoCommand* addMoveCommand = new AddMoveCommand(tab->getModel(), index.parent());
+            undoGroup->activeStack()->push(addMoveCommand);
+
+            on_cutAction();
+            treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+            on_pasteAction();
+            treeView->setCurrentIndex(model->index(index_bak.row() + 2, 0, index.parent()));
+            actionRemove_activated();
+        }
+
+        //之前的老方法
+        /*ItemState* temp = model->saveItemState(index);
         int row = index.row() + 2;
         model->addMoveItem(index.parent(), row, temp);
-        model->removeItem(index_bak);
+
+        model->removeItem(index_bak);*/
 
         if (array)
             items->setType("array");

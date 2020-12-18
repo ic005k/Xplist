@@ -7,6 +7,8 @@ extern QCheckBox* chkBox;
 extern bool chk_null;
 extern MainWindow* mw_one;
 
+extern ItemState* AddMoveTemp;
+
 AddCommand::AddCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
 {
 
@@ -153,4 +155,29 @@ void PasteCommand::redo()
 {
 
     m_index = m_model->pasteItem(m_parent.parent(), m_parent.row(), NULL);
+}
+
+AddMoveCommand::AddMoveCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
+{
+
+    Q_UNUSED(parent);
+
+    m_model = model;
+    m_index = QModelIndex();
+    m_parent = index;
+
+    // maybe we should create permanent index?
+    //setText(QObject::tr("Add new item"));
+    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Add new item"));
+    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Add new item"));
+}
+
+void AddMoveCommand::undo()
+{
+    m_model->removeItem(m_index);
+}
+
+void AddMoveCommand::redo()
+{
+    m_index = m_model->addMoveItem(m_parent);
 }

@@ -4,65 +4,73 @@
 #include "dommodel.h"
 #include <QUndoCommand>
 
-#include <QModelIndex>
+#include <QCheckBox>
 #include <QDebug>
 #include <QMessageBox>
-#include <QCheckBox>
+#include <QModelIndex>
 
-class AddCommand : public QUndoCommand
-{
+class AddCommand : public QUndoCommand {
 public:
-    AddCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent = 0);
+    AddCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent = 0);
     void undo();
     void redo();
 
 private:
-    DomModel *m_model;
+    DomModel* m_model;
     QModelIndex m_index;
     QModelIndex m_parent;
 };
 
-class PasteCommand : public QUndoCommand
-{
+class AddMoveCommand : public QUndoCommand {
 public:
-    PasteCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent = 0);
+    AddMoveCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent = 0);
     void undo();
     void redo();
 
 private:
-    DomModel *m_model;
+    DomModel* m_model;
     QModelIndex m_index;
     QModelIndex m_parent;
 };
 
-class RemoveCommand : public QUndoCommand
-{
+class PasteCommand : public QUndoCommand {
 public:
-    RemoveCommand(DomModel *model, const QModelIndex &index, QUndoCommand *parent = 0);
+    PasteCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent = 0);
+    void undo();
+    void redo();
+
+private:
+    DomModel* m_model;
+    QModelIndex m_index;
+    QModelIndex m_parent;
+};
+
+class RemoveCommand : public QUndoCommand {
+public:
+    RemoveCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent = 0);
     ~RemoveCommand();
 
     void undo();
     void redo();
 
 private:
-    DomModel *m_model;
+    DomModel* m_model;
     QModelIndex m_index;
     QModelIndex m_parent;
 
     int m_row;
-    ItemState *m_state;
+    ItemState* m_state;
 };
 
-class EditCommand : public QUndoCommand
-{
+class EditCommand : public QUndoCommand {
 public:
-    EditCommand(QString val, DomModel *model, const QModelIndex &index, QUndoCommand *parent = 0);
+    EditCommand(QString val, DomModel* model, const QModelIndex& index, QUndoCommand* parent = 0);
 
     void undo();
     void redo();
 
 private:
-    DomModel *m_model;
+    DomModel* m_model;
     QModelIndex m_index;
 
     QString m_oldVal;
