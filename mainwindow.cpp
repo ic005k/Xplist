@@ -211,7 +211,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1050, 600));
     mac = true;
-    ui->actionCheck_Update->setEnabled(true);
+    ui->actionCheck_Update->setVisible(true);
 #endif
 
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
@@ -359,10 +359,11 @@ void MainWindow::openPlist(QString filePath)
         treeView = (QTreeView*)tab->children().at(1);
         treeView->resizeColumnToContents(0);
 
+        treeView->setCurrentIndex(tab->getModel()->index(0, 0));
+        treeView->setFocus();
+
         QFileInfo fi(filePath);
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
-
-        //tab->expand();
     }
 }
 
@@ -521,11 +522,13 @@ void MainWindow::actionSave_as_activated()
 
 void MainWindow::actionAdd_activated()
 {
+
     if (tabWidget->hasTabs()) {
         EditorTab* tab = tabWidget->getCurentTab();
         const QModelIndex index = tab->currentIndex();
 
-        //if (index.isValid()) tab->getModel()->addItem(index);
+        if (index.data().toString() == "")
+            return;
 
         if (index.isValid()) {
 
@@ -540,8 +543,6 @@ void MainWindow::actionRemove_activated()
     if (tabWidget->hasTabs()) {
         EditorTab* tab = tabWidget->getCurentTab();
         const QModelIndex index = tab->currentIndex();
-
-        //if (index.isValid()) tab->getModel()->removeItem(index);
 
         if (index.isValid()) {
             DomModel* model = tab->getModel();
@@ -713,12 +714,21 @@ void MainWindow::on_Find()
     if (findEdit->text() == "")
         return;
 
+    /*QString fn = tabWidget->getCurentTab()->getPath();
+    if (QFileInfo(fn).exists()) {
+        actionSave_activated();
+        openPlist(fn);
+    }*/
+
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
+
         QModelIndex index;
         //index = tab->currentIndex();
         DomModel* model = tab->getModel();
+
+        model->refrushModel();
 
         QTreeView* treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
@@ -754,7 +764,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
         if (value.toLower().contains(str.trimmed().toLower()) && str.trimmed() != "") {
 
             EditorTab* tab = tabWidget->getCurentTab();
-            //DomModel * model = tab->getModel();
+            //DomModel* model = tab->getModel();
+
             QTreeView* treeView = new QTreeView;
             treeView = (QTreeView*)tab->children().at(1);
 
@@ -764,14 +775,14 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
             find = true;
 
-            //treeView->expand(index);
-            //tab->view_expand(index.parent().parent(), model);
+            //treeView->expand(index2);
+            //tab->view_expand(index2, model);
         }
         //搜索键
         if (name.toLower().contains(str.trimmed().toLower()) && str.trimmed() != "") {
 
             EditorTab* tab = tabWidget->getCurentTab();
-            //DomModel * model = tab->getModel();
+            //DomModel* model = tab->getModel();
             QTreeView* treeView = new QTreeView;
             treeView = (QTreeView*)tab->children().at(1);
 
@@ -934,6 +945,7 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
 void MainWindow::on_actionMoveUp()
 {
+
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();

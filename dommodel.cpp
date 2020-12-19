@@ -415,7 +415,7 @@ void DomModel::removeItem(const QModelIndex& index)
         }
     }
 
-    //emit itemAdded(index);//通知treeView自适应列宽和展开节点
+    //emit itemAdded(index); //通知treeView自适应列宽和展开节点
 }
 
 ItemState* DomModel::saveItemState(const QModelIndex& index)
@@ -441,4 +441,10 @@ DomItem* DomModel::getItem(const QModelIndex& index) const
             return item;
     }
     return rootItem;
+}
+
+void DomModel::refrushModel()
+{
+    beginResetModel();
+    endResetModel();
 }

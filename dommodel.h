@@ -97,6 +97,8 @@ public:
 
     DomItem* getItem(const QModelIndex& index) const;
 
+    void refrushModel();
+
 signals:
 
     void itemAdded(const QModelIndex& index);

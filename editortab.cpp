@@ -186,6 +186,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
 
 void EditorTab::onItemAded(const QModelIndex& index)
 {
+
     ui->treeView->resizeColumnToContents(0);
 
     ui->treeView->expand(index);
