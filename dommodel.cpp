@@ -446,5 +446,9 @@ DomItem* DomModel::getItem(const QModelIndex& index) const
 void DomModel::refrushModel()
 {
     beginResetModel();
+    EditorTab* tab = tabWidget->getCurentTab();
+    QTreeView* treeView = new QTreeView;
+    treeView = (QTreeView*)tab->children().at(1);
+    treeView->doItemsLayout();
     endResetModel();
 }

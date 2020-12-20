@@ -138,6 +138,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->mainToolBar->addAction(ui->actionRemove);
     ui->actionRemove->setShortcut(Qt::Key_Delete);
+
+    ui->mainToolBar->addSeparator();
+
     ui->mainToolBar->addAction(ui->actionExpand_all);
     ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
 
@@ -469,7 +472,6 @@ void MainWindow::savePlist(QString filePath)
         //undoGroup->activeStack()->setClean();
 
         SelfSaved = true;
-
         FileSystemWatcher::addWatchPath(filePath); //监控这个文件的变化
 
         bool re = false;
@@ -530,13 +532,19 @@ void MainWindow::actionAdd_activated()
     if (tabWidget->hasTabs()) {
         EditorTab* tab = tabWidget->getCurentTab();
         const QModelIndex index = tab->currentIndex();
+        DomModel* model = tab->getModel();
 
-        if (index.data().toString() == "")
+        QTreeView* treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+
+        QModelIndex index0 = model->index(index.row(), 0, index.parent());
+
+        if (index0.data().toString() == "")
             return;
 
         if (index.isValid()) {
 
-            QUndoCommand* addCommand = new AddCommand(tab->getModel(), index);
+            QUndoCommand* addCommand = new AddCommand(model, index);
             undoGroup->activeStack()->push(addCommand);
         }
     }
@@ -718,32 +726,49 @@ void MainWindow::on_Find()
     if (findEdit->text() == "")
         return;
 
-    if (ui->actionSaveAndFind->isChecked()) {
-        QString fn = tabWidget->getCurentTab()->getPath();
-        if (QFileInfo(fn).exists()) {
-            actionSave_activated();
-            openPlist(fn);
-        }
-    }
-
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
 
-        QModelIndex index;
-        //index = tab->currentIndex();
-        DomModel* model = tab->getModel();
+        if (ui->actionSaveAndFind->isChecked()) {
 
-        model->refrushModel();
+            QString fn = tabWidget->getCurentTab()->getPath();
+            if (QFileInfo(fn).exists()) {
+
+                actionSave_activated();
+
+                FileSystemWatcher::removeWatchPath(fn);
+
+                //Open current plist
+                QFile file(fn);
+                if (file.open(QIODevice::ReadOnly)) {
+                    QDomDocument document;
+
+                    if (document.setContent(&file)) {
+
+                        DomModel* model = DomParser::fromDom(document);
+                        tab->setModel(model);
+                    }
+                    file.close();
+                }
+
+                FileSystemWatcher::addWatchPath(fn);
+            }
+        }
+
+        QModelIndex index;
+
+        DomModel* model = tab->getModel();
 
         QTreeView* treeView = new QTreeView;
         treeView = (QTreeView*)tab->children().at(1);
-        treeView->setFocus();
+
         //treeView->collapseAll();
         treeView->expandToDepth(0);
 
-        treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
         index = model->index(0, 0);
+        treeView->setCurrentIndex(index); //设置当前索引
+        treeView->setFocus();
 
         findCount = 0;
         find = false;
@@ -759,13 +784,13 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 {
 
     for (int r = 0; r < model->rowCount(parent); ++r) {
+        QModelIndex index2 = model->index(r, 2, parent);
+        QString value = model->data(index2, Qt::DisplayRole).toString();
+
         QModelIndex index = model->index(r, 0, parent);
         //QVariant name = model->data(index);
         QString name = model->data(index, Qt::DisplayRole).toString();
 
-        QModelIndex index2 = model->index(r, 2, parent);
-        QString value = model->data(index2, Qt::DisplayRole).toString();
-        //qDebug() << value;
         //搜索值
         if (value.toLower().contains(str.trimmed().toLower()) && str.trimmed() != "") {
 
@@ -811,7 +836,10 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 void MainWindow::findEdit_textChanged(const QString& arg1)
 {
     if (tabWidget->hasTabs()) {
+
         if (arg1 != "") {
+
+            //on_Find();
         }
 
         if (arg1 == "" || !find) {
