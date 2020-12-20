@@ -108,6 +108,7 @@
     </property>
     <addaction name="actionRestoreScene"/>
     <addaction name="actionDefaultNodeIcon"/>
+    <addaction name="actionSaveAndFind"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menuEdit"/>
@@ -396,6 +397,11 @@
   <action name="actionCheck_Update">
    <property name="text">
     <string>Check Update</string>
+   </property>
+  </action>
+  <action name="actionSaveAndFind">
+   <property name="text">
+    <string>Save and refresh data before finding</string>
    </property>
   </action>
  </widget>

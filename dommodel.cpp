@@ -330,7 +330,7 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
             QString type = copy_item->childItems.at(i)->getType();
             QString value = copy_item->childItems.at(i)->getValue();
             item0 = NULL;
-            item0 = child->addChild(row + i, item0);
+            item0 = child->addChild(i, item0);
             item0->setData(name, type, value); //先增加，再设置数据
 
             sub1 = copy_item->childItems.at(i);

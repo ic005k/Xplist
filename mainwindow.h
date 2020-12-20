@@ -129,6 +129,8 @@ private:
 
     QString ver;
 
+    bool SaveAndFind = false;
+
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);

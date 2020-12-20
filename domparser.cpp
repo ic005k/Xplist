@@ -184,8 +184,10 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
             keyText = doc.createTextNode(name);
         }
 
-        key.appendChild(keyText);
-        n.appendChild(key);
+        if (!key.isNull())
+            key.appendChild(keyText);
+        if (!n.isNull())
+            n.appendChild(key);
 
         QDomElement val;
         if (type == "bool") //新增：bool类型

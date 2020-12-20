@@ -213,13 +213,17 @@ MainWindow::MainWindow(QWidget* parent)
     mac = true;
     ui->actionCheck_Update->setVisible(true);
 #endif
-
+    ui->actionSaveAndFind->setCheckable(true);
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QFileInfo fi(qfile);
     if (fi.exists()) {
         QSettings Reg(qfile, QSettings::IniFormat);
         defaultIcon = Reg.value("DefaultIcon").toBool();
         ui->actionDefaultNodeIcon->setChecked(defaultIcon);
+
+        SaveAndFind = Reg.value("SaveAndFind").toBool();
+        ui->actionSaveAndFind->setChecked(SaveAndFind);
+
         bool restore = Reg.value("restore").toBool();
         ui->actionRestoreScene->setChecked(restore);
         if (restore) {
@@ -714,11 +718,13 @@ void MainWindow::on_Find()
     if (findEdit->text() == "")
         return;
 
-    /*QString fn = tabWidget->getCurentTab()->getPath();
-    if (QFileInfo(fn).exists()) {
-        actionSave_activated();
-        openPlist(fn);
-    }*/
+    if (ui->actionSaveAndFind->isChecked()) {
+        QString fn = tabWidget->getCurentTab()->getPath();
+        if (QFileInfo(fn).exists()) {
+            actionSave_activated();
+            openPlist(fn);
+        }
+    }
 
     if (tabWidget->hasTabs()) {
 
@@ -857,6 +863,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
     Reg.setValue("restore", ui->actionRestoreScene->isChecked());
     Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
+    Reg.setValue("SaveAndFind", ui->actionSaveAndFind->isChecked());
 
     if (tabWidget->hasTabs()) {
 
