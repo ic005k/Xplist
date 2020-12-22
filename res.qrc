@@ -26,6 +26,7 @@
         <file>res/down.png</file>
         <file>res/up.png</file>
         <file>res/ec.png</file>
+        <file>res/sort.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
