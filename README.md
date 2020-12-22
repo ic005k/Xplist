@@ -29,6 +29,10 @@ Plist editor
 
 10.更改数据类型时，其值会自动随之转换
 
+11.可自由选某个节点下的子项进行A->Z排序（目前不对数组进行排序）
+
+12.内置更新检查
+
 ...
 
 ![截图](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
