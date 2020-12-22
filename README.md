@@ -33,6 +33,10 @@ Plist editor
 
 12.内置更新检查
 
+13.如果当前打开的文件被其他程序修改，则自动提示是否重新装入
+
+14.软件UI自适应各种分辨率，支持winpe、linux livecd等
+
 ...
 
 ![截图](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
