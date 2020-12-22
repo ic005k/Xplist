@@ -99,6 +99,8 @@ public:
 
     void refrushModel();
 
+    virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
+
 signals:
 
     void itemAdded(const QModelIndex& index);

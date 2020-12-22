@@ -5,9 +5,11 @@
 #include "dommodel.h"
 #include "editortab.h"
 #include "editortabswidget.h"
+#include "mainwindow.h"
 extern EditorTabsWidget* tabWidget;
 extern DomItem* copy_item;
 extern bool paste;
+extern MainWindow* mw_one;
 
 DomModel::DomModel(QObject* parent)
     : QAbstractItemModel(parent)
@@ -401,8 +403,11 @@ void DomModel::removeItem(const QModelIndex& index)
         DomItem* item = itemForIndex(index);
         int row = index.row();
         QModelIndex parent = index.parent();
+
         beginRemoveRows(parent, row, row);
+
         item->removeFromParent(index.row());
+
         endRemoveRows();
 
         item = itemForIndex(index.parent());
@@ -445,10 +450,75 @@ DomItem* DomModel::getItem(const QModelIndex& index) const
 
 void DomModel::refrushModel()
 {
-    beginResetModel();
+    //beginResetModel();
     EditorTab* tab = tabWidget->getCurentTab();
     QTreeView* treeView = new QTreeView;
     treeView = (QTreeView*)tab->children().at(1);
     treeView->doItemsLayout();
-    endResetModel();
+
+    //endResetModel();
+}
+
+void DomModel::sort(int column, Qt::SortOrder order)
+{
+
+    if (tabWidget->hasTabs()) {
+
+        EditorTab* tab = tabWidget->getCurentTab();
+        QModelIndex index = tab->currentIndex();
+        if (!index.isValid())
+            return;
+        index = index.parent();
+        if (!index.isValid())
+            return;
+
+        QTreeView* treeView = new QTreeView;
+        treeView = (QTreeView*)tab->children().at(1);
+        QModelIndex indexBak = tab->currentIndex();
+        int rowBak = indexBak.row();
+
+        DomItem* item;
+        item = itemForIndex(index);
+        DomItem* item1;
+        DomItem* item2;
+
+        int count = item->childCount();
+
+        emit layoutAboutToBeChanged();
+
+        if (item->getType() != "array") {
+            for (int i = 0; i < count; i++) {
+                treeView->setCurrentIndex(index.child(i, column));
+
+                item1 = item->child(i);
+
+                if (i + 1 < count)
+                    item2 = item->child(i + 1);
+
+                if (i + 1 == count) {
+
+                    break;
+                }
+
+                //qDebug() << item1->getName() << item2->getName();
+                if (order == Qt::AscendingOrder) {
+
+                    if (item1->getName() > item2->getName()) {
+                        i = -1;
+                        mw_one->on_actionMoveDown();
+                    }
+                }
+
+                //item->sort(column, order);
+            }
+        }
+
+        emit layoutChanged();
+
+        indexBak = this->index(rowBak, 0, index);
+        treeView->setCurrentIndex(indexBak);
+        treeView->setFocus();
+
+        mw_one->showMsg();
+    }
 }

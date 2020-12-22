@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QObject>
+#include <QSortFilterProxyModel>
 #include <QStandardItem>
 #include <QStyleFactory>
 #include <QUndoStack>
@@ -30,6 +31,8 @@ class EditorTab : public QWidget {
 public:
     explicit EditorTab(DomModel* model, QWidget* parent = 0);
     ~EditorTab();
+
+    QSortFilterProxyModel* proxyModel;
 
     void forEach1(QAbstractItemModel* model, QModelIndex parent = QModelIndex());
 
@@ -57,8 +60,15 @@ public:
 
     void setIcon();
 
+    void clearModel();
+
 protected:
     void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
+
+    void dropEvent(QDropEvent* event) override; //放下动作
+    void dragEnterEvent(QDragEnterEvent* event) override; //托到进入窗口动作
+    void dragMoveEvent(QDragMoveEvent* event) override; //拖着物体在窗口移动
+    void dragLeaveEvent(QDragLeaveEvent* event) override; //拖走了没有释放
 
 #ifndef QT_NO_CONTEXTMENU
     void contextMenuEvent(QContextMenuEvent* event) override;
@@ -82,11 +92,11 @@ public slots:
 
     void editorDataAboutToBeSet(const QModelIndex& index, QString val);
 
+    void on_treeView_clicked(const QModelIndex& index);
+
 private slots:
 
     void on_treeView_doubleClicked(const QModelIndex& index);
-
-    void on_treeView_clicked(const QModelIndex& index);
 
     void on_chkBox();
 
@@ -97,8 +107,6 @@ private:
     bool treeExpanded;
     DomModel* model;
     QFileInfo fileInfo;
-
-    void clearModel();
 
     QStandardItem* getTopParent(QStandardItem* item);
     QModelIndex getTopParent(QModelIndex itemIndex);

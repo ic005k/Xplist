@@ -20,6 +20,7 @@ QAction* cutAction;
 QAction* pasteAction;
 QAction* actionNewSibling;
 QAction* actionNewChild;
+QAction* actionSort;
 
 QUndoGroup* undoGroup;
 
@@ -50,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.22";
+    CurVerison = "1.0.21";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -160,6 +161,13 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->mainToolBar->addSeparator();
 
+    actionSort = new QAction(tr("A->Z Sort"));
+    actionSort->setIcon(QIcon(":/new/toolbar/res/sort.png"));
+    ui->mainToolBar->addAction(actionSort);
+    connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
+
+    ui->mainToolBar->addSeparator();
+
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
     connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
 
@@ -216,7 +224,9 @@ MainWindow::MainWindow(QWidget* parent)
     mac = true;
     ui->actionCheck_Update->setVisible(true);
 #endif
+
     ui->actionSaveAndFind->setCheckable(true);
+    ui->actionSaveAndFind->setVisible(false);
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QFileInfo fi(qfile);
     if (fi.exists()) {
@@ -747,6 +757,7 @@ void MainWindow::on_Find()
                     if (document.setContent(&file)) {
 
                         DomModel* model = DomParser::fromDom(document);
+
                         tab->setModel(model);
                     }
                     file.close();
@@ -771,6 +782,7 @@ void MainWindow::on_Find()
         treeView->setFocus();
 
         findCount = 0;
+        lblFindCount->setText("  " + QString::number(findCount) + "  ");
         find = false;
 
         if (index.isValid()) {
@@ -806,6 +818,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
             find = true;
 
+            actionSort->setEnabled(false);
+
             //treeView->expand(index2);
             //tab->view_expand(index2, model);
         }
@@ -822,6 +836,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             findCount++;
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
             find = true;
+
+            actionSort->setEnabled(false);
 
             //treeView->expand(index);
             //tab->view_expand(index, model);
@@ -1268,4 +1284,25 @@ int MainWindow::parse_UpdateJSON(QString str)
             QMessageBox::information(this, "", tr("It is currently the latest version!"));
     }
     return 0;
+}
+
+void MainWindow::on_actionSort()
+{
+    if (tabWidget->hasTabs()) {
+
+        EditorTab* tab = tabWidget->getCurentTab();
+        QModelIndex index = tab->currentIndex();
+        if (!index.isValid())
+            return;
+
+        DomModel* model = tab->getModel();
+
+        //QSortFilterProxyModel* sortModel = new QSortFilterProxyModel(this);
+        //sortModel->setSourceModel(model);
+        //QTreeView* treeView = new QTreeView;
+        //treeView = (QTreeView*)tab->children().at(1);
+        //treeView->setModel(sortModel);
+
+        model->sort(0, Qt::AscendingOrder);
+    }
 }

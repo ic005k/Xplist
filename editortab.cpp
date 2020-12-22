@@ -15,6 +15,7 @@ extern QAction* cutAction;
 extern QAction* pasteAction;
 extern QAction* actionNewSibling;
 extern QAction* actionNewChild;
+extern QAction* actionSort;
 
 extern QUndoGroup* undoGroup;
 extern MainWindow* mw_one;
@@ -33,6 +34,7 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     chkBox = new QCheckBox(this);
     chkBox->setVisible(false);
+    this->setAcceptDrops(true);
 
     QTreeView* view = ui->treeView;
 
@@ -107,9 +109,10 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     //view->header()->setDefaultAlignment(Qt::AlignCenter); //表头文字默认对齐方式
     //view->header()->setStretchLastSection(true);
-    //view->header()->setSortIndicator(0,Qt::AscendingOrder);    //按第1列升序排序
+    //view->header()->setSortIndicator(0, Qt::AscendingOrder); //按第1列升序排序
+    //view->setSortingEnabled(true);
     //view->setStyle(QStyleFactory::create("windows")); //连接的虚线
-    //view->setSelectionBehavior(QAbstractItemView::SelectItems);//不选中一行，分单元格选择
+    //view->setSelectionBehavior(QAbstractItemView::SelectItems); //不选中一行，分单元格选择
 
     connect(model, SIGNAL(itemAdded(const QModelIndex&)), this, SLOT(onItemAded(const QModelIndex&)));
 
@@ -250,7 +253,15 @@ void EditorTab::setModel(DomModel* m)
     if (model != NULL)
         clearModel();
     this->model = m;
+
+    //proxyModel = new QSortFilterProxyModel(this);
+    //proxyModel->setSourceModel(m);
+
     ui->treeView->setModel(m);
+    //ui->treeView->setModel(proxyModel);
+
+    //ui->treeView->setSortingEnabled(true);
+    //ui->treeView->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void EditorTab::clearModel()
@@ -393,6 +404,8 @@ int EditorTab::hex_to_ascii(QString str)
 
 void EditorTab::on_treeView_clicked(const QModelIndex& index)
 {
+
+    actionSort->setEnabled(true);
 
     DomModel* model = this->model;
     DomItem* item = model->itemForIndex(index);
@@ -694,4 +707,50 @@ void EditorTab::on_chkBox()
     treeView = (QTreeView*)tabWidget->getCurentTab()->children().at(1);
     treeView->doItemsLayout();
     treeView->setFocus();
+}
+
+void EditorTab::dragEnterEvent(QDragEnterEvent* event)
+{
+    QStringList formats = event->mimeData()->formats();
+    qDebug() << "dragEnterEvent formats = " << formats;
+    if (event->mimeData()->hasFormat("Node/NodePtr"))
+        event->accept();
+    else
+        event->ignore();
+}
+
+void EditorTab::dragLeaveEvent(QDragLeaveEvent* event)
+{
+    Q_UNUSED(event);
+    qDebug() << "dragLeaveEvent";
+}
+
+void EditorTab::dragMoveEvent(QDragMoveEvent* event)
+{
+    QStringList formats = event->mimeData()->formats();
+    qDebug() << "dragMoveEvent formats = " << formats;
+    if (event->mimeData()->hasFormat("Node/NodePtr")) {
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+    } else {
+        event->ignore();
+    }
+}
+
+void EditorTab::dropEvent(QDropEvent* event)
+{
+    QStringList formats = event->mimeData()->formats();
+    qDebug() << "dropEvent formats = " << formats;
+    if (event->mimeData()->hasFormat("Node/NodePtr")) {
+        QVariant varData = event->mimeData()->data("Node/NodePtr");
+        QByteArray byteData = varData.toByteArray();
+        QDataStream stream(&byteData, QIODevice::ReadWrite);
+        qint64 node;
+        stream >> (node);
+
+        event->setDropAction(Qt::MoveAction);
+        event->accept();
+    } else {
+        event->ignore();
+    }
 }

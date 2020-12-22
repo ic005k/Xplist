@@ -13,6 +13,7 @@
 #include <QMimeData>
 #include <QPalette>
 #include <QPushButton>
+#include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTreeView>
 #include <QUndoGroup>
@@ -53,6 +54,8 @@ public:
     QAction* actionUndo;
 
     QAction* actionRedo;
+
+    void showMsg();
 
 public slots:
     void on_Find();
@@ -101,6 +104,8 @@ private slots:
     void replyFinished(QNetworkReply* reply);
     void CheckUpdate();
 
+    void on_actionSort();
+
 private:
     QNetworkAccessManager* manager;
     int parse_UpdateJSON(QString str);
@@ -122,8 +127,6 @@ private:
     int findCount = 0;
     QLabel* lblFindCount;
     bool find = false;
-
-    void showMsg();
 
     void reg_win();
 

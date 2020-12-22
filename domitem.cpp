@@ -1,6 +1,5 @@
 
 #include "domitem.h"
-
 #include <QTime>
 
 DomItem::DomItem(int row, QString n, DomItem* parent)
@@ -134,4 +133,32 @@ DomItem* DomItem::clone()
     }
 
     return newItem;
+}
+
+bool DomItem::lessThan_key(const DomItem* item1, const DomItem* item2)
+{
+
+    return (item1->name < item2->name);
+}
+
+// 对key列执行排序
+void DomItem::sort_key(Qt::SortOrder order)
+{
+
+    QList<DomItem*> _children; // 子节点
+    if (order == Qt::AscendingOrder) // 升序
+    {
+        std::sort(_children.begin(), _children.end(), lessThan_key);
+
+    } else // 降序
+    {
+        std::sort(_children.rbegin(), _children.rend(), lessThan_key);
+    }
+}
+
+void DomItem::sort(int column, Qt::SortOrder order)
+{
+
+    if (column == 0)
+        sort_key(order);
 }
