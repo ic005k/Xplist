@@ -1,4 +1,6 @@
 # PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
+---
+***
 
 写在前面：该软件的原型来自：https://github.com/alpex92/PlistED  ，由于这个原型的存在，不至于使我从头开始码砖，感谢@alpex92！
 
@@ -47,6 +49,5 @@
 远景pcbeta: http://bbs.pcbeta.com/viewthread-1873474-1-1.html
 
 insanelymac: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
----
-***
+
 ### 备注：此项目开始于2020年10月
