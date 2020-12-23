@@ -46,6 +46,6 @@ When I wrote this software, I actually hesitated, and there seemed to be quite a
 
 ## Discussion area:
 
-[China PCBeta](http://bbs.pcbeta.com/viewthread-1873474-1-1.html)&nbsp;&nbsp;&nbsp;&nbsp;[insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
+[insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
 
 ### Note: This project started in October 2020
