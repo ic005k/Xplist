@@ -4,7 +4,7 @@ Written in front: The prototype of this software comes from https://github.com/a
 
 When I wrote this software, I actually hesitated, and there seemed to be quite a few similar softwares. In addition, due to the time, I never took any substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus ...
 
-# # Features include but are not limited to:
+## Features include but are not limited to:
 
 * Simple and easy-to-use man-machine interaction, with refined functions, no bloated and unnecessary
 
@@ -38,14 +38,12 @@ When I wrote this software, I actually hesitated, and there seemed to be quite a
 
 ...
 
-! [screenshot] (https://github.com/ic005k/plistedplus/blob/main/plist.png)
+![screenshot](https://github.com/ic005k/plistedplus/blob/main/plist.png)
 
-# # # [it is recommended to use github accelerator to download in China ](https://toolwa.com/github/)
+### [it is recommended to use github accelerator to download in China ](https://toolwa.com/github/)
 
-# # Discussion area:
+## Discussion area:
 
-[Vision PCBeta] (http://bbs.pcbeta.com/viewthread-1873474-1-1.html): &nbsp; &nbsp; &nbsp; [insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
+[China PCBeta](http://bbs.pcbeta.com/viewthread-1873474-1-1.html)&nbsp;&nbsp;&nbsp;&nbsp;[insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
 
-
-
-# # # Note: This project started in October 2020
+### Note: This project started in October 2020
