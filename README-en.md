@@ -1,4 +1,4 @@
-[English](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [简体中文](https://github.com/ic005k/PlistEDPlus/edit/main/README.md)
+[English](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 
 # PlistEDPlus-- open source cross-platform lightweight Plist file editor
 
