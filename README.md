@@ -44,7 +44,7 @@
 
 ## 讨论区：
 
-远景pcbeta: http://bbs.pcbeta.com/viewthread-1873474-1-1.html
+[远景pcbeta](http://bbs.pcbeta.com/viewthread-1873474-1-1.html)
 
 insanelymac: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
