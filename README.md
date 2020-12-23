@@ -1,4 +1,4 @@
-# PlistEDPlus--开源跨平台的轻量Plist文件编辑器
+# PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
 
 写在前面：该软件的原型来自：https://github.com/alpex92/PlistED  ，由于这个原型的存在，不至于使我从头开始码砖，感谢@alpex92！
 
