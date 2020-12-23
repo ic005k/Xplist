@@ -42,8 +42,6 @@ When I wrote this software, I actually hesitated, and there seemed to be quite a
 
 ![screenshot](https://github.com/ic005k/plistedplus/blob/main/plist.png)
 
-### [it is recommended to use github accelerator to download in China ](https://toolwa.com/github/)
-
 ## Discussion area:
 
 [insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
