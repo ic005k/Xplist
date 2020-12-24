@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.22";
+    CurVerison = "1.0.23";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -131,14 +131,21 @@ MainWindow::MainWindow(QWidget* parent)
     ui->mainToolBar->addAction(actionNewSibling);
     actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
     connect(actionNewSibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
+    connect(ui->actionNew_Sibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
+    ui->actionNew_Sibling->setShortcut(tr("ctrl+="));
 
     actionNewChild = new QAction(tr("New Child"), this);
     ui->mainToolBar->addAction(actionNewChild);
     actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
     connect(actionNewChild, &QAction::triggered, this, &MainWindow::on_actionNewChild);
+    ui->actionNew_Child->setShortcut(tr("="));
+    connect(ui->actionNew_Child, &QAction::triggered, this, &MainWindow::on_actionNewChild);
 
     ui->mainToolBar->addAction(ui->actionRemove);
     ui->actionRemove->setShortcut(Qt::Key_Delete);
+    ui->actionRemove_2->setShortcut(Qt::Key_Delete);
+    ui->actionRemove_2->setShortcut(tr("-"));
+    connect(ui->actionRemove_2, &QAction::triggered, this, &MainWindow::actionRemove_activated);
 
     ui->mainToolBar->addSeparator();
 
@@ -212,6 +219,8 @@ MainWindow::MainWindow(QWidget* parent)
     reg_win();
     this->resize(QSize(1350, 750));
     win = true;
+    ui->actionRemove_2->setShortcut(tr("ctrl+-"));
+    ui->actionNew_Child->setShortcut(tr("alt+="));
 #endif
 
 #ifdef Q_OS_LINUX
@@ -554,8 +563,8 @@ void MainWindow::actionAdd_activated()
 
         if (index.isValid()) {
 
-            QUndoCommand* addCommand = new AddCommand(model, index);
-            undoGroup->activeStack()->push(addCommand);
+            QUndoCommand* addMoveCommand = new AddMoveCommand(model, index);
+            undoGroup->activeStack()->push(addMoveCommand);
         }
     }
 }
@@ -677,8 +686,12 @@ void MainWindow::updateRecentFiles()
 void MainWindow::openRecentFile()
 {
     QAction* action = qobject_cast<QAction*>(sender());
-    if (action)
-        openPlist(action->text());
+    if (action) {
+        QString file = action->text();
+        QFileInfo fi(file);
+        if (fi.exists())
+            openPlist(file);
+    }
 }
 
 void MainWindow::setExpandText(EditorTab* tab)

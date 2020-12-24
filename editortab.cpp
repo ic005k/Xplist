@@ -652,8 +652,8 @@ void EditorTab::on_actionNewSibling()
 
     if (index.isValid()) {
 
-        QUndoCommand* addCommand = new AddCommand(tab->getModel(), index.parent());
-        undoGroup->activeStack()->push(addCommand);
+        QUndoCommand* addMoveCommand = new AddMoveCommand(tab->getModel(), index.parent());
+        undoGroup->activeStack()->push(addMoveCommand);
     }
 }
 

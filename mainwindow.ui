@@ -94,6 +94,10 @@
     <addaction name="separator"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
+    <addaction name="actionNew_Sibling"/>
+    <addaction name="actionNew_Child"/>
+    <addaction name="actionRemove_2"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -402,6 +406,21 @@
   <action name="actionSaveAndFind">
    <property name="text">
     <string>Save and refresh the data before searching</string>
+   </property>
+  </action>
+  <action name="actionNew_Sibling">
+   <property name="text">
+    <string>New Sibling</string>
+   </property>
+  </action>
+  <action name="actionNew_Child">
+   <property name="text">
+    <string>New Child</string>
+   </property>
+  </action>
+  <action name="actionRemove_2">
+   <property name="text">
+    <string>Remove</string>
    </property>
   </action>
  </widget>
