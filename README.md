@@ -1,52 +1,49 @@
-[简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md)
-# PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
+[English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md) | [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md)
 
-写在前面：该软件的原型来自：https://github.com/alpex92/PlistED  ，由于这个原型的存在，不至于使我从头开始码砖，感谢@alpex92！
+# PlistEDPlus-- open source cross-platform lightweight Plist file editor
 
-写这个软件的时候，其实有些犹豫，类似的软件貌似也不少，再加上时间的关系，一直没有付出实质的行动。但写一款Plist编辑器的想法，一直挥之不去，所以最终促成了PlistEDPlus...
+Written in front: The prototype of this software comes from https://github.com/alpex92/PlistED. Because of the existence of this prototype, it won't make me code bricks from scratch. Thanks @alpex92!
 
-## 特征包括但不限于：
+When I wrote this software, I actually hesitated, and there seemed to be quite a few similar softwares. In addition, due to the time, I never took any substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus ...
 
-* 简洁明快易于使用的人机交互，力保功能精炼，不臃肿、不多余
+## Features include but are not limited to:
 
-* 开源、跨平台（目前支持win、mac、linux）
+* Simple and easy-to-use man-machine interaction, with refined functions, no bloated and unnecessary
 
-* 人性化的搜索功能（a.在展开的节点范围内，键、数据类型、值各列的键盘首字符搜索; b.搜索框全局搜索，一次性展示搜索结果）
+* open source, cross-platform (currently supports win, mac, linux)
 
-* 完全遵循并符合plist文件技术规范，数据类型显示与plist文本完全一致，不做任何转义
+* humanized search function (a. search the keyboard initials of each column of keys, data types and values within the expanded nodes; B. Search box global search, display search results at one time)
 
-* 多标签浏览文件
+* fully comply with and comply with plist file technical specifications, and the data type display is completely consistent with plist text without any escape
 
-* 多国语言支持（目前支持中文、俄文、英文）
+* Multi-tab browsing documents
 
-* 拖拽文件到软件界面打开文件、双击打开文件、文件打开的历史记录显示、自动加载上次打开的文件
+* Multilingual support (currently supports Chinese, Russian and English)
 
-* 增加、移除、粘贴、剪切、编辑条目等，全部纳入Undo、Redo策略组，支持撤销和恢复
+* drag and drop the file to the software interface to open the file, double-click to open the file, display the history of file opening, and automatically load the last opened file
 
-* 展开和折叠条目的右键菜单，在不同的列，有不同的效果
+* add, remove, paste, cut, edit entries, etc., all of which are included in the Undo and Redo policy groups, and support revocation and recovery
 
-* 对于data类型的值，悬浮窗自动显示对应的ASCII和Base64的值
+* expand and collapse the right-click menu of items, which has different effects in different columns
 
-* 更改数据类型时，其值会自动随之转换
+* for the value of data type, the floating window automatically displays the corresponding ASCII and Base64 values
 
-* 可自由选择某个节点下的子项进行A->Z排序（目前不对数组进行排序）
+* When the data type is changed, its value will be automatically converted.
 
-* 内置更新检查
+* you can freely choose the children under a node to sort by A->Z (the array is not sorted at present)
 
-* 如果当前打开的文件被其他程序修改，则自动提示是否重新装入
+* Built-in update check
 
-* 软件UI自适应各种分辨率，支持winpe、linux livecd等
+* If the currently opened file is modified by other programs, it will automatically prompt whether to reload it.
+
+* Software UI adapts to various resolutions and supports winpe, linux livecd, etc.
 
 ...
 
-![截图](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
+![screenshot](https://github.com/ic005k/plistedplus/blob/main/plist.png)
 
-### [国内建议使用github加速器下载](https://toolwa.com/github/)
-
-## 讨论区：
+## Discussion area:
 
 [insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
 
-
-
-### 备注：此项目开始于2020年10月
+### Note: This project started in October 2020
