@@ -113,6 +113,7 @@
     <addaction name="actionRestoreScene"/>
     <addaction name="actionDefaultNodeIcon"/>
     <addaction name="actionSaveAndFind"/>
+    <addaction name="actionExpandAllOpenFile"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menuEdit"/>
@@ -421,6 +422,14 @@
   <action name="actionRemove_2">
    <property name="text">
     <string>Remove</string>
+   </property>
+  </action>
+  <action name="actionExpandAllOpenFile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Expand all when opening a file</string>
    </property>
   </action>
  </widget>

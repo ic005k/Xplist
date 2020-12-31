@@ -24,6 +24,8 @@ extern bool defaultIcon;
 
 QCheckBox* chkBox;
 bool chk_null = true;
+int childCount = 0;
+int currentRow = 0;
 
 EditorTab::EditorTab(DomModel* m, QWidget* parent)
     : QWidget(parent)
@@ -34,50 +36,19 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     chkBox = new QCheckBox(this);
     chkBox->setVisible(false);
-    this->setAcceptDrops(true);
 
-    QTreeView* view = ui->treeView;
+    QSizePolicy policy;
+    policy.setHorizontalPolicy(QSizePolicy::Expanding);
+    policy.setVerticalPolicy(QSizePolicy::Expanding);
 
-    QFont font;
-#ifdef Q_OS_WIN32
+    treeView = new MyTreeView(this);
+    //treeView = ui->treeView;
 
-    font.setPointSize(9);
-    if (!defaultIcon)
-        view->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+    ui->gridLayout->addWidget(treeView);
+    //treeView->setGeometry(0, 0, 500, 500);
+    //treeView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-        );
-
-#endif
-
-#ifdef Q_OS_LINUX
-    font.setPointSize(11);
-    if (!defaultIcon)
-        view->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
-
-        );
-
-#endif
-
-#ifdef Q_OS_MAC
-    font.setPointSize(13);
-    if (!defaultIcon)
-        view->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
-
-        );
-
-#endif
+    treeView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
 
     treeExpanded = false;
 
@@ -85,40 +56,88 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     setModel(m);
 
+    QFont font;
+#ifdef Q_OS_WIN32
+
+    font.setPointSize(9);
+    if (!defaultIcon)
+        treeView->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+            "QTreeView::branch:open:has-children:!has-siblings,"
+            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+            "QTreeView::branch:has-children:!has-siblings:closed,"
+            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+
+        );
+
+    treeView->setColumnWidth(0, 600);
+    //treeView->setStyle(QStyleFactory::create("windows"));
+
+#endif
+
+#ifdef Q_OS_LINUX
+    font.setPointSize(11);
+    if (!defaultIcon)
+        treeView->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+            "QTreeView::branch:open:has-children:!has-siblings,"
+            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+            "QTreeView::branch:has-children:!has-siblings:closed,"
+            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+
+        );
+
+    treeView->setColumnWidth(0, 500);
+
+#endif
+
+#ifdef Q_OS_MAC
+    font.setPointSize(13);
+    if (!defaultIcon)
+        treeView->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+            "QTreeView::branch:open:has-children:!has-siblings,"
+            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+            "QTreeView::branch:has-children:!has-siblings:closed,"
+            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+
+        );
+    treeView->setColumnWidth(0, 420);
+#endif
+
     undoStack = new QUndoStack();
 
-    delegate1 = new LineEditDelegate(view);
+    delegate1 = new LineEditDelegate(treeView);
 
-    delegate2 = new ComboBoxDelegate(view);
+    delegate2 = new ComboBoxDelegate(treeView);
 
-    delegate_bool = new ComboBoxDelegateBool(view);
+    delegate_bool = new ComboBoxDelegateBool(treeView);
 
-    view->setItemDelegateForColumn(0, delegate1);
+    treeView->setItemDelegateForColumn(0, delegate1);
 
-    view->setItemDelegateForColumn(1, delegate2);
+    treeView->setItemDelegateForColumn(1, delegate2);
 
-    view->setItemDelegateForColumn(2, delegate1);
+    treeView->setItemDelegateForColumn(2, delegate1);
 
-    view->expandToDepth(0);
+    treeView->expandToDepth(0);
 
-    view->setFont(font);
+    treeView->setFont(font);
 
     //view->header()->setDefaultSectionSize(150);//表头默认列宽
-    view->setColumnWidth(0, 200);
-    view->header()->setMinimumHeight(25); //表头高度
-
-    //view->header()->setDefaultAlignment(Qt::AlignCenter); //表头文字默认对齐方式
+    //treeView->header()->setMinimumHeight(25); //表头高度
+    //view->header()->setDefaultAlignment(Qt::AlignCenter);
     //view->header()->setStretchLastSection(true);
-    //view->header()->setSortIndicator(0, Qt::AscendingOrder); //按第1列升序排序
+    //view->header()->setSortIndicator(0, Qt::AscendingOrder);
     //view->setSortingEnabled(true);
-    //view->setStyle(QStyleFactory::create("windows")); //连接的虚线
+    //treeView->setStyle(QStyleFactory::create("windows"));
     //view->setSelectionBehavior(QAbstractItemView::SelectItems); //不选中一行，分单元格选择
 
-    connect(model, SIGNAL(itemAdded(const QModelIndex&)), this, SLOT(onItemAded(const QModelIndex&)));
+    connect(model, SIGNAL(itemAdded(const QModelIndex&)), this, SLOT(onItemAdded(const QModelIndex&)));
 
     connect(delegate1, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex&, QString)));
     connect(delegate2, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex&, QString)));
     connect(delegate_bool, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex&, QString)));
+
+    connect(treeView, &QTreeView::clicked, this, &EditorTab::treeView_clicked);
+    //connect(treeView, &QTreeView::doubleClicked, this, &EditorTab::treeView_doubleClicked);
+    connect(treeView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &EditorTab::slotCurrentRowChanged);
 }
 
 EditorTab::~EditorTab()
@@ -131,10 +150,6 @@ EditorTab::~EditorTab()
 #ifndef QT_NO_CONTEXTMENU
 void EditorTab::contextMenuEvent(QContextMenuEvent* event)
 {
-
-    EditorTab* tab = tabWidget->getCurentTab();
-    QTreeView* treeView = new QTreeView;
-    treeView = (QTreeView*)tab->children().at(1);
 
     QMenu menu(treeView);
 
@@ -187,13 +202,13 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
 }
 #endif // QT_NO_CONTEXTMENU
 
-void EditorTab::onItemAded(const QModelIndex& index)
+void EditorTab::onItemAdded(const QModelIndex& index)
 {
 
-    ui->treeView->resizeColumnToContents(0);
+    //treeView->resizeColumnToContents(0);
 
-    ui->treeView->expand(index);
-    ui->treeView->doItemsLayout(); //重要：刷新数据的显示
+    treeView->expand(index);
+    treeView->doItemsLayout(); //重要：刷新数据的显示
 }
 
 bool EditorTab::isExpanded()
@@ -203,30 +218,27 @@ bool EditorTab::isExpanded()
 
 void EditorTab::expand()
 {
+    loading = true;
+
     if (treeExpanded == false) {
         treeExpanded = true;
         //ui->treeView->expandAll(); //性能差
 
-        EditorTab* tab = tabWidget->getCurentTab();
-        DomModel* model = tab->getModel();
+        DomModel* model = this->getModel();
         QModelIndex index;
         index = model->index(0, 0);
 
         if (index.isValid()) {
 
             view_expand(index, model); //性能好
-            mw_one->ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/col.png"));
         }
 
     } else //if(treeExpanded)
     {
         treeExpanded = false;
-        ui->treeView->expandToDepth(0); //性能好些
+        treeView->expandToDepth(0); //性能好些
 
-        mw_one->ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
-
-        EditorTab* tab = tabWidget->getCurentTab();
-        DomModel* model = tab->getModel();
+        DomModel* model = this->getModel();
         QModelIndex index;
         index = model->index(0, 0);
 
@@ -235,11 +247,13 @@ void EditorTab::expand()
         }
     }
 
-    on_treeView_expanded();
+    //treeView->resizeColumnToContents(0);
+
+    loading = false;
 }
 QModelIndex EditorTab::currentIndex() const
 {
-    QModelIndex i = ui->treeView->currentIndex();
+    QModelIndex i = treeView->currentIndex();
     return QModelIndex(i);
 }
 
@@ -257,7 +271,9 @@ void EditorTab::setModel(DomModel* m)
     //proxyModel = new QSortFilterProxyModel(this);
     //proxyModel->setSourceModel(m);
 
-    ui->treeView->setModel(m);
+    //m->supportedDragActions();
+    treeView->setModel(m);
+
     //ui->treeView->setModel(proxyModel);
 
     //ui->treeView->setSortingEnabled(true);
@@ -266,19 +282,21 @@ void EditorTab::setModel(DomModel* m)
 
 void EditorTab::clearModel()
 {
-    ui->treeView->setModel(NULL);
+    treeView->setModel(NULL);
     delete model;
     model = NULL;
 }
 
-void EditorTab::on_treeView_expanded()
+void EditorTab::treeView_expanded()
 {
-    ui->treeView->resizeColumnToContents(0);
+    if (!loading)
+        treeView->resizeColumnToContents(0);
 }
 
-void EditorTab::on_treeView_collapsed()
+void EditorTab::treeView_collapsed()
 {
-    on_treeView_expanded();
+    if (!loading)
+        treeView->resizeColumnToContents(0);
 }
 
 QUndoStack* EditorTab::getUndoStack()
@@ -310,53 +328,9 @@ void EditorTab::editorDataAboutToBeSet(const QModelIndex& index, QString val)
     }
 }
 
-void EditorTab::on_treeView_doubleClicked(const QModelIndex& index)
+void EditorTab::treeView_doubleClicked(const QModelIndex& index)
 {
-    DomModel* model = this->model;
-    DomItem* item = model->itemForIndex(index);
-
-    if (item->getType() == "bool" && index.column() == 2) {
-        //connect(chkBox, &QCheckBox::stateChanged, this, &EditorTab::on_chkBox);
-        if (!chkBox->isChecked()) {
-            //val_bool = "false";
-            //item->setValue("     " + val_bool);
-        }
-        return;
-    }
-
-    //if(item->getType() == "bool")
-    //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
-    //else
-    //    ui->treeView->setItemDelegateForColumn(2, delegate1);
-
-    /*if(index != index_bool_bak)
-    {
-        if(index_bool_bak.isValid())
-            ui->treeView->setIndexWidget(index_bool_bak, NULL);
-    }
-
-    if(index.column() == 1)
-    {
-        comBox = new QComboBox;
-        QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
-        comBox->setItemDelegate(itemDelegate);
-
-        //comBox->setMaximumHeight(16);
-        QStringList list;
-        list << "array" << "dict" << "integer" << "real" << "string" << "data" << "bool" << "date";
-        comBox->insertItems(0, list);
-        ui->treeView->setIndexWidget(index, comBox);
-        index_bool_bak = index;
-        QString value = index.data().toString();
-        int n = comBox->findText(value);
-        comBox->setCurrentIndex(n);
-        comBox->showPopup();
-    }*/
-}
-
-void EditorTab::mousePressEvent(QMouseEvent* e)
-{
-    Q_UNUSED(e);
+    Q_UNUSED(index);
 }
 
 QByteArray EditorTab::HexStrToByte(QString value)
@@ -402,41 +376,45 @@ int EditorTab::hex_to_ascii(QString str)
     }
 }
 
-void EditorTab::on_treeView_clicked(const QModelIndex& index)
+void EditorTab::treeView_clicked(const QModelIndex& index)
 {
 
+    Q_UNUSED(index);
     actionSort->setEnabled(true);
-
-    DomModel* model = this->model;
-    DomItem* item = model->itemForIndex(index);
+    initBoolWidget(index);
 
     //if(item->getType() == "bool")
     //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
     //else
     //    ui->treeView->setItemDelegateForColumn(2, delegate1);
+}
 
-    QString str, str0, str1, str2, str3, str4, str5;
-    if (item->getType() == "data" && index.column() == 2) {
+void EditorTab::slotCurrentRowChanged(const QModelIndex index, const QModelIndex& previous)
+{
+    Q_UNUSED(previous);
+
+    mw_one->showMsg();
+
+    DomModel* model = this->model;
+    DomItem* item = model->itemForIndex(index);
+
+    QString str0, str;
+    if (item->getType() == "data") // && index.column() == 2)
+    {
         str = item->getValue().remove(QRegExp("\\s")); //16进制去除所有空格
         str0 = QString::fromLocal8Bit(HexStrToByte(str));
-        ui->treeView->setToolTip(str + "\nASCII: " + HexStrToByte(str) + "\nBase64: " + HexStrToByte(str).toBase64());
-        //qDebug() << str0;
+        treeView->setToolTip(str + "\nASCII: " + HexStrToByte(str) + "\nBase64: " + HexStrToByte(str).toBase64());
+
     } else {
         str = index.data().toString();
-        ui->treeView->setToolTip("");
+        treeView->setToolTip("");
     }
+}
 
-    str1 = QObject::tr("Currently selected: ") + str;
-    str2 = "      " + QObject::tr("Row: ") + QString::number(index.row() + 1);
-    str3 = "      " + QObject::tr("Column: ") + QString::number(index.column() + 1);
-    str4 = "      " + QObject::tr("Parent level：") + index.parent().data().toString();
-    str5 = "      " + QObject::tr("Children: ") + QString::number(item->childCount());
-
-    //QString   top  =   getTopParent( c_index). data(). toString();
-    //str  +=   QStringLiteral( "    顶层节点名：%1\n"). arg( top);
-
-    myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
-
+void EditorTab::initBoolWidget(QModelIndex index)
+{
+    DomModel* model = this->model;
+    DomItem* item = model->itemForIndex(index);
     if (index != index_bool_bak) {
 
         if (index_bool_bak.isValid()) {
@@ -445,7 +423,7 @@ void EditorTab::on_treeView_clicked(const QModelIndex& index)
             if (item_bool->getType() == "bool")
                 item_bool->setValue(val_bool.trimmed());
 
-            ui->treeView->setIndexWidget(index_bool_bak, NULL);
+            treeView->setIndexWidget(index_bool_bak, NULL);
             chk_null = true;
             index_bool_bak = QModelIndex();
         }
@@ -455,19 +433,19 @@ void EditorTab::on_treeView_clicked(const QModelIndex& index)
 
         chkBox = new QCheckBox(this);
         chk_null = false;
-        ui->treeView->setFocus();
+        treeView->setFocus();
 
         connect(chkBox, &QCheckBox::clicked, this, &EditorTab::on_chkBox);
         QModelIndex index_m = model->index(index.row(), 2, index.parent());
 
-        ui->treeView->setIndexWidget(index_m, chkBox);
-        //chkBox->setGeometry(chkBox->x() + 100, chkBox->y(), chkBox->width(), chkBox->height());
+        treeView->setIndexWidget(index_m, chkBox);
+
         val_bool = item->getValue();
 
-        //QPalette p = chkBox->palette();
-        //p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
-        //p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
-        //chkBox->setPalette(p);
+        /*QPalette p = chkBox->palette();
+        p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
+        p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
+        chkBox->setPalette(p);*/
 
         if (item->getValue() == "false") {
             chkBox->setChecked(false);
@@ -498,7 +476,7 @@ QStandardItem* EditorTab::getTopParent(QStandardItem* item)
         item = secondItem;
     }
     if (secondItem->index().column() != 0) {
-        QStandardItemModel* model = static_cast<QStandardItemModel*>(ui->treeView->model());
+        QStandardItemModel* model = static_cast<QStandardItemModel*>(treeView->model());
         secondItem = model->itemFromIndex(secondItem->index().sibling(secondItem->index().row(), 0));
     }
     return secondItem;
@@ -596,11 +574,12 @@ void EditorTab::view_collapse(const QModelIndex index, DomModel* model)
     int childCount = model->rowCount(index);
     //qDebug() << childCount;
     for (int childNo = 0; childNo < childCount; childNo++) {
-        QModelIndex childIndex = index.child(childNo, 0);
+        //QModelIndex childIndex = index.child(childNo, 0);
+        QModelIndex childIndex = model->index(childNo, 0, index);
 
         if (model->rowCount(childIndex) > 0) {
-            if (ui->treeView->isExpanded(childIndex)) {
-                ui->treeView->setExpanded(childIndex, false);
+            if (treeView->isExpanded(childIndex)) {
+                treeView->setExpanded(childIndex, false);
 
                 view_collapse(childIndex, model);
             }
@@ -612,14 +591,15 @@ void EditorTab::view_expand(const QModelIndex index, DomModel* model)
 {
 
     int childCount = model->rowCount(index);
-    //qDebug() << childCount;
+
     for (int childNo = 0; childNo < childCount; childNo++) {
 
-        QModelIndex childIndex = index.child(childNo, 0);
+        //QModelIndex childIndex = index.child(childNo, 0);
+        QModelIndex childIndex = model->index(childNo, 0, index);
         if (model->rowCount(childIndex) > 0) {
-            if (!ui->treeView->isExpanded(childIndex)) {
-                ui->treeView->setExpanded(childIndex, true);
-                //ui->treeView->expand(childIndex);
+            if (!treeView->isExpanded(childIndex)) {
+                treeView->setExpanded(childIndex, true);
+                //ui->treetreeView->expand(childIndex);
 
                 view_expand(childIndex, model);
             }
@@ -629,17 +609,29 @@ void EditorTab::view_expand(const QModelIndex index, DomModel* model)
 
 void EditorTab::on_expandAction()
 {
+    loading = true;
+
     QModelIndex index = this->currentIndex();
     DomModel* model = this->getModel();
-    ui->treeView->expand(index);
+    treeView->expand(index);
     view_expand(index, model);
+
+    //treeView->resizeColumnToContents(0);
+
+    loading = false;
 }
 
 void EditorTab::on_collapseAction()
 {
+    loading = true;
+
     QModelIndex index = this->currentIndex();
     DomModel* model = this->getModel();
     view_collapse(index.parent(), model);
+
+    //treeView->resizeColumnToContents(0);
+
+    loading = false;
 }
 
 void EditorTab::on_actionNewSibling()
@@ -659,21 +651,13 @@ void EditorTab::on_actionNewSibling()
 
 void EditorTab::on_actionNewChild()
 {
-    /*EditorTab* tab = tabWidget->getCurentTab();
-    const QModelIndex index = tab->currentIndex();
-
-    if (index.isValid()) {
-
-        QUndoCommand* addCommand = new AddCommand(tab->getModel(), index);
-        undoGroup->activeStack()->push(addCommand);
-    }*/
 
     mw_one->actionAdd_activated();
 }
 
 void EditorTab::setIcon()
 {
-    ui->treeView->setIconSize(QSize(6, 6));
+    treeView->setIconSize(QSize(6, 6));
 }
 
 void EditorTab::on_chkBox()
@@ -703,54 +687,11 @@ void EditorTab::on_chkBox()
 
     item->setValue("     " + val_bool);
 
-    QTreeView* treeView = new QTreeView;
-    treeView = (QTreeView*)tabWidget->getCurentTab()->children().at(1);
     treeView->doItemsLayout();
     treeView->setFocus();
 }
 
-void EditorTab::dragEnterEvent(QDragEnterEvent* event)
+int EditorTab::getCurrentRow()
 {
-    QStringList formats = event->mimeData()->formats();
-    qDebug() << "dragEnterEvent formats = " << formats;
-    if (event->mimeData()->hasFormat("Node/NodePtr"))
-        event->accept();
-    else
-        event->ignore();
-}
-
-void EditorTab::dragLeaveEvent(QDragLeaveEvent* event)
-{
-    Q_UNUSED(event);
-    qDebug() << "dragLeaveEvent";
-}
-
-void EditorTab::dragMoveEvent(QDragMoveEvent* event)
-{
-    QStringList formats = event->mimeData()->formats();
-    qDebug() << "dragMoveEvent formats = " << formats;
-    if (event->mimeData()->hasFormat("Node/NodePtr")) {
-        event->setDropAction(Qt::MoveAction);
-        event->accept();
-    } else {
-        event->ignore();
-    }
-}
-
-void EditorTab::dropEvent(QDropEvent* event)
-{
-    QStringList formats = event->mimeData()->formats();
-    qDebug() << "dropEvent formats = " << formats;
-    if (event->mimeData()->hasFormat("Node/NodePtr")) {
-        QVariant varData = event->mimeData()->data("Node/NodePtr");
-        QByteArray byteData = varData.toByteArray();
-        QDataStream stream(&byteData, QIODevice::ReadWrite);
-        qint64 node;
-        stream >> (node);
-
-        event->setDropAction(Qt::MoveAction);
-        event->accept();
-    } else {
-        event->ignore();
-    }
+    return currentRow;
 }

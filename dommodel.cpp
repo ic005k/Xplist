@@ -10,6 +10,9 @@ extern EditorTabsWidget* tabWidget;
 extern DomItem* copy_item;
 extern bool paste;
 extern MainWindow* mw_one;
+extern int childCount;
+extern QUndoGroup* undoGroup;
+extern int currentRow;
 
 DomModel::DomModel(QObject* parent)
     : QAbstractItemModel(parent)
@@ -96,10 +99,17 @@ Qt::ItemFlags DomModel::flags(const QModelIndex& index) const
      return Qt::ItemIsEnabled | Qt::ItemIsSelectable| Qt::ItemIsEditable;*/
 
     //新的
-    if (!index.isValid())
+    /*if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
+    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);*/
+
+    Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+
+    if (index.isValid())
+        return Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | defaultFlags;
+    else
+        return Qt::ItemIsDropEnabled | defaultFlags;
 }
 
 QVariant DomModel::headerData(int section, Qt::Orientation orientation,
@@ -249,8 +259,6 @@ QModelIndex DomModel::addMoveItem(const QModelIndex& parent, int row, ItemState*
         return this->index(child->row(), 0, index);
     }
 
-    //QAbstractItemView::viewport()->update();
-
     return QModelIndex();
 }
 
@@ -295,16 +303,18 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
 
         DomItem* child = NULL;
 
-        //if(copy_item->getName().contains("Item "))
-        //    row = child_count; //如果原始数据是数组，则直接放在最后面
-
         beginInsertRows(index, row, row);
 
         child = item->addChild(row, child);
+        QString Name = copy_item->getName();
+        QString Type = copy_item->getType();
+        QString Value = copy_item->getValue();
+        if (Type == "bool")
+            Value = Value.trimmed();
         if (!re)
-            child->setData(copy_item->getName(), copy_item->getType(), copy_item->getValue());
+            child->setData(Name, Type, Value);
         else
-            child->setData(copy_item->getName() + "-" + QString::number(total), copy_item->getType(), copy_item->getValue());
+            child->setData(Name + "-" + QString::number(total), Type, Value);
 
         //if (copy_item->getName().contains("Item "))
         if (item->getType() == "array") {
@@ -331,6 +341,9 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
             QString name = copy_item->childItems.at(i)->getName();
             QString type = copy_item->childItems.at(i)->getType();
             QString value = copy_item->childItems.at(i)->getValue();
+            if (type == "bool")
+                value = value.trimmed();
+
             item0 = NULL;
             item0 = child->addChild(i, item0);
             item0->setData(name, type, value); //先增加，再设置数据
@@ -341,6 +354,9 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
                     QString name = sub1->childItems.at(j)->getName();
                     QString type = sub1->childItems.at(j)->getType();
                     QString value = sub1->childItems.at(j)->getValue();
+                    if (type == "bool")
+                        value = value.trimmed();
+
                     item1 = NULL;
                     item1 = item0->addChild(j, item1);
                     item1->setData(name, type, value); //先增加，再设置数据
@@ -351,6 +367,9 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
                             QString name = sub2->childItems.at(k)->getName();
                             QString type = sub2->childItems.at(k)->getType();
                             QString value = sub2->childItems.at(k)->getValue();
+                            if (type == "bool")
+                                value = value.trimmed();
+
                             item2 = NULL;
                             item2 = item1->addChild(k, item2);
                             item2->setData(name, type, value); //先增加，再设置数据
@@ -361,6 +380,9 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
                                     QString name = sub3->childItems.at(l)->getName();
                                     QString type = sub3->childItems.at(l)->getType();
                                     QString value = sub3->childItems.at(l)->getValue();
+                                    if (type == "bool")
+                                        value = value.trimmed();
+
                                     item3 = NULL;
                                     item3 = item2->addChild(l, item3);
                                     item3->setData(name, type, value); //先增加，再设置数据
@@ -371,6 +393,8 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
                                             QString name = sub4->childItems.at(n)->getName();
                                             QString type = sub4->childItems.at(n)->getType();
                                             QString value = sub4->childItems.at(n)->getValue();
+                                            if (type == "bool")
+                                                value = value.trimmed();
                                             item4 = NULL;
                                             item4 = item3->addChild(n, item4);
                                             item4->setData(name, type, value); //先增加，再设置数据
@@ -472,8 +496,6 @@ void DomModel::sort(int column, Qt::SortOrder order)
         if (!index.isValid())
             return;
 
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
         QModelIndex indexBak = tab->currentIndex();
         int rowBak = indexBak.row();
 
@@ -488,7 +510,8 @@ void DomModel::sort(int column, Qt::SortOrder order)
 
         if (item->getType() != "array") {
             for (int i = 0; i < count; i++) {
-                treeView->setCurrentIndex(index.child(i, column));
+                //tab->treeView->setCurrentIndex(index.child(i, column));
+                tab->treeView->setCurrentIndex(tab->getModel()->index(i, column, index));
 
                 item1 = item->child(i);
 
@@ -500,7 +523,6 @@ void DomModel::sort(int column, Qt::SortOrder order)
                     break;
                 }
 
-                //qDebug() << item1->getName() << item2->getName();
                 if (order == Qt::AscendingOrder) {
 
                     if (item1->getName() > item2->getName()) {
@@ -516,9 +538,145 @@ void DomModel::sort(int column, Qt::SortOrder order)
         emit layoutChanged();
 
         indexBak = this->index(rowBak, 0, index);
-        treeView->setCurrentIndex(indexBak);
-        treeView->setFocus();
+        tab->treeView->setCurrentIndex(indexBak);
+        tab->treeView->setFocus();
 
         mw_one->showMsg();
     }
+}
+
+Qt::DropActions DomModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}
+
+QStringList DomModel::mimeTypes() const
+//当items中的data从model导出时，他们被编译成一个或多个Mime类型
+{
+    QStringList types;
+    types << "application/vnd.text.list";
+    //表示plain text，纯文本
+    return types;
+}
+
+QMimeData* DomModel::mimeData(const QModelIndexList& indexes) const
+//将items中的数据，编译成plain text并存储在QMimeData对象中
+{
+    QMimeData* mimeData = new QMimeData();
+    QByteArray encodedData;
+    //存储“8 bit、以'\0'结尾的 字符串”，比const char*更方便；
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+    //二进制的stream，100%的独立于操作系统。
+    foreach (QModelIndex index, indexes) {
+        if (index.isValid()) {
+            QString text = data(index, Qt::DisplayRole).toString();
+            stream << text;
+        }
+    }
+    mimeData->setData("application/vnd.text.list", encodedData);
+
+    /*QMimeData* data = QAbstractItemModel::mimeData(indexes);
+    if (data) {
+        // parent mimeData中已判断indexes有效性，无效的会返回nullptr
+        // 也可以把信息放到model的mutable成员中
+        data->setData("row", QByteArray::number(indexes.at(0).row()));
+        data->setData("col", QByteArray::number(indexes.at(0).column()));
+    }
+
+    return data;*/
+
+    EditorTab* tab = tabWidget->getCurentTab();
+
+    currentRow = indexes.at(0).row();
+
+    if (indexes.at(0).parent().isValid())
+        childCount = tab->getModel()->itemForIndex(indexes.at(0).parent())->childCount();
+
+    return mimeData;
+}
+
+bool DomModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
+{
+    Q_UNUSED(data);
+    Q_UNUSED(action);
+
+    //将“拖放的数据(dropped data)”插入到Model中
+    /*if (action == Qt::IgnoreAction)
+        return true;
+    if (!data->hasFormat("application/vnd.text.list"))
+        return false;
+    if (column > 0)
+        return false;
+    //
+    int beginRow;
+    if (row != -1)
+        beginRow = row;
+    else if (parent.isValid())
+        beginRow = parent.row();
+    else
+        beginRow = rowCount(QModelIndex());
+    //
+    QByteArray encodedData = data->data("application/vnd.text.list");
+    QDataStream stream(&encodedData, QIODevice::ReadOnly);
+    QStringList newItems;
+    int rows = 0;
+    while (!stream.atEnd()) {
+        QString text;
+        stream >> text;
+        newItems << text;
+        ++rows;
+    }
+    insertRows(beginRow, rows, QModelIndex());
+    foreach (QString text, newItems) {
+        QModelIndex idx = index(beginRow, 0, QModelIndex());
+        setData(idx, text);
+        beginRow++;
+    }*/
+
+    if (!parent.isValid())
+        return false;
+
+    EditorTab* tab = tabWidget->getCurentTab();
+    QModelIndex indexNew;
+    indexNew = tab->treeView->currentIndex();
+
+    if (tab->treeView->currentIndex().parent() != parent) //是否同级
+        return false;
+
+    //qDebug() << "目标行：" << row << "条目总数：" << childCount << "开始行：" << currentRow;
+
+    if (row == -1) {
+
+        //undoGroup->undo();
+        tab->treeView->setFocus();
+
+        tab->treeView->setCurrentIndex(indexNew);
+        return false;
+    }
+
+    if (row > currentRow) {
+        indexNew = tab->getModel()->index(row - 1, column, parent);
+    }
+
+    if (row < currentRow) {
+        indexNew = tab->getModel()->index(row, column, parent);
+    }
+
+    if (row != -1) {
+        tab->on_cutAction();
+        tab->treeView->setCurrentIndex(indexNew);
+
+        tab->on_pasteAction();
+    }
+
+    if (row > currentRow) {
+        indexNew = tab->getModel()->index(row - 1, column, parent);
+    }
+    if (row < currentRow) {
+        indexNew = tab->getModel()->index(row, column, parent);
+    }
+
+    tab->treeView->setCurrentIndex(indexNew);
+
+    return true;
 }

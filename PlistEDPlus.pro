@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     editortabswidget.cpp \
     commands.cpp \
     itemstate.cpp \
-    myapp.cpp
+    myapp.cpp \
+    mytreeview.cpp
 
 HEADERS  += mainwindow.h \
     comboboxdelegatebool.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     editortabswidget.h \
     commands.h \
     itemstate.h \
-    myapp.h
+    myapp.h \
+    mytreeview.h
 
 FORMS    += mainwindow.ui \
     editortab.ui

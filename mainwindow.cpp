@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "filesystemwatcher.h"
+#include "mytreeview.h"
 #include "ui_mainwindow.h"
 
 #include <QMessageBox>
@@ -51,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.23";
+    CurVerison = "1.0.24";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -246,6 +247,8 @@ MainWindow::MainWindow(QWidget* parent)
         SaveAndFind = Reg.value("SaveAndFind").toBool();
         ui->actionSaveAndFind->setChecked(SaveAndFind);
 
+        ui->actionExpandAllOpenFile->setChecked(Reg.value("ExpAll").toBool());
+
         bool restore = Reg.value("restore").toBool();
         ui->actionRestoreScene->setChecked(restore);
         if (restore) {
@@ -294,11 +297,11 @@ void MainWindow::actionNew_activated()
     tabWidget->createTab(model);
 
     EditorTab* tab = tabWidget->getCurentTab();
-    QTreeView* treeView = new QTreeView;
-    treeView = (QTreeView*)tab->children().at(1);
-    treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
+    //QTreeView* treeView = new QTreeView;
+    //treeView = (QTreeView*)tab->children().at(1);
+    tab->treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
 
-    treeView->setFocus();
+    tab->treeView->setFocus();
 }
 
 void MainWindow::actionOpen_activated()
@@ -326,8 +329,9 @@ void MainWindow::openFiles(QStringList list)
             "", "Property list (*.plist);;All files(*.*)");
     }
 
-    for (int i = 0; i < list.size(); ++i)
+    for (int i = 0; i < list.size(); ++i) {
         openPlist(list[i]);
+    }
 }
 
 void MainWindow::openPlist(QString filePath)
@@ -381,12 +385,14 @@ void MainWindow::openPlist(QString filePath)
 
         //列宽自动适应最长的条目
         EditorTab* tab = tabWidget->getCurentTab();
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
-        treeView->resizeColumnToContents(0);
 
-        treeView->setCurrentIndex(tab->getModel()->index(0, 0));
-        treeView->setFocus();
+        //tab->treeView->resizeColumnToContents(0);
+
+        tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
+        tab->treeView->setFocus();
+
+        if (ui->actionExpandAllOpenFile->isChecked())
+            actionExpand_all_activated();
 
         QFileInfo fi(filePath);
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
@@ -552,9 +558,6 @@ void MainWindow::actionAdd_activated()
         EditorTab* tab = tabWidget->getCurentTab();
         const QModelIndex index = tab->currentIndex();
         DomModel* model = tab->getModel();
-
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
 
         QModelIndex index0 = model->index(index.row(), 0, index.parent());
 
@@ -784,15 +787,15 @@ void MainWindow::on_Find()
 
         DomModel* model = tab->getModel();
 
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
+        //QTreeView* treeView = new QTreeView;
+        //treeView = (QTreeView*)tab->children().at(1);
 
         //treeView->collapseAll();
-        treeView->expandToDepth(0);
+        tab->treeView->expandToDepth(0);
 
         index = model->index(0, 0);
-        treeView->setCurrentIndex(index); //设置当前索引
-        treeView->setFocus();
+        tab->treeView->setCurrentIndex(index); //设置当前索引
+        tab->treeView->setFocus();
 
         findCount = 0;
         lblFindCount->setText("  " + QString::number(findCount) + "  ");
@@ -822,10 +825,10 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             EditorTab* tab = tabWidget->getCurentTab();
             //DomModel* model = tab->getModel();
 
-            QTreeView* treeView = new QTreeView;
-            treeView = (QTreeView*)tab->children().at(1);
+            //QTreeView* treeView = new QTreeView;
+            //treeView = (QTreeView*)tab->children().at(1);
 
-            treeView->selectionModel()->setCurrentIndex(index2, QItemSelectionModel::Select);
+            tab->treeView->selectionModel()->setCurrentIndex(index2, QItemSelectionModel::Select);
             //treeView->selectionModel()->setCurrentIndex(index2, QItemSelectionModel::SelectCurrent);
             findCount++;
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
@@ -841,10 +844,10 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 
             EditorTab* tab = tabWidget->getCurentTab();
             //DomModel* model = tab->getModel();
-            QTreeView* treeView = new QTreeView;
-            treeView = (QTreeView*)tab->children().at(1);
+            //QTreeView* treeView = new QTreeView;
+            //treeView = (QTreeView*)tab->children().at(1);
 
-            treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
+            tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
             //treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::SelectCurrent);
             findCount++;
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
@@ -876,10 +879,10 @@ void MainWindow::findEdit_textChanged(const QString& arg1)
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
 
             EditorTab* tab = tabWidget->getCurentTab();
-            QTreeView* treeView = new QTreeView;
-            treeView = (QTreeView*)tab->children().at(1);
+            //QTreeView* treeView = new QTreeView;
+            //treeView = (QTreeView*)tab->children().at(1);
             QModelIndex index = tab->currentIndex();
-            treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Clear);
+            tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Clear);
         }
     }
 }
@@ -921,6 +924,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
     Reg.setValue("restore", ui->actionRestoreScene->isChecked());
     Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
     Reg.setValue("SaveAndFind", ui->actionSaveAndFind->isChecked());
+    Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
 
     if (tabWidget->hasTabs()) {
 
@@ -1013,8 +1017,8 @@ void MainWindow::on_actionMoveUp()
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
+        //QTreeView* treeView = new QTreeView;
+        //treeView = (QTreeView*)tab->children().at(1);
         DomModel* model = tab->getModel();
         QModelIndex index, index_bak;
         index = tab->currentIndex();
@@ -1044,7 +1048,7 @@ void MainWindow::on_actionMoveUp()
         }
 
         on_cutAction();
-        treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
+        tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
         on_pasteAction();
 
         //之前的老方法
@@ -1060,8 +1064,7 @@ void MainWindow::on_actionMoveUp()
         if (array)
             items->setType("array");
 
-        treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
-        showMsg();
+        tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
     }
 }
 void MainWindow::on_actionMoveDown()
@@ -1069,8 +1072,8 @@ void MainWindow::on_actionMoveDown()
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
+        //QTreeView* treeView = new QTreeView;
+        //treeView = (QTreeView*)tab->children().at(1);
         DomModel* model = tab->getModel();
         QModelIndex index, index_bak;
         index = tab->currentIndex();
@@ -1102,7 +1105,7 @@ void MainWindow::on_actionMoveDown()
         //倒数第三行及以前
         if (index.row() <= items->childCount() - 3) {
             on_cutAction();
-            treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+            tab->treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
             on_pasteAction();
         }
 
@@ -1113,9 +1116,9 @@ void MainWindow::on_actionMoveDown()
             undoGroup->activeStack()->push(addMoveCommand);
 
             on_cutAction();
-            treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+            tab->treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
             on_pasteAction();
-            treeView->setCurrentIndex(model->index(index_bak.row() + 2, 0, index.parent()));
+            tab->treeView->setCurrentIndex(model->index(index_bak.row() + 2, 0, index.parent()));
             actionRemove_activated();
         }
 
@@ -1129,8 +1132,7 @@ void MainWindow::on_actionMoveDown()
         if (array)
             items->setType("array");
 
-        treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
-        showMsg();
+        tab->treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
     }
 }
 
@@ -1176,14 +1178,14 @@ void MainWindow::on_expandAction()
         index = tab->currentIndex();
         DomModel* model = tab->getModel();
 
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
+        //QTreeView* treeView = new QTreeView;
+        //treeView = (QTreeView*)tab->children().at(1);
 
-        if (!treeView->isExpanded(index)) {
-            treeView->expand(index);
+        if (!tab->treeView->isExpanded(index)) {
+            tab->treeView->expand(index);
             //tab->view_expand(index, model);
 
-        } else if (treeView->isExpanded(index)) {
+        } else if (tab->treeView->isExpanded(index)) {
             QModelIndex index1 = model->index(index.row(), 0, index.parent());
             tab->view_collapse(index1.parent(), model);
             //treeView->setExpanded(index1, false);
@@ -1200,9 +1202,6 @@ void MainWindow::on_collapseAction()
         QModelIndex index;
         index = tab->currentIndex();
         DomModel* model = tab->getModel();
-
-        QTreeView* treeView = new QTreeView;
-        treeView = (QTreeView*)tab->children().at(1);
 
         tab->view_collapse(index.parent(), model);
     }

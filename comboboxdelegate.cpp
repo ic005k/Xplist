@@ -231,10 +231,7 @@ void ComboBoxDelegate::OnComboBoxChanged(int index)
     DomModel* mymodel = tab->getModel();
     QModelIndex in;
     item = mymodel->itemForIndex(in);
-    treeView = new QTreeView;
-    treeView = (QTreeView*)tab->children().at(1);
-
-    QString val = comboBox->currentText();
+    treeView = tab->treeView;
 
     treeView->doItemsLayout();
     treeView->setFocus();

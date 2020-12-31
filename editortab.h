@@ -1,6 +1,7 @@
 #ifndef EDITORTAB_H
 #define EDITORTAB_H
 
+#include <QAbstractItemView>
 #include <QAction>
 #include <QClipboard>
 #include <QDebug>
@@ -20,6 +21,7 @@
 #include "commands.h"
 #include "dommodel.h"
 #include "lineeditdelegate.h"
+#include "mytreeview.h"
 
 namespace Ui {
 class EditorTab;
@@ -31,6 +33,13 @@ class EditorTab : public QWidget {
 public:
     explicit EditorTab(DomModel* model, QWidget* parent = 0);
     ~EditorTab();
+
+    //QTreeView* treeView;
+    MyTreeView* treeView;
+
+    int getCurrentRow();
+
+    bool loading = false;
 
     QSortFilterProxyModel* proxyModel;
 
@@ -62,23 +71,15 @@ public:
 
     void clearModel();
 
-protected:
-    void mousePressEvent(QMouseEvent* event) Q_DECL_OVERRIDE;
-
-    void dropEvent(QDropEvent* event) override; //放下动作
-    void dragEnterEvent(QDragEnterEvent* event) override; //托到进入窗口动作
-    void dragMoveEvent(QDragMoveEvent* event) override; //拖着物体在窗口移动
-    void dragLeaveEvent(QDragLeaveEvent* event) override; //拖走了没有释放
-
 #ifndef QT_NO_CONTEXTMENU
     void contextMenuEvent(QContextMenuEvent* event) override;
 #endif // QT_NO_CONTEXTMENU
 
 public slots:
 
-    void onItemAded(const QModelIndex& index);
-    void on_treeView_expanded();
-    void on_treeView_collapsed();
+    void onItemAdded(const QModelIndex& index);
+    void treeView_expanded();
+    void treeView_collapsed();
 
     void on_copyAction();
     void on_cutAction();
@@ -92,11 +93,13 @@ public slots:
 
     void editorDataAboutToBeSet(const QModelIndex& index, QString val);
 
-    void on_treeView_clicked(const QModelIndex& index);
+    void treeView_clicked(const QModelIndex& index);
 
 private slots:
 
-    void on_treeView_doubleClicked(const QModelIndex& index);
+    void treeView_doubleClicked(const QModelIndex& index);
+
+    void slotCurrentRowChanged(const QModelIndex index, const QModelIndex& previous);
 
     void on_chkBox();
 
@@ -119,6 +122,8 @@ private:
 
     QByteArray HexStrToByte(QString value);
     int hex_to_ascii(QString str);
+
+    void initBoolWidget(QModelIndex index);
 };
 
 #endif // EDITORTAB_H
