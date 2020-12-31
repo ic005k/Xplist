@@ -1,7 +1,7 @@
 [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 # PlistEDPlus - open source cross-platform lightweight Plist file editor
 
-Write in front: The prototype of this software comes from: https://github.com/alpex92/PlistED , thanks to this prototype, not to make me start from scratch code brick, thanks to @alpex92!
+Write in front. The prototype of this software is from: https://github.com/alpex92/PlistED , thanks to this prototype, not to let me start coding from zero, thanks to @alpex92!
 
 When writing this software, actually some hesitation, similar software seems to be quite a lot, plus the relationship of time, has not paid substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus...
 
