@@ -1,4 +1,4 @@
-[Simplified Chinese](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/) README.md)
+[Simplified Chinese](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 # PlistEDPlus - open source cross-platform lightweight Plist file editor
 
 Write in front: The prototype of this software comes from: https://github.com/alpex92/PlistED , thanks to this prototype, not to make me start from scratch code brick, thanks to @alpex92!
