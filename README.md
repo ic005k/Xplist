@@ -50,4 +50,3 @@ When writing this software, actually some hesitation, similar software seems to 
 [insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
 
 ### Note: This project started in October 2020
- macos/deepLFree.translatedWithDeepL.text
