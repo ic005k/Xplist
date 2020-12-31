@@ -1,49 +1,53 @@
-[English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md) | [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md)
+[Simplified Chinese](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/) README.md)
+# PlistEDPlus - open source cross-platform lightweight Plist file editor
 
-# PlistEDPlus-- open source cross-platform lightweight Plist file editor
+Write in front: The prototype of this software comes from: https://github.com/alpex92/PlistED , thanks to this prototype, not to make me start from scratch code brick, thanks to @alpex92!
 
-Written in front: The prototype of this software comes from https://github.com/alpex92/PlistED. Because of the existence of this prototype, it won't make me code bricks from scratch. Thanks @alpex92!
+When writing this software, actually some hesitation, similar software seems to be quite a lot, plus the relationship of time, has not paid substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus...
 
-When I wrote this software, I actually hesitated, and there seemed to be quite a few similar softwares. In addition, due to the time, I never took any substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus ...
+## Features include but are not limited to.
 
-## Features include but are not limited to:
+* Simple, clean and easy-to-use human-computer interaction with refined, lightweight features and excellent performance
 
-* Simple and easy-to-use man-machine interaction, with refined functions, no bloated and unnecessary
+* Open source, cross-platform (currently supports win, mac, linux)
 
-* open source, cross-platform (currently supports win, mac, linux)
+* Humanized search function (a. Keyboard initial character search for each column of key, data type, and value within the expanded node range; b. Search box global search, one-time display of search results)
 
-* humanized search function (a. search the keyboard initials of each column of keys, data types and values within the expanded nodes; B. Search box global search, display search results at one time)
+* Fully comply with and conform to the technical specifications of plist files, data types are displayed exactly the same as plist text, without any escaping
 
-* fully comply with and comply with plist file technical specifications, and the data type display is completely consistent with plist text without any escape
+* Multi-tab view or edit files
 
-* Multi-tab browsing documents
+* Multi-language support (currently supports Chinese, Russian, English)
 
-* Multilingual support (currently supports Chinese, Russian and English)
+* Drag and drop files to the software interface to open files, double-click to open files, file open history display, automatically load the last opened file
 
-* drag and drop the file to the software interface to open the file, double-click to open the file, display the history of file opening, and automatically load the last opened file
+* Add, remove, paste, cut, edit entries, etc., all included in Undo, Redo policy group, support undo and restore
 
-* add, remove, paste, cut, edit entries, etc., all of which are included in the Undo and Redo policy groups, and support revocation and recovery
+* Expand and collapse entries right-click menu, in different columns, with different effects
 
-* expand and collapse the right-click menu of items, which has different effects in different columns
+* For values of data type, the hover window automatically displays the corresponding ASCII and Base64 values
 
-* for the value of data type, the floating window automatically displays the corresponding ASCII and Base64 values
+* When changing the data type, the value is automatically converted with it
 
-* When the data type is changed, its value will be automatically converted.
+* Free to select the children under a node for A->Z sorting (currently no sorting of arrays)
 
-* you can freely choose the children under a node to sort by A->Z (the array is not sorted at present)
+* Drag and drop to adjust the order of sibling items, up or down button to adjust the order of sibling items
 
-* Built-in update check
+* Rich shortcut keys
 
-* If the currently opened file is modified by other programs, it will automatically prompt whether to reload it.
+* Built-in update checking
 
-* Software UI adapts to various resolutions and supports winpe, linux livecd, etc.
+* If the currently opened file is modified by other programs, it automatically prompts whether to reload
+
+* Software UI adapts to various resolutions, supports winpe, linux livecd, etc.
 
 ...
 
-![screenshot](https://github.com/ic005k/plistedplus/blob/main/plist.png)
+! [Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
 
-## Discussion area:
+## Discussion forum.
 
 [insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
 
 ### Note: This project started in October 2020
+ macos/deepLFree.translatedWithDeepL.text
