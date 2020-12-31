@@ -7,7 +7,7 @@ When writing this software, actually some hesitation, similar software seems to 
 
 ## Features include but are not limited to.
 
-* Simple, clean and easy-to-use human-computer interaction with refined, lightweight features and excellent performance
+* Lightweight and high performance
 
 * Open source, cross-platform (currently supports win, mac, linux)
 
