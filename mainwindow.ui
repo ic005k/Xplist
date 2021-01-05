@@ -83,6 +83,7 @@
     <addaction name="actionClose"/>
     <addaction name="actionClose_all"/>
     <addaction name="separator"/>
+    <addaction name="actionNew_Window"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -140,7 +141,7 @@
   </widget>
   <action name="actionAdd">
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/new/toolbar/res/Add.png</normaloff>:/new/toolbar/res/Add.png</iconset>
    </property>
    <property name="text">
@@ -240,7 +241,7 @@
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="res.qrc">
+    <iconset>
      <normaloff>:/new/toolbar/res/Transfer.png</normaloff>:/new/toolbar/res/Transfer.png</iconset>
    </property>
    <property name="text">
@@ -430,6 +431,11 @@
    </property>
    <property name="text">
     <string>Expand all when opening a file</string>
+   </property>
+  </action>
+  <action name="actionNew_Window">
+   <property name="text">
+    <string>New Window</string>
    </property>
   </action>
  </widget>

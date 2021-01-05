@@ -12,6 +12,7 @@
 #include <QMainWindow>
 #include <QMimeData>
 #include <QPalette>
+#include <QProcess>
 #include <QPushButton>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
@@ -65,6 +66,7 @@ public slots:
     void actionRemove_activated();
 
 private slots:
+    void on_NewWindow();
 
     void actionNew_activated();
     void actionOpen_activated();

@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "filesystemwatcher.h"
+#include "myapp.h"
 #include "mytreeview.h"
 #include "ui_mainwindow.h"
 
@@ -52,7 +53,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.24";
+    CurVerison = "1.0.25";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -103,6 +104,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->actionSave_as, &QAction::triggered, this, &MainWindow::actionSave_as_activated);
     connect(ui->actionClose, &QAction::triggered, this, &MainWindow::actionClose_activated);
     connect(ui->actionClose_all, &QAction::triggered, this, &MainWindow::actionClose_all_activated);
+    connect(ui->actionNew_Window, &QAction::triggered, this, &MainWindow::on_NewWindow);
 
     connect(ui->actionCheck_Update, &QAction::triggered, this, &MainWindow::CheckUpdate);
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::actionAbout_activated);
@@ -133,14 +135,15 @@ MainWindow::MainWindow(QWidget* parent)
     actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
     connect(actionNewSibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
     connect(ui->actionNew_Sibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
-    ui->actionNew_Sibling->setShortcut(tr("ctrl+="));
+    ui->actionNew_Sibling->setShortcut(tr("ctrl++"));
 
     actionNewChild = new QAction(tr("New Child"), this);
     ui->mainToolBar->addAction(actionNewChild);
     actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
     connect(actionNewChild, &QAction::triggered, this, &MainWindow::on_actionNewChild);
-    ui->actionNew_Child->setShortcut(tr("="));
+
     connect(ui->actionNew_Child, &QAction::triggered, this, &MainWindow::on_actionNewChild);
+    ui->actionNew_Child->setShortcut(tr("+"));
 
     ui->mainToolBar->addAction(ui->actionRemove);
     ui->actionRemove->setShortcut(Qt::Key_Delete);
@@ -221,7 +224,7 @@ MainWindow::MainWindow(QWidget* parent)
     this->resize(QSize(1350, 750));
     win = true;
     ui->actionRemove_2->setShortcut(tr("ctrl+-"));
-    ui->actionNew_Child->setShortcut(tr("alt+="));
+    ui->actionNew_Child->setShortcut(tr("alt++"));
 #endif
 
 #ifdef Q_OS_LINUX
@@ -283,6 +286,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::actionNew_activated()
 {
+
     // create new model
     DomModel* model = new DomModel();
 
@@ -1317,4 +1321,15 @@ void MainWindow::on_actionSort()
 
         model->sort(0, Qt::AscendingOrder);
     }
+}
+
+void MainWindow::on_NewWindow()
+{
+
+    QFileInfo appInfo(qApp->applicationDirPath());
+    QString pathSource = appInfo.filePath() + "/PlistEDPlus";
+
+    QProcess* process = new QProcess;
+    process->setEnvironment(process->environment());
+    process->start(pathSource);
 }
