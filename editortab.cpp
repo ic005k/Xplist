@@ -504,6 +504,10 @@ void EditorTab::on_copyAction()
     index = tab->currentIndex();
     model = tab->getModel();
 
+    DomItem* item = model->itemForIndex(index);
+    if (item->getName() == "plist")
+        return;
+
     if (index.isValid()) {
 
         copy_item = NULL;

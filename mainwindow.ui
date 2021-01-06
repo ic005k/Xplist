@@ -95,6 +95,9 @@
     <addaction name="separator"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
+    <addaction name="actionCopy_between_windows"/>
+    <addaction name="actionPaste_between_windows"/>
+    <addaction name="separator"/>
     <addaction name="actionNew_Sibling"/>
     <addaction name="actionNew_Child"/>
     <addaction name="actionRemove_2"/>
@@ -436,6 +439,16 @@
   <action name="actionNew_Window">
    <property name="text">
     <string>New Window</string>
+   </property>
+  </action>
+  <action name="actionCopy_between_windows">
+   <property name="text">
+    <string>Copy between windows</string>
+   </property>
+  </action>
+  <action name="actionPaste_between_windows">
+   <property name="text">
+    <string>Paste between windows</string>
    </property>
   </action>
  </widget>

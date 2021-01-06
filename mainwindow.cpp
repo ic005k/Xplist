@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.25";
+    CurVerison = "1.0.26";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -85,6 +85,12 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(undoGroup, SIGNAL(cleanChanged(bool)), this, SLOT(onCleanChanged(bool)));
 
+    //File
+    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen_activated);
+    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew_activated);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave_activated);
+    connect(ui->actionSave_as, &QAction::triggered, this, &MainWindow::actionSave_as_activated);
+
     connect(ui->actionFile1, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     connect(ui->actionFile2, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     connect(ui->actionFile3, SIGNAL(triggered()), this, SLOT(openRecentFile()));
@@ -95,25 +101,37 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->actionFile8, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     connect(ui->actionFile9, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     connect(ui->actionFile10, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    updateRecentFiles();
+
+    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::actionClose_activated);
+    connect(ui->actionClose_all, &QAction::triggered, this, &MainWindow::actionClose_all_activated);
 
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabCloseRequest(int)));
 
-    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen_activated);
-    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew_activated);
-    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave_activated);
-    connect(ui->actionSave_as, &QAction::triggered, this, &MainWindow::actionSave_as_activated);
-    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::actionClose_activated);
-    connect(ui->actionClose_all, &QAction::triggered, this, &MainWindow::actionClose_all_activated);
     connect(ui->actionNew_Window, &QAction::triggered, this, &MainWindow::on_NewWindow);
 
+    //Edit
+    ui->actionCopy->setShortcuts(QKeySequence::Copy);
+    connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
+
+    ui->actionPaste->setShortcuts(QKeySequence::Paste);
+    connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
+
+    ui->actionCut->setShortcuts(QKeySequence::Cut);
+    connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
+
+    connect(ui->actionCopy_between_windows, &QAction::triggered, this, &MainWindow::on_copyBW);
+    ui->actionCopy_between_windows->setShortcut(tr("ctrl+b"));
+    connect(ui->actionPaste_between_windows, &QAction::triggered, this, &MainWindow::on_pasteBW);
+    ui->actionPaste_between_windows->setShortcut(tr("ctrl+alt+b"));
+
+    //Help
     connect(ui->actionCheck_Update, &QAction::triggered, this, &MainWindow::CheckUpdate);
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::actionAbout_activated);
 
     connect(ui->actionAdd, &QAction::triggered, this, &MainWindow::actionAdd_activated);
     connect(ui->actionRemove, &QAction::triggered, this, &MainWindow::actionRemove_activated);
     connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
-
-    updateRecentFiles();
 
     ui->actionNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
     ui->mainToolBar->addAction(ui->actionNew);
@@ -178,15 +196,6 @@ MainWindow::MainWindow(QWidget* parent)
     connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
 
     ui->mainToolBar->addSeparator();
-
-    ui->actionCopy->setShortcuts(QKeySequence::Copy);
-    connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
-
-    ui->actionPaste->setShortcuts(QKeySequence::Paste);
-    connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
-
-    ui->actionCut->setShortcuts(QKeySequence::Cut);
-    connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
 
     actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.png"));
     ui->mainToolBar->addAction(actionUndo);
@@ -315,8 +324,9 @@ void MainWindow::actionOpen_activated()
 
 void MainWindow::actionClose_activated()
 {
-    if (tabWidget->hasTabs())
+    if (tabWidget->hasTabs()) {
         onTabCloseRequest();
+    }
 }
 
 void MainWindow::actionClose_all_activated()
@@ -374,8 +384,11 @@ void MainWindow::openPlist(QString filePath)
             file.close();
         }
 
-        setRecentFiles(filePath);
-        updateRecentFiles();
+        QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+        if (filePath != fn) {
+            setRecentFiles(filePath);
+            updateRecentFiles();
+        }
 
         FileSystemWatcher::addWatchPath(filePath); //监控这个文件的变化
 
@@ -461,6 +474,9 @@ void MainWindow::onTabCloseRequest(int i)
 
     // close tab
     tabWidget->closeTab();
+
+    if (tabWidget->currentIndex() != -1)
+        tabWidget->getCurentTab()->treeView->setFocus();
 }
 
 void MainWindow::savePlist(QString filePath)
@@ -1332,4 +1348,64 @@ void MainWindow::on_NewWindow()
     QProcess* process = new QProcess;
     process->setEnvironment(process->environment());
     process->start(pathSource);
+}
+
+void MainWindow::on_copyBW()
+{
+    if (tabWidget->hasTabs()) {
+
+        this->repaint();
+
+        int ci = tabWidget->currentIndex();
+        on_copyAction();
+        actionNew_activated();
+        on_actionNewChild();
+        QModelIndex index = tabWidget->getCurentTab()->currentIndex();
+        QModelIndex index1 = tabWidget->getCurentTab()->getModel()->index(0, 0, index);
+        tabWidget->getCurentTab()->treeView->setCurrentIndex(index1);
+
+        on_pasteAction();
+        actionRemove_activated();
+
+        QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+        savePlist(fn);
+
+        tabWidget->getCurentTab()->setWindowModified(false);
+        actionClose_activated();
+
+        tabWidget->setCurrentIndex(ci);
+        tabWidget->getCurentTab()->treeView->setFocus();
+
+        this->repaint();
+    }
+}
+
+void MainWindow::on_pasteBW()
+{
+    if (tabWidget->hasTabs()) {
+
+        this->repaint();
+
+        int ci = tabWidget->currentIndex();
+        QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+        QFileInfo fi(fn);
+        if (!fi.exists())
+            return;
+        openPlist(fn);
+
+        QModelIndex index = tabWidget->getCurentTab()->currentIndex();
+        QModelIndex index1 = tabWidget->getCurentTab()->getModel()->index(0, 0, index);
+        if (index1.isValid())
+            tabWidget->getCurentTab()->treeView->setCurrentIndex(index1);
+
+        on_copyAction();
+        actionClose_activated();
+
+        tabWidget->setCurrentIndex(ci);
+        tabWidget->getCurentTab()->treeView->setFocus();
+
+        on_pasteAction();
+
+        this->repaint();
+    }
 }

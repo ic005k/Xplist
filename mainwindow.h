@@ -66,7 +66,8 @@ public slots:
     void actionRemove_activated();
 
 private slots:
-    void on_NewWindow();
+    void on_copyBW();
+    void on_pasteBW();
 
     void actionNew_activated();
     void actionOpen_activated();
@@ -75,6 +76,8 @@ private slots:
 
     void actionSave_activated();
     void actionSave_as_activated();
+
+    void on_NewWindow();
 
     void actionExpand_all_activated();
     void actionAbout_activated();
