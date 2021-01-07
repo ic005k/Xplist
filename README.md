@@ -43,7 +43,7 @@ When writing this software, actually some hesitation, similar software seems to 
 
 ...
 
-! [Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
 
 ## Discussion forum
 
