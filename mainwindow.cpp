@@ -36,6 +36,9 @@ bool defaultIcon = false;
 
 bool SelfSaved = false;
 
+int windowX = 0;
+int windowY = 0;
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -53,7 +56,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.26";
+    CurVerison = "1.0.27";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -109,6 +112,7 @@ MainWindow::MainWindow(QWidget* parent)
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabCloseRequest(int)));
 
     connect(ui->actionNew_Window, &QAction::triggered, this, &MainWindow::on_NewWindow);
+    ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
 
     //Edit
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
@@ -280,6 +284,24 @@ MainWindow::MainWindow(QWidget* parent)
                 tabWidget->setCurrentIndex(index);
             if (index >= tabWidget->tabBar()->count())
                 tabWidget->setCurrentIndex(tabWidget->tabBar()->count() - 1);
+        }
+
+        bool drag = Reg.value("drag").toBool();
+        if (drag) {
+            int x, y, w, h;
+            x = Reg.value("x").toInt();
+            y = Reg.value("y").toInt();
+            windowX = x;
+            windowY = y;
+            QScreen* screen = QGuiApplication::primaryScreen();
+            w = screen->size().width();
+            h = screen->size().height();
+            if (x > w - 300)
+                x = w - 300;
+            if (y > h - 300)
+                y = h - 300;
+
+            this->setGeometry(x, y, this->width(), this->height());
         }
     }
 
@@ -945,6 +967,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
     Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
     Reg.setValue("SaveAndFind", ui->actionSaveAndFind->isChecked());
     Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
+    Reg.setValue("drag", false);
 
     if (tabWidget->hasTabs()) {
 
@@ -1342,12 +1365,33 @@ void MainWindow::on_actionSort()
 void MainWindow::on_NewWindow()
 {
 
+    QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+    QFile file(qfile);
+    QSettings Reg(qfile, QSettings::IniFormat);
+
+    Reg.setValue("drag", true);
+    windowX = windowX + 25;
+    windowY = windowY + 50;
+
+    QScreen* screen = QGuiApplication::primaryScreen();
+    int w = screen->size().width();
+
+    if (windowX > w + this->width()) {
+        windowX = 0;
+        windowY = 0;
+    }
+
+    Reg.setValue("x", windowX);
+    Reg.setValue("y", windowY);
+
     QFileInfo appInfo(qApp->applicationDirPath());
     QString pathSource = appInfo.filePath() + "/PlistEDPlus";
-
+    QStringList arguments;
+    QString fn = "";
+    arguments << fn;
     QProcess* process = new QProcess;
     process->setEnvironment(process->environment());
-    process->start(pathSource);
+    process->start(pathSource, arguments);
 }
 
 void MainWindow::on_copyBW()

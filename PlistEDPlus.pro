@@ -20,6 +20,8 @@ TRANSLATIONS = translation_ru.ts \
                translation_cn.ts
 
 SOURCES += main.cpp\
+    MyTabBar.cpp \
+    MyTabPopup.cpp \
     comboboxdelegatebool.cpp \
     filesystemwatcher.cpp \
     mainwindow.cpp \
@@ -36,6 +38,8 @@ SOURCES += main.cpp\
     mytreeview.cpp
 
 HEADERS  += mainwindow.h \
+    MyTabBar.h \
+    MyTabPopup.h \
     comboboxdelegatebool.h \
     domparser.h \
     dommodel.h \

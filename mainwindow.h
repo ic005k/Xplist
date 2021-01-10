@@ -14,6 +14,7 @@
 #include <QPalette>
 #include <QProcess>
 #include <QPushButton>
+#include <QScreen>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 #include <QTreeView>
@@ -65,6 +66,8 @@ public slots:
     void actionAdd_activated();
     void actionRemove_activated();
 
+    void on_NewWindow();
+
 private slots:
     void on_copyBW();
     void on_pasteBW();
@@ -76,8 +79,6 @@ private slots:
 
     void actionSave_activated();
     void actionSave_as_activated();
-
-    void on_NewWindow();
 
     void actionExpand_all_activated();
     void actionAbout_activated();
