@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.27";
+    CurVerison = "1.0.28";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -723,8 +723,10 @@ void MainWindow::updateRecentFiles()
         QAction* action = ui->menuRecent_files->actions().at(i);
         QString text = files.at(i);
 
-        action->setText(text);
-        action->setVisible(true);
+        if (QFileInfo(text).exists()) {
+            action->setText(text);
+            action->setVisible(true);
+        }
     }
 }
 
