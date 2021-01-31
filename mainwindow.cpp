@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.28";
+    CurVerison = "1.0.29";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -248,7 +248,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1050, 600));
     mac = true;
-    ui->actionCheck_Update->setVisible(true);
+    //ui->actionCheck_Update->setVisible(false);
 #endif
 
     ui->actionSaveAndFind->setCheckable(true);

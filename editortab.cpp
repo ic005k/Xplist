@@ -383,6 +383,8 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
     actionSort->setEnabled(true);
     initBoolWidget(index);
 
+    mw_one->showMsg();
+
     //if(item->getType() == "bool")
     //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
     //else

@@ -12,6 +12,7 @@ CONFIG += c++11
 
 ICON = my.icns
 RC_FILE += myapp.rc
+RC_FILE +=
 
 TARGET = PlistEDPlus
 TEMPLATE = app
