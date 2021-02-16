@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QCompleter>
 #include <QDateTime>
 #include <QDebug>
 #include <QDesktopServices>
@@ -139,6 +140,8 @@ private:
     QString ver;
 
     bool SaveAndFind = false;
+
+    QStringList FindTextList;
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);

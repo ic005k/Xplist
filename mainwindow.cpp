@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.29";
+    CurVerison = "1.0.30";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -303,6 +303,17 @@ MainWindow::MainWindow(QWidget* parent)
 
             this->setGeometry(x, y, this->width(), this->height());
         }
+
+        //Get search text list
+        int count = Reg.value("FindTextListTotal").toInt();
+        for (int i = 0; i < count; i++) {
+            FindTextList.append(Reg.value("FindTextList" + QString::number(i)).toString());
+        }
+
+        QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
+        editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
+        editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
+        findEdit->setCompleter(editFindCompleter);
     }
 
     manager = new QNetworkAccessManager(this);
@@ -934,6 +945,23 @@ void MainWindow::findEdit_textChanged(const QString& arg1)
 void MainWindow::findEdit_returnPressed()
 {
     on_Find();
+
+    QString str = findEdit->text().trimmed();
+    bool re = false;
+    for (int i = 0; i < FindTextList.count(); i++) {
+        if (FindTextList.at(i) == str) {
+            re = true;
+            break;
+        }
+    }
+
+    if (!re)
+        FindTextList.insert(0, str);
+
+    QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
+    editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
+    editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
+    findEdit->setCompleter(editFindCompleter);
 }
 
 void MainWindow::on_copyAction()
@@ -970,6 +998,33 @@ void MainWindow::closeEvent(QCloseEvent* event)
     Reg.setValue("SaveAndFind", ui->actionSaveAndFind->isChecked());
     Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
     Reg.setValue("drag", false);
+
+    //记录搜索文本列表
+    //先读取，采用增量保存的方式，以免覆盖之前的已有数据
+    QFileInfo fi(qfile);
+
+    if (fi.exists()) {
+        QStringList tempList;
+        int count = Reg.value("FindTextListTotal").toInt();
+        for (int i = 0; i < count; i++) {
+            tempList.append(Reg.value("FindTextList" + QString::number(i)).toString());
+        }
+
+        if (FindTextList.count() < tempList.count()) {
+            FindTextList = tempList;
+        }
+    }
+
+    int findTotal;
+    if (FindTextList.count() > 50)
+        findTotal = 50;
+    else
+        findTotal = FindTextList.count();
+    Reg.setValue("FindTextListTotal", findTotal);
+    for (int i = 0; i < FindTextList.count(); i++) {
+
+        Reg.setValue("FindTextList" + QString::number(i), FindTextList.at(i));
+    }
 
     if (tabWidget->hasTabs()) {
 
