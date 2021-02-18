@@ -54,12 +54,12 @@
     <message>
         <location filename="editortab.cpp" line="166"/>
         <source>Copy</source>
-        <translation>копировать</translation>
+        <translation>Копировать</translation>
     </message>
     <message>
         <location filename="editortab.cpp" line="171"/>
         <source>Cut</source>
-        <translation>порез</translation>
+        <translation>Вырезать</translation>
     </message>
     <message>
         <location filename="editortab.cpp" line="178"/>
@@ -69,12 +69,12 @@
     <message>
         <location filename="editortab.cpp" line="185"/>
         <source>New Sibling</source>
-        <translation>Новый брат</translation>
+        <translation>Новая группа</translation>
     </message>
     <message>
         <location filename="editortab.cpp" line="189"/>
         <source>New Child</source>
-        <translation>Новый ребенок</translation>
+        <translation>Новый элемент</translation>
     </message>
 </context>
 <context>
@@ -370,17 +370,17 @@
     <message>
         <location filename="mainwindow.ui" line="374"/>
         <source>Copy</source>
-        <translation>копировать</translation>
+        <translation>Копировать</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="379"/>
         <source>Cut</source>
-        <translation>порез</translation>
+        <translation>Вырезать</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="384"/>
         <source>Paste</source>
-        <translation>вставить</translation>
+        <translation>Вставить</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="164"/>
@@ -499,13 +499,13 @@
         <location filename="mainwindow.ui" line="418"/>
         <location filename="mainwindow.cpp" line="151"/>
         <source>New Sibling</source>
-        <translation>Новый брат</translation>
+        <translation>Новая группа</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="423"/>
         <location filename="mainwindow.cpp" line="158"/>
         <source>New Child</source>
-        <translation>Новый ребенок</translation>
+        <translation>Новый элемент</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="193"/>
