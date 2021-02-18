@@ -26,6 +26,7 @@ QCheckBox* chkBox;
 bool chk_null = true;
 int childCount = 0;
 int currentRow = 0;
+bool loading = false;
 
 EditorTab::EditorTab(DomModel* m, QWidget* parent)
     : QWidget(parent)
@@ -384,6 +385,8 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
     initBoolWidget(index);
 
     mw_one->showMsg();
+
+    mw_one->goPlistText();
 
     //if(item->getType() == "bool")
     //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);

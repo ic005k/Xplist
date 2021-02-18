@@ -165,6 +165,7 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
                 value = value.trimmed();
 
             if (type == "data") {
+
                 QString v = value.remove(QRegExp("\\s")); //16进制去除所有空格
                 value = QString::fromLatin1(HexStrToByte(v).toBase64());
             }
@@ -208,7 +209,12 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
             if (type == "data") //新增：解决16进制字串转换问题
             {
                 value = value.remove(QRegExp("\\s")); //16进制去除所有空格
-                valText = doc.createTextNode(QString::fromLatin1(HexStrToByte(value).toBase64()));
+
+                if (name.contains("Item"))
+                    valText = doc.createTextNode(value);
+                else
+                    valText = doc.createTextNode(QString::fromLatin1(HexStrToByte(value).toBase64()));
+
             } else {
 
                 valText = doc.createTextNode(value);

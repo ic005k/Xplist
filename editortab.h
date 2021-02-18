@@ -39,8 +39,6 @@ public:
 
     int getCurrentRow();
 
-    bool loading = false;
-
     QSortFilterProxyModel* proxyModel;
 
     void forEach1(QAbstractItemModel* model, QModelIndex parent = QModelIndex());
@@ -70,6 +68,8 @@ public:
     void setIcon();
 
     void clearModel();
+
+    QByteArray HexStrToByte(QString value);
 
 #ifndef QT_NO_CONTEXTMENU
     void contextMenuEvent(QContextMenuEvent* event) override;
@@ -120,7 +120,6 @@ private:
 
     QComboBox* comBox;
 
-    QByteArray HexStrToByte(QString value);
     int hex_to_ascii(QString str);
 
     void initBoolWidget(QModelIndex index);

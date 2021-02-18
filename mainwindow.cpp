@@ -39,12 +39,16 @@ bool SelfSaved = false;
 int windowX = 0;
 int windowY = 0;
 
+extern bool loading;
+
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
 
     ui->setupUi(this);
+
+    loading = true;
 
     myToolBar = ui->mainToolBar;
     myStatusBar = ui->statusBar;
@@ -56,9 +60,19 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.30";
+    CurVerison = "1.0.32";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
+
+    //初始化Dock并删除Title棒（暂时）
+    QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
+    QWidget* lEmptyWidget = new QWidget();
+    ui->dockWidget->setTitleBarWidget(lEmptyWidget);
+    delete lTitleBar;
+    ui->gridLayout->setMargin(1);
+    ui->dockWidgetContents->layout()->setMargin(1);
+    ui->textEdit->setReadOnly(true);
+    resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
 
     QDir dir;
     if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) { }
@@ -318,6 +332,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     manager = new QNetworkAccessManager(this);
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+
+    loading = false;
 }
 
 MainWindow::~MainWindow()
@@ -446,6 +462,8 @@ void MainWindow::openPlist(QString filePath)
 
         QFileInfo fi(filePath);
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
+
+        loadText(filePath);
     }
 }
 
@@ -562,6 +580,8 @@ void MainWindow::savePlist(QString filePath)
 
         QFileInfo fi(filePath);
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
+
+        loadText(filePath);
     }
 }
 
@@ -692,6 +712,8 @@ void MainWindow::tabWidget_currentChanged(int index)
                 undoGroup->addStack(stack);
 
             undoGroup->setActiveStack(stack);
+
+            loadText(tabWidget->getCurentTab()->getPath());
         }
         //?
         //else this->setWindowFilePath(" ");
@@ -1254,6 +1276,112 @@ void MainWindow::showMsg()
     myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
 }
 
+void MainWindow::goPlistText()
+{
+    //转到plist文本
+    if (!loading) {
+
+        EditorTab* tab = tabWidget->getCurentTab();
+        QModelIndex index;
+        index = tab->currentIndex();
+        DomModel* model = tab->getModel();
+        DomItem* item = model->itemForIndex(index);
+
+        QString name, datatype, val;
+        name = item->getName();
+        datatype = item->getType();
+        val = item->getValue();
+        if (datatype == "data") {
+
+            val = tab->HexStrToByte(val).toBase64();
+        }
+
+        //QTextBlock block = ui->textEdit->document()->findBlockByNumber(0);
+        //ui->textEdit->setTextCursor(QTextCursor(block));
+
+        for (int i = 0; i < ui->textEdit->document()->lineCount(); i++) {
+            QTextBlock block = ui->textEdit->document()->findBlockByNumber(i);
+            ui->textEdit->setTextCursor(QTextCursor(block));
+            QString lineText = ui->textEdit->document()->findBlockByNumber(i).text().trimmed();
+
+            if (name.contains("Item")) {
+
+                if (lineText.contains(val)) {
+                    setBarMarkers();
+
+                    break;
+                }
+            } else {
+
+                if (val == "") {
+                    if (lineText.contains(name)) {
+                        setBarMarkers();
+
+                        break;
+                    }
+
+                } else if (datatype == "bool") {
+                    if (lineText.contains(name)) {
+                        setBarMarkers();
+
+                        break;
+                    }
+
+                } else if (datatype == "integer" || datatype == "string" || datatype == "data" || datatype == "date" || datatype == "real") {
+                    if (index.column() == 0 || index.column() == 1) {
+                        if (lineText.contains(name)) {
+
+                            QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
+                            if (strNext.contains(val)) {
+
+                                setBarMarkers();
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (index.column() == 2) {
+                        if (lineText.contains(val)) {
+                            QString strNext = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
+                            if (strNext.contains(name)) {
+
+                                setBarMarkers();
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        this->repaint();
+    }
+}
+
+void MainWindow::setBarMarkers()
+{
+    QList<QTextEdit::ExtraSelection> extraSelection;
+    QTextEdit::ExtraSelection selection;
+    QColor lineColor;
+    lineColor.setRgb(255, 255, 0, 100);
+    //lineColor = QColor(Qt::gray).lighter(150);
+    selection.format.setBackground(lineColor);
+    selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+    selection.cursor = ui->textEdit->textCursor();
+    selection.cursor.clearSelection();
+    //将刚设置的 selection追加到链表当中
+    extraSelection.append(selection);
+    ui->textEdit->setExtraSelections(extraSelection);
+
+    QScrollBar* vsBar = new QScrollBar;
+    vsBar = ui->textEdit->verticalScrollBar();
+    int vPos = ui->textEdit->verticalScrollBar()->sliderPosition();
+    if (vPos > ui->textEdit->height() / 3)
+        vsBar->setSliderPosition(vPos + ui->textEdit->height() / 2);
+}
+
 void MainWindow::paintEvent(QPaintEvent* event)
 {
     Q_UNUSED(event);
@@ -1508,5 +1636,25 @@ void MainWindow::on_pasteBW()
         on_pasteAction();
 
         this->repaint();
+    }
+}
+
+void MainWindow::loadText(QString textFile)
+{
+    QFileInfo fi(textFile);
+    if (fi.exists()) {
+        QFile file(textFile);
+        if (!file.open(QFile::ReadOnly | QFile::Text)) {
+            QMessageBox::warning(this, tr("Application"),
+                tr("Cannot read file %1:\n%2.")
+                    .arg(QDir::toNativeSeparators(fileName), file.errorString()));
+
+        } else {
+
+            QTextStream in(&file);
+            in.setCodec("UTF-8");
+            QString text = in.readAll();
+            ui->textEdit->setPlainText(text);
+        }
     }
 }

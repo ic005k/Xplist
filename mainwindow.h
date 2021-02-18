@@ -16,8 +16,10 @@
 #include <QProcess>
 #include <QPushButton>
 #include <QScreen>
+#include <QScrollBar>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QTextBlock>
 #include <QTreeView>
 #include <QUndoGroup>
 
@@ -59,6 +61,10 @@ public:
     QAction* actionRedo;
 
     void showMsg();
+
+    void loadText(QString textFile);
+
+    void goPlistText();
 
 public slots:
     void on_Find();
@@ -142,6 +148,8 @@ private:
     bool SaveAndFind = false;
 
     QStringList FindTextList;
+
+    void setBarMarkers();
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);

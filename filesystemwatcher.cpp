@@ -111,7 +111,14 @@ void FileSystemWatcher::fileUpdated(const QString& path)
 
     //qDebug() << QString("The file %1 at path %2 is updated").arg(strName).arg(strPath);
 
-    if (!SelfSaved) {
+
+
+    if (!SelfSaved && msgClose) {
+
+
+        msgClose = false;
+
+
         QMessageBox message(QMessageBox::Warning, "", tr("The file has been modified by another program. Do you want to reload?") + "\n\n" + QString("%1").arg(strName));
         message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         message.setButtonText(QMessageBox::Yes, QString(tr("Yes")));
@@ -122,12 +129,15 @@ void FileSystemWatcher::fileUpdated(const QString& path)
         case QMessageBox::Yes:
             //ReLoad = true;
             mw_one->openPlist(path); //重新装入文件
+            msgClose = true;
             break;
         case QMessageBox::No:
-
+            msgClose = true;
             break;
         }
     }
+
+
 
     SelfSaved = false;
 
