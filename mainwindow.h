@@ -119,6 +119,8 @@ private slots:
 
     void on_actionSort();
 
+    void on_actionShowPlistText_triggered(bool checked);
+
 private:
     QNetworkAccessManager* manager;
     int parse_UpdateJSON(QString str);
@@ -150,6 +152,7 @@ private:
     QStringList FindTextList;
 
     void setBarMarkers();
+    QString getPlistTextValue(QString str);
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);

@@ -36,6 +36,7 @@ SOURCES += main.cpp\
     commands.cpp \
     itemstate.cpp \
     myapp.cpp \
+    myhighlighter.cpp \
     mytreeview.cpp
 
 HEADERS  += mainwindow.h \
@@ -53,6 +54,7 @@ HEADERS  += mainwindow.h \
     commands.h \
     itemstate.h \
     myapp.h \
+    myhighlighter.h \
     mytreeview.h
 
 FORMS    += mainwindow.ui \

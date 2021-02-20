@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "filesystemwatcher.h"
 #include "myapp.h"
+#include "myhighlighter.h"
 #include "mytreeview.h"
 #include "ui_mainwindow.h"
 
@@ -64,6 +65,9 @@ MainWindow::MainWindow(QWidget* parent)
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
+    QDir dir;
+    if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) { }
+
     //初始化Dock并删除Title棒（暂时）
     QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
     QWidget* lEmptyWidget = new QWidget();
@@ -73,9 +77,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui->dockWidgetContents->layout()->setMargin(1);
     ui->textEdit->setReadOnly(true);
     resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
-
-    QDir dir;
-    if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) { }
+    MyHighLighter* myHL = new MyHighLighter(ui->textEdit->document());
+    Q_UNUSED(myHL);
 
     //获取背景色
     QPalette pal = this->palette();
@@ -328,6 +331,13 @@ MainWindow::MainWindow(QWidget* parent)
         editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
         editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
         findEdit->setCompleter(editFindCompleter);
+
+        //是否显示plist文本
+        ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 1).toBool());
+        if (ui->actionShowPlistText->isChecked())
+            ui->dockWidget->setHidden(false);
+        else
+            ui->dockWidget->setHidden(true);
     }
 
     manager = new QNetworkAccessManager(this);
@@ -582,6 +592,7 @@ void MainWindow::savePlist(QString filePath)
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
 
         loadText(filePath);
+        goPlistText();
     }
 }
 
@@ -713,7 +724,15 @@ void MainWindow::tabWidget_currentChanged(int index)
 
             undoGroup->setActiveStack(stack);
 
-            loadText(tabWidget->getCurentTab()->getPath());
+            if (!loading) {
+                loadText(tabWidget->getCurentTab()->getPath());
+            }
+
+            if (this->isVisible() && !loading) {
+                if (mac) {
+                    //goPlistText();
+                }
+            }
         }
         //?
         //else this->setWindowFilePath(" ");
@@ -1009,6 +1028,7 @@ void MainWindow::on_pasteAction()
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
+    loading = true;
 
     //记录当前文件
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
@@ -1048,6 +1068,9 @@ void MainWindow::closeEvent(QCloseEvent* event)
         Reg.setValue("FindTextList" + QString::number(i), FindTextList.at(i));
     }
 
+    //记录是否显示Plist文本
+    Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
+
     if (tabWidget->hasTabs()) {
 
         int count = tabWidget->count();
@@ -1071,6 +1094,9 @@ void MainWindow::closeEvent(QCloseEvent* event)
             {
                 event->ignore();
                 close_flag = -1;
+
+                loading = false;
+
                 break; //如果第一个标签页选择取消，则直接终止关闭
             }
             if (close_flag == 1) {
@@ -1089,6 +1115,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
     } else {
         Reg.setValue("count", 0);
     }
+
+    loading = false;
 }
 
 void MainWindow::reg_win()
@@ -1276,6 +1304,32 @@ void MainWindow::showMsg()
     myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
 }
 
+QString MainWindow::getPlistTextValue(QString str)
+{
+    QString str0, str1, str2, str3, str4;
+    str0 = str.trimmed();
+    for (int i = 0; i < str0.length(); i++) {
+        str1 = str0.mid(i, 1);
+        if (str1 == ">") {
+            str2 = str0.mid(i + 1, str0.length() - i);
+            //qDebug() << str2;
+
+            for (int j = 0; j < str2.length(); j++) {
+                str3 = str2.mid(j, 1);
+                if (str3 == "<") {
+                    str4 = str2.mid(0, j);
+                    //qDebug() << str4;
+                    break;
+                }
+            }
+
+            break;
+        }
+    }
+
+    return str4;
+}
+
 void MainWindow::goPlistText()
 {
     //转到plist文本
@@ -1300,13 +1354,14 @@ void MainWindow::goPlistText()
         //ui->textEdit->setTextCursor(QTextCursor(block));
 
         for (int i = 0; i < ui->textEdit->document()->lineCount(); i++) {
+
             QTextBlock block = ui->textEdit->document()->findBlockByNumber(i);
             ui->textEdit->setTextCursor(QTextCursor(block));
             QString lineText = ui->textEdit->document()->findBlockByNumber(i).text().trimmed();
 
             if (name.contains("Item")) {
 
-                if (lineText.contains(val)) {
+                if (getPlistTextValue(lineText) == val) {
                     setBarMarkers();
 
                     break;
@@ -1314,14 +1369,14 @@ void MainWindow::goPlistText()
             } else {
 
                 if (val == "") {
-                    if (lineText.contains(name)) {
+                    if (getPlistTextValue(lineText) == name) {
                         setBarMarkers();
 
                         break;
                     }
 
                 } else if (datatype == "bool") {
-                    if (lineText.contains(name)) {
+                    if (getPlistTextValue(lineText) == name) {
                         setBarMarkers();
 
                         break;
@@ -1329,10 +1384,11 @@ void MainWindow::goPlistText()
 
                 } else if (datatype == "integer" || datatype == "string" || datatype == "data" || datatype == "date" || datatype == "real") {
                     if (index.column() == 0 || index.column() == 1) {
-                        if (lineText.contains(name)) {
+
+                        if (getPlistTextValue(lineText) == name) {
 
                             QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
-                            if (strNext.contains(val)) {
+                            if (getPlistTextValue(strNext) == val) {
 
                                 setBarMarkers();
 
@@ -1342,9 +1398,12 @@ void MainWindow::goPlistText()
                     }
 
                     if (index.column() == 2) {
-                        if (lineText.contains(val)) {
+
+                        if (getPlistTextValue(lineText) == val) {
+
                             QString strNext = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
-                            if (strNext.contains(name)) {
+
+                            if (getPlistTextValue(strNext) == name) {
 
                                 setBarMarkers();
 
@@ -1355,9 +1414,9 @@ void MainWindow::goPlistText()
                 }
             }
         }
-
-        this->repaint();
     }
+
+    this->repaint();
 }
 
 void MainWindow::setBarMarkers()
@@ -1365,7 +1424,7 @@ void MainWindow::setBarMarkers()
     QList<QTextEdit::ExtraSelection> extraSelection;
     QTextEdit::ExtraSelection selection;
     QColor lineColor;
-    lineColor.setRgb(255, 255, 0, 100);
+    lineColor.setRgb(0, 255, 0, 30);
     //lineColor = QColor(Qt::gray).lighter(150);
     selection.format.setBackground(lineColor);
     selection.format.setProperty(QTextFormat::FullWidthSelection, true);
@@ -1641,6 +1700,7 @@ void MainWindow::on_pasteBW()
 
 void MainWindow::loadText(QString textFile)
 {
+
     QFileInfo fi(textFile);
     if (fi.exists()) {
         QFile file(textFile);
@@ -1656,5 +1716,14 @@ void MainWindow::loadText(QString textFile)
             QString text = in.readAll();
             ui->textEdit->setPlainText(text);
         }
-    }
+    } else
+        ui->textEdit->clear();
+}
+
+void MainWindow::on_actionShowPlistText_triggered(bool checked)
+{
+    if (checked)
+        ui->dockWidget->setVisible(true);
+    else
+        ui->dockWidget->setVisible(false);
 }

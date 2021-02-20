@@ -118,6 +118,7 @@
     <addaction name="actionDefaultNodeIcon"/>
     <addaction name="actionSaveAndFind"/>
     <addaction name="actionExpandAllOpenFile"/>
+    <addaction name="actionShowPlistText"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menuEdit"/>
@@ -146,7 +147,7 @@
    <property name="minimumSize">
     <size>
      <width>95</width>
-     <height>100</height>
+     <height>117</height>
     </size>
    </property>
    <property name="features">
@@ -470,6 +471,17 @@
   <action name="actionPaste_between_windows">
    <property name="text">
     <string>Paste between windows</string>
+   </property>
+  </action>
+  <action name="actionShowPlistText">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show plist text</string>
    </property>
   </action>
  </widget>
