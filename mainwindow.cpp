@@ -729,9 +729,9 @@ void MainWindow::tabWidget_currentChanged(int index)
             }
 
             if (this->isVisible() && !loading) {
-                if (mac) {
-                    //goPlistText();
-                }
+                //if (mac) {
+                //goPlistText();
+                //}
             }
         }
         //?
@@ -1368,21 +1368,28 @@ void MainWindow::goPlistText()
                 }
             } else {
 
-                if (val == "") {
+                if (datatype == "array" || datatype == "dict") {
                     if (getPlistTextValue(lineText) == name) {
                         setBarMarkers();
 
                         break;
                     }
+                }
 
-                } else if (datatype == "bool") {
+                if (datatype == "bool") {
+
                     if (getPlistTextValue(lineText) == name) {
-                        setBarMarkers();
+
+                        QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
+                        QString strBool = strNext.mid(1, strNext.length() - 3);
+                        if (strBool == val.trimmed())
+                            setBarMarkers();
 
                         break;
                     }
+                }
 
-                } else if (datatype == "integer" || datatype == "string" || datatype == "data" || datatype == "date" || datatype == "real") {
+                if (datatype == "integer" || datatype == "string" || datatype == "data" || datatype == "date" || datatype == "real") {
                     if (index.column() == 0 || index.column() == 1) {
 
                         if (getPlistTextValue(lineText) == name) {
