@@ -13,6 +13,7 @@ extern DomItem* copy_item;
 extern QAction* copyAction;
 extern QAction* cutAction;
 extern QAction* pasteAction;
+extern QAction* pasteAsChildAction;
 extern QAction* actionNewSibling;
 extern QAction* actionNewChild;
 extern QAction* actionSort;
@@ -181,6 +182,10 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
     //pasteAction->setShortcut(tr("ctrl+v"));
     menu.addAction(pasteAction);
 
+    pasteAsChildAction = new QAction(tr("Paste as child"), this);
+    //pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
+    menu.addAction(pasteAsChildAction);
+
     menu.addSeparator();
 
     actionNewSibling = new QAction(tr("New Sibling"), this);
@@ -194,6 +199,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
     connect(copyAction, &QAction::triggered, this, &EditorTab::on_copyAction);
     connect(cutAction, &QAction::triggered, this, &EditorTab::on_cutAction);
     connect(pasteAction, &QAction::triggered, this, &EditorTab::on_pasteAction);
+    connect(pasteAsChildAction, &QAction::triggered, this, &EditorTab::on_pasteAsChildAction);
     connect(expandAction, &QAction::triggered, this, &EditorTab::on_expandAction);
     connect(collapseAction, &QAction::triggered, this, &EditorTab::on_collapseAction);
     connect(actionNewSibling, &QAction::triggered, this, &EditorTab::on_actionNewSibling);
@@ -559,6 +565,39 @@ void EditorTab::on_pasteAction()
 
         QUndoCommand* pasteCommand = new PasteCommand(model, index);
         undoGroup->activeStack()->push(pasteCommand);
+    }
+}
+
+void EditorTab::on_pasteAsChildAction()
+{
+
+    if (copy_item == NULL)
+        return;
+
+    DomModel* model;
+    QModelIndex index;
+    EditorTab* tab = tabWidget->getCurentTab();
+    index = tab->currentIndex();
+    model = tab->getModel();
+
+    if (index.isValid()) {
+
+        DomItem* item = model->itemForIndex(index);
+        if (item->getType() != "array" && item->getType() != "dict")
+            return;
+
+        QModelIndex childIndex = model->index(0, 0, index);
+        if (childIndex.isValid()) {
+            QUndoCommand* pasteCommand = new PasteCommand(model, childIndex);
+            undoGroup->activeStack()->push(pasteCommand);
+        } else {
+            on_actionNewChild();
+            childIndex = model->index(0, 0, index);
+            QUndoCommand* pasteCommand = new PasteCommand(model, childIndex);
+            undoGroup->activeStack()->push(pasteCommand);
+            treeView->setCurrentIndex(model->index(1, 0, index));
+            mw_one->actionRemove_activated();
+        }
     }
 }
 

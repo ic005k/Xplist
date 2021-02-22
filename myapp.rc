@@ -10,7 +10,7 @@ IDI_ICON1 ICON DISCARDABLE "my.ico"
 #endif
 
 VS_VERSION_INFO VERSIONINFO
-    FILEVERSION 1,0,32
+    FILEVERSION 1,0,33
     PRODUCTVERSION 1,0,0,10
     FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -28,8 +28,8 @@ VS_VERSION_INFO VERSIONINFO
             BEGIN
                 VALUE "CompanyName", ""
                 VALUE "FileDescription", ""
-                VALUE "FileVersion", "1.0.32\0"
-                VALUE "ProductVersion", "1.0.32\0"
+                VALUE "FileVersion", "1.0.33\0"
+                VALUE "ProductVersion", "1.0.33\0"
                 VALUE "LegalCopyright", "\0"
                 VALUE "LegalTrademarks", ""
                 VALUE "OriginalFilename", "PlistEDPlus\0"

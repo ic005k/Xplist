@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "filesystemwatcher.h"
 #include "myapp.h"
-#include "myhighlighter.h"
+
 #include "mytreeview.h"
 #include "ui_mainwindow.h"
 
@@ -21,6 +21,7 @@ ItemState* AddMoveTemp;
 QAction* copyAction;
 QAction* cutAction;
 QAction* pasteAction;
+QAction* pasteAsChildAction;
 QAction* actionNewSibling;
 QAction* actionNewChild;
 QAction* actionSort;
@@ -61,12 +62,17 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.32";
+    CurVerison = "1.0.33";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
     QDir dir;
     if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) { }
+
+    //获取背景色
+    QPalette pal = this->palette();
+    QBrush brush = pal.window();
+    red = brush.color().red();
 
     //初始化Dock并删除Title棒（暂时）
     QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
@@ -77,13 +83,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui->dockWidgetContents->layout()->setMargin(1);
     ui->textEdit->setReadOnly(true);
     resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
-    MyHighLighter* myHL = new MyHighLighter(ui->textEdit->document());
-    Q_UNUSED(myHL);
-
-    //获取背景色
-    QPalette pal = this->palette();
-    QBrush brush = pal.window();
-    red = brush.color().red();
+    myHL = new MyHighLighter(ui->textEdit->document());
+    myHL->rehighlight();
 
     undoGroup = new QUndoGroup(this);
 
@@ -137,6 +138,8 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->actionPaste->setShortcuts(QKeySequence::Paste);
     connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
+
+    ui->actionPaste_as_child->setShortcut(tr("shift+ctrl+v"));
 
     ui->actionCut->setShortcuts(QKeySequence::Cut);
     connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
@@ -1344,10 +1347,10 @@ void MainWindow::goPlistText()
         QString name, datatype, val;
         name = item->getName();
         datatype = item->getType();
-        val = item->getValue();
+        val = item->getValue().trimmed();
         if (datatype == "data") {
 
-            val = tab->HexStrToByte(val).toBase64();
+            val = tab->HexStrToByte(val).toBase64().trimmed();
         }
 
         //QTextBlock block = ui->textEdit->document()->findBlockByNumber(0);
@@ -1378,14 +1381,34 @@ void MainWindow::goPlistText()
 
                 if (datatype == "bool") {
 
-                    if (getPlistTextValue(lineText) == name) {
+                    if (index.column() == 0 || index.column() == 1) {
 
-                        QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
-                        QString strBool = strNext.mid(1, strNext.length() - 3);
-                        if (strBool == val.trimmed())
-                            setBarMarkers();
+                        if (getPlistTextValue(lineText) == name) {
 
-                        break;
+                            QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
+                            QString strBool = strNext.mid(1, strNext.length() - 3);
+
+                            if (strBool == val) {
+                                setBarMarkers();
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (index.column() == 2) {
+
+                        if (lineText.mid(1, lineText.length() - 3) == val) {
+
+                            QString strPrevious = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
+
+                            if (getPlistTextValue(strPrevious) == name) {
+
+                                setBarMarkers();
+
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -1408,9 +1431,9 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == val) {
 
-                            QString strNext = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
+                            QString strPrevious = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
 
-                            if (getPlistTextValue(strNext) == name) {
+                            if (getPlistTextValue(strPrevious) == name) {
 
                                 setBarMarkers();
 
@@ -1456,8 +1479,13 @@ void MainWindow::paintEvent(QPaintEvent* event)
     QPalette pal = this->palette();
     QBrush brush = pal.window();
     int c_red = brush.color().red();
+
     if (c_red != red) {
         red = c_red;
+        myHL = new MyHighLighter(ui->textEdit->document());
+        myHL->rehighlight();
+        ui->textEdit->repaint();
+
         //qDebug() << "repaint";
     }
 }
@@ -1733,4 +1761,10 @@ void MainWindow::on_actionShowPlistText_triggered(bool checked)
         ui->dockWidget->setVisible(true);
     else
         ui->dockWidget->setVisible(false);
+}
+
+void MainWindow::on_actionPaste_as_child_triggered()
+{
+    if (tabWidget->hasTabs())
+        tabWidget->getCurentTab()->on_pasteAsChildAction();
 }

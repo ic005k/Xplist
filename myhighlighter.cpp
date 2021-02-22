@@ -1,11 +1,17 @@
 #include "myhighlighter.h"
 
+extern int red;
+
 MyHighLighter::MyHighLighter(QTextDocument* parent)
     : QSyntaxHighlighter(parent)
 {
     HighlightingRule rule;
 
-    keywordFormat.setForeground(Qt::blue);
+    if (red > 55)
+        keywordFormat.setForeground(Qt::blue);
+    else
+        keywordFormat.setForeground(Qt::green);
+
     //keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
     keywordPatterns
@@ -14,10 +20,14 @@ MyHighLighter::MyHighLighter(QTextDocument* parent)
         << "\\bdate\\b"
         << "\\breal\\b"
         << "\\bkey\\b"
+
         << "\\binteger\\b"
         << "\\bbool\\b"
         << "\\bstring\\b"
-        << "\\bdata\\b";
+        << "\\bdata\\b"
+        << "\\b<\\b"
+        << "\\b>\\b"
+        << "\\b/\\b";
 
     foreach (const QString& pattern, keywordPatterns) {
         rule.pattern = QRegExp(pattern);
@@ -35,12 +45,27 @@ MyHighLighter::MyHighLighter(QTextDocument* parent)
     singleLineCommentFormat.setForeground(Qt::darkGreen);
     rule.pattern = QRegExp("//[^\n]*");
     rule.format = singleLineCommentFormat;
+    highlightingRules.append(rule);*/
+
+    if (red > 55)
+        quotationFormat.setForeground(Qt::blue);
+    else
+        quotationFormat.setForeground(Qt::green);
+    rule.pattern = QRegExp("/");
+    rule.format = quotationFormat;
+    highlightingRules.append(rule);
+
+    rule.pattern = QRegExp("<");
+    rule.format = quotationFormat;
+    highlightingRules.append(rule);
+
+    rule.pattern = QRegExp(">");
+    rule.format = quotationFormat;
     highlightingRules.append(rule);
 
     multiLineCommentFormat.setForeground(Qt::darkGreen);
-
-    quotationFormat.setForeground(Qt::darkBlue);
-    rule.pattern = QRegExp("\".*\"");
+    quotationFormat.setForeground(Qt::red);
+    rule.pattern = QRegExp("#");
     rule.format = quotationFormat;
     highlightingRules.append(rule);
 
@@ -48,7 +73,7 @@ MyHighLighter::MyHighLighter(QTextDocument* parent)
     functionFormat.setForeground(Qt::blue);
     rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
     rule.format = functionFormat;
-    highlightingRules.append(rule);*/
+    highlightingRules.append(rule);
 
     commentStartExpression = QRegExp("/\\*");
     commentEndExpression = QRegExp("\\*/");

@@ -34,6 +34,7 @@
 
 #include "domparser.h"
 #include "editortabswidget.h"
+#include "myhighlighter.h"
 
 namespace Ui {
 class MainWindow;
@@ -121,6 +122,8 @@ private slots:
 
     void on_actionShowPlistText_triggered(bool checked);
 
+    void on_actionPaste_as_child_triggered();
+
 private:
     QNetworkAccessManager* manager;
     int parse_UpdateJSON(QString str);
@@ -153,6 +156,8 @@ private:
 
     void setBarMarkers();
     QString getPlistTextValue(QString str);
+
+    MyHighLighter* myHL;
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);

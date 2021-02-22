@@ -94,6 +94,7 @@
     <addaction name="actionCut"/>
     <addaction name="separator"/>
     <addaction name="actionPaste"/>
+    <addaction name="actionPaste_as_child"/>
     <addaction name="separator"/>
     <addaction name="actionCopy_between_windows"/>
     <addaction name="actionPaste_between_windows"/>
@@ -482,6 +483,11 @@
    </property>
    <property name="text">
     <string>Show plist text</string>
+   </property>
+  </action>
+  <action name="actionPaste_as_child">
+   <property name="text">
+    <string>Paste as child</string>
    </property>
   </action>
  </widget>

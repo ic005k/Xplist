@@ -84,6 +84,7 @@ public slots:
     void on_copyAction();
     void on_cutAction();
     void on_pasteAction();
+    void on_pasteAsChildAction();
     void on_expandAction();
     void on_collapseAction();
 
