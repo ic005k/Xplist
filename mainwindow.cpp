@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget* parent)
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
 
-    CurVerison = "1.0.33";
+    CurVerison = "1.0.34";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget* parent)
     QBrush brush = pal.window();
     red = brush.color().red();
 
-    //初始化Dock并删除Title棒（暂时）
+    //初始化plist文本Dock并删除Title棒（暂时）
     QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
     QWidget* lEmptyWidget = new QWidget();
     ui->dockWidget->setTitleBarWidget(lEmptyWidget);
@@ -85,6 +85,20 @@ MainWindow::MainWindow(QWidget* parent)
     resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
     myHL = new MyHighLighter(ui->textEdit->document());
     myHL->rehighlight();
+
+    //初始化查找与替换界面
+    //QWidget* lTitleBar2 = ui->dockWidget->titleBarWidget();
+    QWidget* lEmptyWidget2 = new QWidget();
+    ui->dockWidgetFindReplace->setTitleBarWidget(lEmptyWidget2);
+    //delete lTitleBar2;
+    ui->gridLayoutFindReplace->setMargin(1);
+    //ui->gridLayoutFindReplace->setSpacing(1);
+    ui->dockWidgetContentsFindReplace->layout()->setMargin(1);
+    //ui->dockWidgetContentsFindReplace->layout()->setSpacing(1);
+    ui->dockWidgetFindReplace->close();
+    ui->btnPrevious->setEnabled(false);
+    ui->btnNext->setEnabled(false);
+    ui->btnReplace->setEnabled(false);
 
     undoGroup = new QUndoGroup(this);
 
@@ -229,19 +243,53 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->mainToolBar->addSeparator();
 
-    lblFindCount = new QLabel(tr("Count"));
+    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
+    findAction->setToolTip(tr("Find and Replace"));
+    findAction->setShortcut(tr("ctrl+F"));
+    //ui->mainToolBar->addAction(findAction);
+    connect(findAction, &QAction::triggered, this, &MainWindow::on_ShowFindReplace);
+
+    lblFindCount = new QLabel("0"); //查找结果计数器
     ui->mainToolBar->addWidget(lblFindCount);
-    findEdit = new QLineEdit(this);
-    findEdit->setClearButtonEnabled(true);
-    findEdit->setPlaceholderText(tr("Find"));
-    ui->mainToolBar->addWidget(findEdit);
+    findEdit = new QLineEdit();
+    ui->editFind->setClearButtonEnabled(true);
+    ui->editFind->setPlaceholderText(tr("Find"));
+    ui->editReplace->setClearButtonEnabled(true);
+    ui->editReplace->setPlaceholderText(tr("Replace"));
+
+    //ui->mainToolBar->addWidget(ui->btnMisc);
+    ui->mainToolBar->setContextMenuPolicy(Qt::CustomContextMenu); //屏蔽默认的右键菜单
+    ui->mainToolBar->addWidget(ui->editFind);
+    //ui->mainToolBar->addAction(findAction);
+    ui->mainToolBar->addWidget(ui->btnFind);
+    ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
+    //设置下拉菜单
+    actCaseSensitive->setCheckable(true);
+    btnFindMenu = new QMenu(this);
+    btnFindMenu->addAction(actCaseSensitive);
+
+    ui->btnFind->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->btnFind, &QPushButton::customContextMenuRequested, [=](const QPoint& pos) {
+        //qDebug() << pos;
+        Q_UNUSED(pos);
+        btnFindMenu->exec(QCursor::pos());
+    });
+
+    connect(actClearList, &QAction::triggered, [=]() {
+        ui->editFind->setText("");
+        FindTextList.clear();
+        on_editFind_returnPressed();
+    });
+
+    ui->mainToolBar->addWidget(ui->btnPrevious);
+    ui->btnPrevious->setIcon(QIcon(":/new/toolbar/res/1.png"));
+    ui->mainToolBar->addWidget(ui->btnNext);
+    ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
+    ui->mainToolBar->addWidget(ui->btnShowReplace);
+    ui->btnMisc->setVisible(false);
+
     connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
     connect(findEdit, &QLineEdit::textChanged, this, &MainWindow::findEdit_textChanged);
-
-    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
-    findAction->setToolTip(tr("Find"));
-    ui->mainToolBar->addAction(findAction);
-    connect(findAction, &QAction::triggered, this, &MainWindow::on_Find);
 
     ui->menuEdit->addSeparator();
     QAction* expandAction = new QAction(tr("Expand") + "/" + tr("Collapse"), this);
@@ -326,14 +374,32 @@ MainWindow::MainWindow(QWidget* parent)
 
         //Get search text list
         int count = Reg.value("FindTextListTotal").toInt();
+
+        btnFindMenu->addSeparator();
+        btnFindMenu->addAction(actClearList);
+        QAction* actTotal = new QAction(tr("Total") + " : " + QString::number(count), this);
+        btnFindMenu->addAction(actTotal);
+        btnFindMenu->addSeparator();
+
         for (int i = 0; i < count; i++) {
-            FindTextList.append(Reg.value("FindTextList" + QString::number(i)).toString());
+
+            QString strList = Reg.value("FindTextList" + QString::number(i)).toString();
+            FindTextList.append(strList);
+
+            btnFindActionList.append(new QAction(strList, this));
+            btnFindMenu->addAction(btnFindActionList.at(i));
+
+            connect(btnFindActionList.at(i), &QAction::triggered, [=]() {
+                qDebug() << "I'm btnFirstAction";
+                ui->editFind->setText(btnFindActionList.at(i)->text());
+                on_btnFind_clicked();
+            });
         }
 
         QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
         editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
         editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
-        findEdit->setCompleter(editFindCompleter);
+        ui->editFind->setCompleter(editFindCompleter);
 
         //是否显示plist文本
         ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 1).toBool());
@@ -736,6 +802,10 @@ void MainWindow::tabWidget_currentChanged(int index)
                 //goPlistText();
                 //}
             }
+
+            ui->btnPrevious->setEnabled(false);
+            ui->btnNext->setEnabled(false);
+            ui->btnReplace->setEnabled(false);
         }
         //?
         //else this->setWindowFilePath(" ");
@@ -848,7 +918,9 @@ void MainWindow::menu_aboutToShow() //目前废除，去掉1就可正常使用
 void MainWindow::on_Find()
 {
 
-    if (findEdit->text() == "")
+    ui->btnReplace->setEnabled(false);
+
+    if (ui->editFind->text() == "")
         return;
 
     if (tabWidget->hasTabs()) {
@@ -901,7 +973,14 @@ void MainWindow::on_Find()
         find = false;
 
         if (index.isValid()) {
-            forEach(model, index, findEdit->text().trimmed());
+            indexFindList.clear();
+            indexCount = -1;
+
+            QString strFind = ui->editFind->text().trimmed();
+            if (!actCaseSensitive->isChecked())
+                strFind = strFind.toLower();
+
+            forEach(model, index, strFind);
         } else
             qDebug() << "index is no valid";
     }
@@ -913,13 +992,17 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
     for (int r = 0; r < model->rowCount(parent); ++r) {
         QModelIndex index2 = model->index(r, 2, parent);
         QString value = model->data(index2, Qt::DisplayRole).toString();
+        if (!actCaseSensitive->isChecked())
+            value = value.toLower();
 
         QModelIndex index = model->index(r, 0, parent);
         //QVariant name = model->data(index);
         QString name = model->data(index, Qt::DisplayRole).toString();
+        if (!actCaseSensitive->isChecked())
+            name = name.toLower();
 
         //搜索值
-        if (value.toLower().contains(str.trimmed().toLower()) && str.trimmed() != "") {
+        if (value.contains(str.trimmed()) && str.trimmed() != "") {
 
             EditorTab* tab = tabWidget->getCurentTab();
             //DomModel* model = tab->getModel();
@@ -937,9 +1020,11 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 
             //treeView->expand(index2);
             //tab->view_expand(index2, model);
+
+            indexFindList.append(index2);
         }
         //搜索键
-        if (name.toLower().contains(str.trimmed().toLower()) && str.trimmed() != "") {
+        if (name.contains(str.trimmed()) && str.trimmed() != "") {
 
             EditorTab* tab = tabWidget->getCurentTab();
             //DomModel* model = tab->getModel();
@@ -956,11 +1041,18 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 
             //treeView->expand(index);
             //tab->view_expand(index, model);
+
+            indexFindList.append(index);
         }
 
         if (model->hasChildren(index)) {
             forEach(model, index, str);
         }
+    }
+
+    if (find) {
+        ui->btnPrevious->setEnabled(true);
+        ui->btnNext->setEnabled(true);
     }
 }
 
@@ -1056,7 +1148,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
         }
 
         if (FindTextList.count() < tempList.count()) {
-            FindTextList = tempList;
+            //FindTextList = tempList;
         }
     }
 
@@ -1767,4 +1859,344 @@ void MainWindow::on_actionPaste_as_child_triggered()
 {
     if (tabWidget->hasTabs())
         tabWidget->getCurentTab()->on_pasteAsChildAction();
+}
+
+void MainWindow::on_editFind_returnPressed()
+{
+    on_Find();
+
+    QString str = ui->editFind->text().trimmed();
+    bool re = false;
+    for (int i = 0; i < FindTextList.count(); i++) {
+        if (FindTextList.at(i) == str) {
+            re = true;
+            break;
+        }
+    }
+
+    if (!re && str != "")
+        FindTextList.insert(0, str);
+
+    QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
+    editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
+    editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
+    ui->editFind->setCompleter(editFindCompleter);
+
+    //更新动作
+    btnFindMenu->clear();
+    btnFindMenu->addAction(actCaseSensitive);
+    btnFindMenu->addSeparator();
+    btnFindMenu->addAction(actClearList);
+    QAction* actTotal = new QAction(tr("Total") + " : " + QString::number(FindTextList.count()), this);
+    btnFindMenu->addAction(actTotal);
+    btnFindMenu->addSeparator();
+
+    btnFindActionList.clear();
+
+    for (int i = 0; i < FindTextList.count(); i++) {
+
+        QString strList = FindTextList.at(i);
+
+        btnFindActionList.append(new QAction(strList, this));
+        btnFindMenu->addAction(btnFindActionList.at(i));
+
+        connect(btnFindActionList.at(i), &QAction::triggered, [=]() {
+            ui->editFind->setText(btnFindActionList.at(i)->text());
+            on_btnFind_clicked();
+        });
+    }
+}
+
+void MainWindow::on_editFind_textChanged(const QString& arg1)
+{
+    if (tabWidget->hasTabs()) {
+
+        if (arg1 != "") {
+
+            //on_Find();
+        }
+
+        if (arg1 == "" || !find) {
+            findCount = 0;
+            lblFindCount->setText("  " + QString::number(findCount) + "  ");
+
+            EditorTab* tab = tabWidget->getCurentTab();
+            //QTreeView* treeView = new QTreeView;
+            //treeView = (QTreeView*)tab->children().at(1);
+            QModelIndex index = tab->currentIndex();
+            tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Clear);
+        }
+    }
+}
+
+void MainWindow::on_ShowFindReplace()
+{
+
+    on_Find();
+}
+
+void MainWindow::on_btnFind_clicked()
+{
+    on_Find();
+}
+
+void MainWindow::on_btnHideFind_clicked()
+{
+    ui->dockWidgetFindReplace->close();
+}
+
+void MainWindow::on_btnPrevious_clicked()
+{
+    if (ui->editFind->text() == "" || indexFindList.count() == 0)
+        return;
+
+    if (findCount == 0)
+        return;
+
+    if (tabWidget->hasTabs()) {
+
+        indexCount--;
+
+        if (indexCount < 0) {
+            indexCount = 0;
+        }
+
+        lblFindCount->setText("  " + QString::number(findCount) + " << " + QString::number(indexCount + 1) + "  ");
+
+        EditorTab* tab = tabWidget->getCurentTab();
+        DomModel* model = tab->getModel();
+        QModelIndex index = model->index(0, 0);
+
+        QModelIndex index0 = indexFindList.at(indexCount);
+        index = model->index(index0.row(), index0.column(), index0.parent());
+        tab->treeView->setCurrentIndex(index);
+
+        tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(indexCount), QItemSelectionModel::SelectCurrent);
+        tab->treeView->setFocus();
+
+        DomItem* item = model->itemForIndex(index);
+        QString name, val;
+        name = item->getName();
+        val = item->getValue();
+        //qDebug() << name << val;
+
+        oneReplace = false;
+        ui->btnReplace->setEnabled(true);
+    }
+}
+
+void MainWindow::on_btnNext_clicked()
+{
+    if (ui->editFind->text() == "" || indexFindList.count() == 0)
+        return;
+
+    if (findCount == 0)
+        return;
+
+    if (tabWidget->hasTabs()) {
+
+        indexCount++;
+
+        if (indexCount >= indexFindList.count()) {
+            indexCount = indexFindList.count() - 1;
+        }
+
+        lblFindCount->setText("  " + QString::number(indexCount + 1) + " >> " + QString::number(findCount) + "  ");
+
+        EditorTab* tab = tabWidget->getCurentTab();
+        DomModel* model = tab->getModel();
+        QModelIndex index = model->index(0, 0);
+
+        QModelIndex index0 = indexFindList.at(indexCount);
+        index = model->index(index0.row(), index0.column(), index0.parent());
+        tab->treeView->setCurrentIndex(index);
+
+        tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(indexCount), QItemSelectionModel::SelectCurrent);
+        tab->treeView->setFocus();
+
+        DomItem* item = model->itemForIndex(index);
+        QString name, val;
+        name = item->getName();
+        val = item->getValue();
+        //qDebug() << name << val;
+
+        oneReplace = false;
+        ui->btnReplace->setEnabled(true);
+    }
+}
+
+void MainWindow::on_btnReplace_clicked()
+{
+
+    on_btnShowReplace_clicked();
+
+    if (ui->editReplace->text().trimmed() == "" || indexFindList.count() == 0)
+        return;
+
+    if (ui->editReplace->text().trimmed().mid(0, 4).toLower() == "item" || ui->editFind->text().trimmed().mid(0, 4).toLower() == "item")
+        return;
+
+    if (tabWidget->hasTabs() && !oneReplace) {
+
+        EditorTab* tab = tabWidget->getCurentTab();
+
+        DomModel* model = tab->getModel();
+        QString strFind = ui->editFind->text().trimmed();
+        QString strReplace = ui->editReplace->text().trimmed();
+
+        QString str = model->data(indexFindList.at(indexCount), Qt::DisplayRole).toString();
+
+        QModelIndex index = tab->treeView->currentIndex();
+        DomItem* item = model->itemForIndex(index);
+        QString name, val;
+        name = item->getName();
+        val = item->getValue();
+
+        QString newStr;
+        QString strModify = str;
+        if (!actCaseSensitive->isChecked()) {
+
+            newStr = strModify.replace(strFind.toLower(), strReplace, Qt::CaseInsensitive);
+        } else
+            newStr = strModify.replace(strFind, strReplace);
+
+        //qDebug() << str << name << val << newStr;
+
+        if (str == name) {
+
+            QModelIndex index_m = model->index(index.row(), 0, index.parent());
+            tab->editorDataAboutToBeSet(index_m, newStr);
+
+            item->setName(newStr);
+
+            tab->treeView->doItemsLayout();
+            tab->treeView->setFocus();
+
+            indexFindList.remove(indexCount);
+            findCount = indexFindList.count();
+            indexCount--;
+            oneReplace = true;
+        }
+
+        if (str == val) {
+
+            QModelIndex index_m = model->index(index.row(), 2, index.parent());
+            tab->editorDataAboutToBeSet(index_m, newStr);
+
+            item->setValue(newStr);
+
+            tab->treeView->doItemsLayout();
+            tab->treeView->setFocus();
+
+            indexFindList.remove(indexCount);
+            findCount = indexFindList.count();
+            indexCount--;
+            oneReplace = true;
+        }
+    }
+}
+
+void MainWindow::on_btnReplaceAll_clicked()
+{
+    if (ui->editReplace->text().trimmed() == "" || ui->editFind->text().trimmed() == "")
+        return;
+
+    if (ui->editReplace->text().trimmed().mid(0, 4).toLower() == "item" || ui->editFind->text().trimmed().mid(0, 4).toLower() == "item")
+        return;
+
+    on_Find();
+
+    for (int i = 0; i < indexFindList.count(); i++) {
+
+        if (tabWidget->hasTabs()) {
+
+            EditorTab* tab = tabWidget->getCurentTab();
+            DomModel* model = tab->getModel();
+
+            QModelIndex index0 = indexFindList.at(i);
+            QModelIndex index = model->index(index0.row(), index0.column(), index0.parent());
+            tab->treeView->setCurrentIndex(index);
+
+            tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(i), QItemSelectionModel::SelectCurrent);
+            tab->treeView->setFocus();
+
+            QString strFind = ui->editFind->text().trimmed();
+            QString strReplace = ui->editReplace->text().trimmed();
+            QString str = model->data(indexFindList.at(i), Qt::DisplayRole).toString();
+
+            DomItem* item = model->itemForIndex(index);
+            QString name, val;
+            name = item->getName();
+            val = item->getValue();
+
+            QString newStr;
+            QString strModify = str;
+            if (!actCaseSensitive->isChecked()) {
+                newStr = strModify.replace(strFind.toLower(), strReplace, Qt::CaseInsensitive);
+            } else
+                newStr = strModify.replace(strFind, strReplace);
+
+            //qDebug() << name << val << newStr;
+
+            if (str == name) {
+
+                QModelIndex index_m = model->index(index.row(), 0, index.parent());
+                tab->editorDataAboutToBeSet(index_m, newStr);
+
+                item->setName(newStr);
+
+                tab->treeView->doItemsLayout();
+                tab->treeView->setFocus();
+            }
+
+            if (str == val) {
+
+                QModelIndex index_m = model->index(index.row(), 2, index.parent());
+                tab->editorDataAboutToBeSet(index_m, newStr);
+
+                item->setValue(newStr);
+
+                tab->treeView->doItemsLayout();
+                tab->treeView->setFocus();
+            }
+        }
+    }
+
+    indexFindList.clear();
+    findCount = 0;
+    lblFindCount->setText("  " + QString::number(findCount) + "  ");
+
+    ui->btnPrevious->setEnabled(false);
+    ui->btnNext->setEnabled(false);
+}
+
+void MainWindow::on_actionFind_triggered()
+{
+    on_ShowFindReplace();
+}
+
+void MainWindow::on_actionFindNext_triggered()
+{
+    on_btnNext_clicked();
+}
+
+void MainWindow::on_actionFindPrevious_triggered()
+{
+    on_btnPrevious_clicked();
+}
+
+void MainWindow::on_actionReplace_triggered()
+{
+    on_btnReplace_clicked();
+}
+
+void MainWindow::on_actionReplaceAll_triggered()
+{
+    on_btnReplaceAll_clicked();
+}
+
+void MainWindow::on_btnShowReplace_clicked()
+{
+    ui->dockWidgetFindReplace->show();
+    ui->editReplace->setFocus();
 }

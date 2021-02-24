@@ -52,6 +52,9 @@ public:
     QLineEdit* findEdit;
 
     void forEach(QAbstractItemModel* model, QModelIndex parent, QString str);
+    QModelIndex indexFind;
+    QVector<QModelIndex> indexFindList;
+    int indexCount = 0;
 
     void openPlist(QString filePath = "");
 
@@ -124,6 +127,36 @@ private slots:
 
     void on_actionPaste_as_child_triggered();
 
+    void on_editFind_returnPressed();
+
+    void on_editFind_textChanged(const QString& arg1);
+
+    void on_ShowFindReplace();
+
+    void on_btnFind_clicked();
+
+    void on_btnHideFind_clicked();
+
+    void on_btnNext_clicked();
+
+    void on_btnPrevious_clicked();
+
+    void on_btnReplace_clicked();
+
+    void on_btnReplaceAll_clicked();
+
+    void on_actionFind_triggered();
+
+    void on_actionFindNext_triggered();
+
+    void on_actionFindPrevious_triggered();
+
+    void on_actionReplace_triggered();
+
+    void on_actionReplaceAll_triggered();
+
+    void on_btnShowReplace_clicked();
+
 private:
     QNetworkAccessManager* manager;
     int parse_UpdateJSON(QString str);
@@ -158,6 +191,13 @@ private:
     QString getPlistTextValue(QString str);
 
     MyHighLighter* myHL;
+
+    bool oneReplace = false;
+
+    QMenu* btnFindMenu;
+    QAction* actCaseSensitive = new QAction(tr("Case sensitive"), this);
+    QAction* actClearList = new QAction(tr("Clear List"), this);
+    QVector<QAction*> btnFindActionList;
 
 protected:
     void dragEnterEvent(QDragEnterEvent* event);
