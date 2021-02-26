@@ -210,7 +210,7 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc)
             {
                 value = value.remove(QRegExp("\\s")); //16进制去除所有空格
 
-                if (name.contains("Item"))
+                if (name.trimmed().mid(0, 4) == "Item")
                     valText = doc.createTextNode(value);
                 else
                     valText = doc.createTextNode(QString::fromLatin1(HexStrToByte(value).toBase64()));

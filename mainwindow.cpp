@@ -1459,7 +1459,7 @@ void MainWindow::goPlistText()
             ui->textEdit->setTextCursor(QTextCursor(block));
             QString lineText = ui->textEdit->document()->findBlockByNumber(i).text().trimmed();
 
-            if (name.contains("Item")) {
+            if (name.mid(0, 4) == "Item") {
 
                 if (getPlistTextValue(lineText) == val) {
                     setBarMarkers();
@@ -1551,7 +1551,7 @@ void MainWindow::setBarMarkers()
     QList<QTextEdit::ExtraSelection> extraSelection;
     QTextEdit::ExtraSelection selection;
     QColor lineColor;
-    lineColor.setRgb(0, 255, 0, 30);
+    lineColor.setRgb(0, 255, 0, 60);
     //lineColor = QColor(Qt::gray).lighter(150);
     selection.format.setBackground(lineColor);
     selection.format.setProperty(QTextFormat::FullWidthSelection, true);

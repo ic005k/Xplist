@@ -138,6 +138,9 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
     if (val.trimmed() == "plist")
         return 0;
 
+    if (val.trimmed().mid(0, 4) == "Item" && item->getType() != "array")
+        return 0;
+
     return ok;
 }
 
