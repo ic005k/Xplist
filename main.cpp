@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
 
     static QTranslator translator; //注意：使translator一直生效
     static QTranslator translator0;
+    static QTranslator translator1;
     QLocale locale;
     if (locale.language() == QLocale::English) //获取系统语言环境
     {
@@ -33,6 +34,10 @@ int main(int argc, char* argv[])
 
         if (translator0.load(":/new/toolbar/res/qt_zh_CN.qm")) {
             qApp->installTranslator(&translator0);
+        }
+
+        if (translator1.load(":/new/toolbar/res/widgets_zh_cn.qm")) {
+            qApp->installTranslator(&translator1);
         }
 
     } else if (locale.language() == QLocale::Russian) {

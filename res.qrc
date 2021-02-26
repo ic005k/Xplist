@@ -26,6 +26,7 @@
         <file>res/2.png</file>
         <file>res/3.png</file>
         <file>res/4.png</file>
+        <file>res/widgets_zh_cn.qm</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
