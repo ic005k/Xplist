@@ -105,6 +105,10 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 #endif
 
     undoStack = new QUndoStack();
+    undoView = new QUndoView(undoStack);
+    undoView->setWindowTitle("Command List");
+    //undoView->show();
+    undoView->setAttribute(Qt::WA_QuitOnClose, false);
 
     delegate1 = new LineEditDelegate(treeView);
 
@@ -122,14 +126,15 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     treeView->setFont(font);
 
-    //view->header()->setDefaultSectionSize(150);//表头默认列宽
+    //treeView->header()->setDefaultSectionSize(150);//表头默认列宽
     //treeView->header()->setMinimumHeight(25); //表头高度
-    //view->header()->setDefaultAlignment(Qt::AlignCenter);
-    //view->header()->setStretchLastSection(true);
-    //view->header()->setSortIndicator(0, Qt::AscendingOrder);
-    //view->setSortingEnabled(true);
+    //treeView->header()->setDefaultAlignment(Qt::AlignCenter);
+    //treeView->header()->setStretchLastSection(true);
+    //treeView->header()->setSortIndicator(0, Qt::AscendingOrder);
+    //treeView->setSortingEnabled(true);
     //treeView->setStyle(QStyleFactory::create("windows"));
-    //view->setSelectionBehavior(QAbstractItemView::SelectItems); //不选中一行，分单元格选择
+    //treeView->setSelectionBehavior(QAbstractItemView::SelectItems); //不选中一行，分单元格选择
+    //treeView->setSelectionMode(QAbstractItemView::ExtendedSelection); //选择多行
 
     connect(model, SIGNAL(itemAdded(const QModelIndex&)), this, SLOT(onItemAdded(const QModelIndex&)));
 
@@ -196,14 +201,14 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
     //actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
     menu.addAction(actionNewChild);
 
-    connect(copyAction, &QAction::triggered, this, &EditorTab::on_copyAction);
-    connect(cutAction, &QAction::triggered, this, &EditorTab::on_cutAction);
-    connect(pasteAction, &QAction::triggered, this, &EditorTab::on_pasteAction);
-    connect(pasteAsChildAction, &QAction::triggered, this, &EditorTab::on_pasteAsChildAction);
-    connect(expandAction, &QAction::triggered, this, &EditorTab::on_expandAction);
-    connect(collapseAction, &QAction::triggered, this, &EditorTab::on_collapseAction);
-    connect(actionNewSibling, &QAction::triggered, this, &EditorTab::on_actionNewSibling);
-    connect(actionNewChild, &QAction::triggered, this, &EditorTab::on_actionNewChild);
+    connect(copyAction, SIGNAL(triggered()), this, SLOT(on_copyAction()));
+    connect(cutAction, SIGNAL(triggered()), this, SLOT(on_cutAction()));
+    connect(pasteAction, SIGNAL(triggered()), this, SLOT(on_pasteAction()));
+    connect(pasteAsChildAction, SIGNAL(triggered()), SLOT(on_pasteAsChildAction()));
+    connect(expandAction, SIGNAL(triggered()), this, SLOT(on_expandAction()));
+    connect(collapseAction, SIGNAL(triggered()), this, SLOT(on_collapseAction()));
+    connect(actionNewSibling, SIGNAL(triggered()), this, SLOT(on_actionNewSibling()));
+    connect(actionNewChild, SIGNAL(triggered()), this, SLOT(on_actionNewChild()));
 
     menu.exec(event->globalPos());
 }
@@ -684,6 +689,9 @@ void EditorTab::on_collapseAction()
 
 void EditorTab::on_actionNewSibling()
 {
+
+    //增加同级项
+
     EditorTab* tab = tabWidget->getCurentTab();
     const QModelIndex index = tab->currentIndex();
 
@@ -694,6 +702,8 @@ void EditorTab::on_actionNewSibling()
 
         QUndoCommand* addMoveCommand = new AddMoveCommand(tab->getModel(), index.parent());
         undoGroup->activeStack()->push(addMoveCommand);
+
+        //tab->getModel()->addMoveItem(index.parent());
     }
 }
 

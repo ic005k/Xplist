@@ -190,8 +190,8 @@ QModelIndex DomModel::addItem(const QModelIndex& parent, int row, ItemState* sta
 {
 
     if (parent.isValid()) {
-        QModelIndex index = this->index(parent.row(), 0, parent.parent()); //原始
-        //QModelIndex index = parent; //粘贴时使用，否则导致新建子级项无法撤销（索引无效）
+        //QModelIndex index = this->index(parent.row(), 0, parent.parent()); //原始
+        QModelIndex index = parent; //粘贴时使用，否则导致新建子级项无法撤销（索引无效）
         DomItem* item = itemForIndex(index);
 
         if (row == -1)
@@ -426,7 +426,10 @@ void DomModel::removeItem(const QModelIndex& index)
 
         DomItem* item = itemForIndex(index);
         int row = index.row();
-        QModelIndex parent = index.parent();
+        const QModelIndex parent = index.parent();
+
+        //这个函数在父级为index的结构中的第position行删除rows行。形式如下：
+        //beginRemoveRows(index, position, position + rows - 1);
 
         beginRemoveRows(parent, row, row);
 

@@ -51,13 +51,13 @@ RemoveCommand::RemoveCommand(DomModel* model, const QModelIndex& index, QUndoCom
     m_row = index.row();
     m_state = model->saveItemState(index);
 
-    // get item name
+    // get item name (命令列表）
     const QModelIndex nameIndex = model->index(m_row, 0, m_parent);
     QString name = model->data(nameIndex, Qt::DisplayRole).toString();
+    setText(QObject::tr("Remove %1").arg(name));
 
-    //setText(QObject::tr("Remove %1").arg(name));
-    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Remove %1").arg(name));
-    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Remove %1").arg(name));
+    mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Remove"));
+    mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Remove"));
 }
 
 RemoveCommand::~RemoveCommand()
@@ -102,7 +102,8 @@ EditCommand::EditCommand(QString val, DomModel* model, const QModelIndex& index,
         subject = QObject::tr("value");
     };
 
-    //setText(QObject::tr("Edit item %1").arg(subject));
+    setText(QObject::tr("Edit item %1").arg(subject));
+
     mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Edit item %1").arg(subject));
     mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Edit item %1").arg(subject));
 }
@@ -140,7 +141,8 @@ PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, QUndoComma
     m_parent = index;
 
     // maybe we should create permanent index?
-    //setText(QObject::tr("Paste entry"));
+    setText(QObject::tr("Paste entry"));
+
     mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Paste entry"));
     mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Paste entry"));
 }
@@ -167,7 +169,8 @@ AddMoveCommand::AddMoveCommand(DomModel* model, const QModelIndex& index, QUndoC
     m_parent = index;
 
     // maybe we should create permanent index?
-    //setText(QObject::tr("Add new item"));
+    setText(QObject::tr("Add new item"));
+
     mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Add new item"));
     mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Add new item"));
 }

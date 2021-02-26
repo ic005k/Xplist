@@ -83,13 +83,13 @@ private slots:
     void on_copyBW();
     void on_pasteBW();
 
-    void actionNew_activated();
-    void actionOpen_activated();
+    void actionNew();
+    void actionOpen();
     void actionClose_activated();
     void actionClose_all_activated();
 
-    void actionSave_activated();
-    void actionSave_as_activated();
+    void actionSave();
+    void actionSaveAs();
 
     void actionExpand_all_activated();
     void actionAbout_activated();
@@ -157,6 +157,30 @@ private slots:
 
     void on_btnShowReplace_clicked();
 
+    void on_actionCut_triggered();
+
+    void on_actionCopy_between_windows_triggered();
+
+    void on_actionPaste_between_windows_triggered();
+
+    void on_actionCheck_Update_triggered();
+
+    void on_actionAbout_triggered();
+
+    void on_actionAdd_triggered();
+
+    void on_actionRemove_triggered();
+
+    void on_actionNew_Sibling_triggered();
+
+    void on_actionOpen_triggered();
+
+    void on_actionNew_triggered();
+
+    void on_actionSave_triggered();
+
+    void on_actionSave_as_triggered();
+
 private:
     QNetworkAccessManager* manager;
     int parse_UpdateJSON(QString str);
@@ -200,11 +224,11 @@ private:
     QVector<QAction*> btnFindActionList;
 
 protected:
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dropEvent(QDropEvent* event);
-    void closeEvent(QCloseEvent* event);
-    void resizeEvent(QResizeEvent* event);
-    void paintEvent(QPaintEvent* event);
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
+    void closeEvent(QCloseEvent* event) override;
+    void resizeEvent(QResizeEvent* event) override;
+    void paintEvent(QPaintEvent* event) override;
 };
 
 #endif // MAINWINDOW_H

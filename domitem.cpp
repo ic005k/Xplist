@@ -39,6 +39,7 @@ DomItem* DomItem::addChild(int i, DomItem* item)
 {
     if (i == -1)
         i = childItems.size();
+
     if (item == NULL) {
         item = new DomItem(i, QObject::tr("NewItem") + " " + QString::number(i + 1), this);
     }
@@ -50,6 +51,7 @@ DomItem* DomItem::addChild(int i, DomItem* item)
     }
 
     childItems.insert(i, item);
+
     return item;
 }
 
@@ -62,6 +64,7 @@ void DomItem::removeChild(int i)
 
 void DomItem::removeFromParent(int row)
 {
+
     parentItem->removeChild(row);
 }
 
@@ -126,7 +129,7 @@ DomItem* DomItem::clone()
     newItem->name = this->name;
 
     // copy children
-    for (int i = 0; i < childItems.size(); ++i) {
+    for (int i = 0; i < childItems.count(); ++i) {
         DomItem* item = childItems[i]->clone();
         newItem->childItems.append(item);
         item->parentItem = newItem;

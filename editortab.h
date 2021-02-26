@@ -14,6 +14,7 @@
 #include <QStandardItem>
 #include <QStyleFactory>
 #include <QUndoStack>
+#include <QUndoView>
 #include <QWidget>
 
 #include "comboboxdelegate.h"
@@ -56,6 +57,7 @@ public:
     QModelIndex currentIndex() const;
 
     QUndoStack* getUndoStack();
+    QUndoView* undoView;
 
     void view_collapse(const QModelIndex index, DomModel* model);
 

@@ -50,7 +50,22 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
+    CurVerison = "1.0.35";
+    ver = "PlistEDPlus  V" + CurVerison + "        ";
+    setWindowTitle(ver);
+
     loading = true;
+
+#ifdef Q_OS_MAC
+    ui->mainToolBar->setIconSize(QSize(28, 28));
+    this->resize(QSize(1080, 650));
+    mac = true;
+    //ui->actionCheck_Update->setVisible(false);
+#endif
+
+#ifdef Q_OS_LINUX
+    linuxOS = true;
+#endif
 
     myToolBar = ui->mainToolBar;
     myStatusBar = ui->statusBar;
@@ -61,10 +76,6 @@ MainWindow::MainWindow(QWidget* parent)
 
     QApplication::setApplicationName("PlistEDPlus");
     QApplication::setOrganizationName("PlistED");
-
-    CurVerison = "1.0.34";
-    ver = "PlistEDPlus  V" + CurVerison + "        ";
-    setWindowTitle(ver);
 
     QDir dir;
     if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) { }
@@ -100,9 +111,8 @@ MainWindow::MainWindow(QWidget* parent)
     ui->btnNext->setEnabled(false);
     ui->btnReplace->setEnabled(false);
 
-    undoGroup = new QUndoGroup(this);
-
     // create undo and redo actions
+    undoGroup = new QUndoGroup(this);
     actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
     actionRedo = undoGroup->createRedoAction(this, tr("Redo"));
 
@@ -121,10 +131,6 @@ MainWindow::MainWindow(QWidget* parent)
     connect(undoGroup, SIGNAL(cleanChanged(bool)), this, SLOT(onCleanChanged(bool)));
 
     //File
-    connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen_activated);
-    connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew_activated);
-    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave_activated);
-    connect(ui->actionSave_as, &QAction::triggered, this, &MainWindow::actionSave_as_activated);
 
     connect(ui->actionFile1, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     connect(ui->actionFile2, SIGNAL(triggered()), this, SLOT(openRecentFile()));
@@ -138,37 +144,30 @@ MainWindow::MainWindow(QWidget* parent)
     connect(ui->actionFile10, SIGNAL(triggered()), this, SLOT(openRecentFile()));
     updateRecentFiles();
 
-    connect(ui->actionClose, &QAction::triggered, this, &MainWindow::actionClose_activated);
-    connect(ui->actionClose_all, &QAction::triggered, this, &MainWindow::actionClose_all_activated);
+    connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(actionClose_activated()));
+    connect(ui->actionClose_all, SIGNAL(triggered()), this, SLOT(actionClose_all_activated()));
 
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabCloseRequest(int)));
 
-    connect(ui->actionNew_Window, &QAction::triggered, this, &MainWindow::on_NewWindow);
+    connect(ui->actionNew_Window, SIGNAL(triggered()), this, SLOT(on_NewWindow()));
     ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
 
     //Edit
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
-    connect(ui->actionCopy, &QAction::triggered, this, &MainWindow::on_copyAction);
+    connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(on_copyAction()));
 
     ui->actionPaste->setShortcuts(QKeySequence::Paste);
-    connect(ui->actionPaste, &QAction::triggered, this, &MainWindow::on_pasteAction);
+    connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(on_pasteAction()));
 
     ui->actionPaste_as_child->setShortcut(tr("shift+ctrl+v"));
 
     ui->actionCut->setShortcuts(QKeySequence::Cut);
-    connect(ui->actionCut, &QAction::triggered, this, &MainWindow::on_cutAction);
+    connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(on_cutAction()));
 
-    connect(ui->actionCopy_between_windows, &QAction::triggered, this, &MainWindow::on_copyBW);
     ui->actionCopy_between_windows->setShortcut(tr("ctrl+b"));
-    connect(ui->actionPaste_between_windows, &QAction::triggered, this, &MainWindow::on_pasteBW);
+
     ui->actionPaste_between_windows->setShortcut(tr("ctrl+alt+b"));
 
-    //Help
-    connect(ui->actionCheck_Update, &QAction::triggered, this, &MainWindow::CheckUpdate);
-    connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::actionAbout_activated);
-
-    connect(ui->actionAdd, &QAction::triggered, this, &MainWindow::actionAdd_activated);
-    connect(ui->actionRemove, &QAction::triggered, this, &MainWindow::actionRemove_activated);
     connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
 
     ui->actionNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
@@ -189,8 +188,8 @@ MainWindow::MainWindow(QWidget* parent)
     actionNewSibling = new QAction(tr("New Sibling"), this);
     ui->mainToolBar->addAction(actionNewSibling);
     actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
-    connect(actionNewSibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
-    connect(ui->actionNew_Sibling, &QAction::triggered, this, &MainWindow::on_actionNewSibling);
+    connect(actionNewSibling, SIGNAL(triggered()), this, SLOT(on_actionNewSibling()));
+
     ui->actionNew_Sibling->setShortcut(tr("ctrl++"));
 
     actionNewChild = new QAction(tr("New Child"), this);
@@ -286,6 +285,7 @@ MainWindow::MainWindow(QWidget* parent)
     ui->mainToolBar->addWidget(ui->btnNext);
     ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
     ui->mainToolBar->addWidget(ui->btnShowReplace);
+    ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
     ui->btnMisc->setVisible(false);
 
     connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
@@ -306,17 +306,6 @@ MainWindow::MainWindow(QWidget* parent)
     win = true;
     ui->actionRemove_2->setShortcut(tr("ctrl+-"));
     ui->actionNew_Child->setShortcut(tr("alt++"));
-#endif
-
-#ifdef Q_OS_LINUX
-    linuxOS = true;
-#endif
-
-#ifdef Q_OS_MAC
-    ui->mainToolBar->setIconSize(QSize(28, 28));
-    this->resize(QSize(1050, 600));
-    mac = true;
-    //ui->actionCheck_Update->setVisible(false);
 #endif
 
     ui->actionSaveAndFind->setCheckable(true);
@@ -421,7 +410,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::actionNew_activated()
+void MainWindow::actionNew()
 {
 
     // create new model
@@ -445,7 +434,7 @@ void MainWindow::actionNew_activated()
     tab->treeView->setFocus();
 }
 
-void MainWindow::actionOpen_activated()
+void MainWindow::actionOpen()
 {
     openFiles();
 }
@@ -503,7 +492,6 @@ void MainWindow::openPlist(QString filePath)
             QDomDocument document;
 
             if (document.setContent(&file)) {
-                //qDebug() << QString("File %1 opened").arg(filePath);
 
                 DomModel* model = DomParser::fromDom(document);
 
@@ -575,7 +563,7 @@ void MainWindow::onTabCloseRequest(int i)
 
         case QMessageBox::Save:
             close_flag = 1;
-            actionSave_activated();
+            actionSave();
             break;
 
         case QMessageBox::Discard:
@@ -665,7 +653,7 @@ void MainWindow::savePlist(QString filePath)
     }
 }
 
-void MainWindow::actionSave_activated()
+void MainWindow::actionSave()
 {
     if (tabWidget->hasTabs()) {
         EditorTab* tab = tabWidget->getCurentTab();
@@ -673,11 +661,11 @@ void MainWindow::actionSave_activated()
         if (!path.isEmpty())
             savePlist(path);
         else
-            actionSave_as_activated();
+            actionSaveAs();
     }
 }
 
-void MainWindow::actionSave_as_activated()
+void MainWindow::actionSaveAs()
 {
     if (tabWidget->hasTabs()) {
         QString cfile = tabWidget->getCurentTab()->getPath();
@@ -707,10 +695,15 @@ void MainWindow::actionSave_as_activated()
 void MainWindow::actionAdd_activated()
 {
 
+    //增加子项
+
     if (tabWidget->hasTabs()) {
         EditorTab* tab = tabWidget->getCurentTab();
         const QModelIndex index = tab->currentIndex();
         DomModel* model = tab->getModel();
+        DomItem* item = model->itemForIndex(index);
+        if (item->getType() != "dict" && item->getType() != "array")
+            return;
 
         QModelIndex index0 = model->index(index.row(), 0, index.parent());
 
@@ -721,6 +714,8 @@ void MainWindow::actionAdd_activated()
 
             QUndoCommand* addMoveCommand = new AddMoveCommand(model, index);
             undoGroup->activeStack()->push(addMoveCommand);
+
+            //model->addMoveItem(index);
         }
     }
 }
@@ -728,17 +723,27 @@ void MainWindow::actionAdd_activated()
 void MainWindow::actionRemove_activated()
 {
     if (tabWidget->hasTabs()) {
+
         EditorTab* tab = tabWidget->getCurentTab();
-        const QModelIndex index = tab->currentIndex();
+        QModelIndex index = tab->currentIndex();
+
+        //QItemSelectionModel* selections = tab->treeView->selectionModel();
+        //const QModelIndexList selectedsList = selections->selectedRows();
+        //int count = selectedsList.count();
+        //for (int i = 0; i < count; i++) {
+
+        //QModelIndex index = selectedsList.at(count - 1 - i);
 
         if (index.isValid()) {
-            DomModel* model = tab->getModel();
 
+            DomModel* model = tab->getModel();
+            index = model->index(index.row(), 0, index.parent());
             if (model->itemNotPlist(index)) {
                 QUndoCommand* removeCommand = new RemoveCommand(model, index);
                 undoGroup->activeStack()->push(removeCommand);
             }
         }
+        //}
     }
 }
 
@@ -932,7 +937,7 @@ void MainWindow::on_Find()
             QString fn = tabWidget->getCurentTab()->getPath();
             if (QFileInfo(fn).exists()) {
 
-                actionSave_activated();
+                actionSave();
 
                 FileSystemWatcher::removeWatchPath(fn);
 
@@ -1390,7 +1395,7 @@ void MainWindow::showMsg()
     DomItem* item = model->itemForIndex(index);
 
     QString str1, str2, str3, str4, str5;
-    str1 = QObject::tr("Currently selected: ") + index.data().toString();
+    str1 = QObject::tr("Currently selected: ") + index.data().toString().trimmed();
     str2 = "      " + QObject::tr("Row: ") + QString::number(index.row() + 1);
     str3 = "      " + QObject::tr("Column: ") + QString::number(index.column() + 1);
     str4 = "      " + QObject::tr("Parent level：") + index.parent().data().toString();
@@ -1773,7 +1778,7 @@ void MainWindow::on_copyBW()
 
         int ci = tabWidget->currentIndex();
         on_copyAction();
-        actionNew_activated();
+        actionNew();
         on_actionNewChild();
         QModelIndex index = tabWidget->getCurentTab()->currentIndex();
         QModelIndex index1 = tabWidget->getCurentTab()->getModel()->index(0, 0, index);
@@ -1943,6 +1948,7 @@ void MainWindow::on_btnFind_clicked()
 void MainWindow::on_btnHideFind_clicked()
 {
     ui->dockWidgetFindReplace->close();
+    ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
 }
 
 void MainWindow::on_btnPrevious_clicked()
@@ -2027,8 +2033,6 @@ void MainWindow::on_btnNext_clicked()
 
 void MainWindow::on_btnReplace_clicked()
 {
-
-    on_btnShowReplace_clicked();
 
     if (ui->editReplace->text().trimmed() == "" || indexFindList.count() == 0)
         return;
@@ -2187,6 +2191,11 @@ void MainWindow::on_actionFindPrevious_triggered()
 
 void MainWindow::on_actionReplace_triggered()
 {
+    if (ui->dockWidgetFindReplace->isHidden()) {
+        ui->dockWidgetFindReplace->show();
+        ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
+    }
+
     on_btnReplace_clicked();
 }
 
@@ -2197,6 +2206,73 @@ void MainWindow::on_actionReplaceAll_triggered()
 
 void MainWindow::on_btnShowReplace_clicked()
 {
-    ui->dockWidgetFindReplace->show();
-    ui->editReplace->setFocus();
+    if (ui->dockWidgetFindReplace->isHidden()) {
+        ui->dockWidgetFindReplace->show();
+        ui->editReplace->setFocus();
+        ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
+    } else {
+        ui->dockWidgetFindReplace->close();
+
+        ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
+    }
+}
+
+void MainWindow::on_actionCut_triggered()
+{
+    on_cutAction();
+}
+
+void MainWindow::on_actionCopy_between_windows_triggered()
+{
+    on_copyBW();
+}
+
+void MainWindow::on_actionPaste_between_windows_triggered()
+{
+    on_pasteBW();
+}
+
+void MainWindow::on_actionCheck_Update_triggered()
+{
+    CheckUpdate();
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    actionAbout_activated();
+}
+
+void MainWindow::on_actionAdd_triggered()
+{
+    actionAdd_activated();
+}
+
+void MainWindow::on_actionRemove_triggered()
+{
+    actionRemove_activated();
+}
+
+void MainWindow::on_actionNew_Sibling_triggered()
+{
+    on_actionNewSibling();
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    actionOpen();
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    actionNew();
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    actionSave();
+}
+
+void MainWindow::on_actionSave_as_triggered()
+{
+    actionSaveAs();
 }
