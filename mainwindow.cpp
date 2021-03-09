@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.35";
+    CurVerison = "1.0.36";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
-    this->resize(QSize(1080, 650));
+    this->resize(QSize(1150, 650));
     mac = true;
     //ui->actionCheck_Update->setVisible(false);
 #endif
@@ -85,220 +85,11 @@ MainWindow::MainWindow(QWidget* parent)
     QBrush brush = pal.window();
     red = brush.color().red();
 
-    //初始化plist文本Dock并删除Title棒（暂时）
-    QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
-    QWidget* lEmptyWidget = new QWidget();
-    ui->dockWidget->setTitleBarWidget(lEmptyWidget);
-    delete lTitleBar;
-    ui->gridLayout->setMargin(1);
-    ui->dockWidgetContents->layout()->setMargin(1);
-    ui->textEdit->setReadOnly(true);
-    resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
-    myHL = new MyHighLighter(ui->textEdit->document());
-    myHL->rehighlight();
+    initPlistTextShow();
 
-    //初始化查找与替换界面
-    //QWidget* lTitleBar2 = ui->dockWidget->titleBarWidget();
-    QWidget* lEmptyWidget2 = new QWidget();
-    ui->dockWidgetFindReplace->setTitleBarWidget(lEmptyWidget2);
-    //delete lTitleBar2;
-    ui->gridLayoutFindReplace->setMargin(1);
-    //ui->gridLayoutFindReplace->setSpacing(1);
-    ui->dockWidgetContentsFindReplace->layout()->setMargin(1);
-    //ui->dockWidgetContentsFindReplace->layout()->setSpacing(1);
-    ui->dockWidgetFindReplace->close();
-    ui->btnPrevious->setEnabled(false);
-    ui->btnNext->setEnabled(false);
-    ui->btnReplace->setEnabled(false);
+    initFindReplace();
 
-    // create undo and redo actions
-    undoGroup = new QUndoGroup(this);
-    actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
-    actionRedo = undoGroup->createRedoAction(this, tr("Redo"));
-
-    // set shortcuts
-    actionUndo->setShortcuts(QKeySequence::Undo);
-    actionRedo->setShortcuts(QKeySequence::Redo);
-    actionUndo->setIconVisibleInMenu(false);
-    actionRedo->setIconVisibleInMenu(false);
-
-    // add actions to menu
-    ui->menuEdit->addAction(actionUndo);
-    ui->menuEdit->addAction(actionRedo);
-
-    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabWidget_currentChanged(int)));
-
-    connect(undoGroup, SIGNAL(cleanChanged(bool)), this, SLOT(onCleanChanged(bool)));
-
-    //File
-
-    connect(ui->actionFile1, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile2, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile3, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile4, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile5, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile6, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile7, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile8, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile9, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile10, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    updateRecentFiles();
-
-    connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(actionClose_activated()));
-    connect(ui->actionClose_all, SIGNAL(triggered()), this, SLOT(actionClose_all_activated()));
-
-    connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabCloseRequest(int)));
-
-    connect(ui->actionNew_Window, SIGNAL(triggered()), this, SLOT(on_NewWindow()));
-    ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
-
-    //Edit
-    ui->actionCopy->setShortcuts(QKeySequence::Copy);
-    connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(on_copyAction()));
-
-    ui->actionPaste->setShortcuts(QKeySequence::Paste);
-    connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(on_pasteAction()));
-
-    ui->actionPaste_as_child->setShortcut(tr("shift+ctrl+v"));
-
-    ui->actionCut->setShortcuts(QKeySequence::Cut);
-    connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(on_cutAction()));
-
-    ui->actionCopy_between_windows->setShortcut(tr("ctrl+b"));
-
-    ui->actionPaste_between_windows->setShortcut(tr("ctrl+alt+b"));
-
-    connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
-
-    ui->actionNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
-    ui->mainToolBar->addAction(ui->actionNew);
-
-    ui->mainToolBar->addAction(ui->actionOpen);
-    ui->actionOpen->setIcon(QIcon(":/new/toolbar/res/open.png"));
-
-    ui->mainToolBar->addAction(ui->actionSave);
-    ui->actionSave->setIcon(QIcon(":/new/toolbar/res/save.png"));
-
-    ui->mainToolBar->addAction(ui->actionSave_as);
-    ui->actionSave_as->setIconVisibleInMenu(false);
-    ui->actionSave_as->setIcon(QIcon(":/new/toolbar/res/saveas.png"));
-
-    ui->mainToolBar->addSeparator();
-
-    actionNewSibling = new QAction(tr("New Sibling"), this);
-    ui->mainToolBar->addAction(actionNewSibling);
-    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
-    connect(actionNewSibling, SIGNAL(triggered()), this, SLOT(on_actionNewSibling()));
-
-    ui->actionNew_Sibling->setShortcut(tr("ctrl++"));
-
-    actionNewChild = new QAction(tr("New Child"), this);
-    ui->mainToolBar->addAction(actionNewChild);
-    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
-    connect(actionNewChild, &QAction::triggered, this, &MainWindow::on_actionNewChild);
-
-    connect(ui->actionNew_Child, &QAction::triggered, this, &MainWindow::on_actionNewChild);
-    ui->actionNew_Child->setShortcut(tr("+"));
-
-    ui->mainToolBar->addAction(ui->actionRemove);
-    ui->actionRemove->setShortcut(Qt::Key_Delete);
-    ui->actionRemove_2->setShortcut(Qt::Key_Delete);
-    ui->actionRemove_2->setShortcut(tr("-"));
-    connect(ui->actionRemove_2, &QAction::triggered, this, &MainWindow::actionRemove_activated);
-
-    ui->mainToolBar->addSeparator();
-
-    ui->mainToolBar->addAction(ui->actionExpand_all);
-    ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
-
-    ui->mainToolBar->addSeparator();
-
-    QAction* actionMoveUp = new QAction(tr("Move up"));
-    actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.png"));
-    actionMoveUp->setShortcut(tr("ctrl+u"));
-    ui->mainToolBar->addAction(actionMoveUp);
-    connect(actionMoveUp, &QAction::triggered, this, &MainWindow::on_actionMoveUp);
-
-    QAction* actionMoveDown = new QAction(tr("Move down"));
-    actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.png"));
-    actionMoveDown->setShortcut(tr("ctrl+d"));
-    ui->mainToolBar->addAction(actionMoveDown);
-    connect(actionMoveDown, &QAction::triggered, this, &MainWindow::on_actionMoveDown);
-
-    ui->mainToolBar->addSeparator();
-
-    actionSort = new QAction(tr("A->Z Sort"));
-    actionSort->setIcon(QIcon(":/new/toolbar/res/sort.png"));
-    ui->mainToolBar->addAction(actionSort);
-    connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
-
-    ui->mainToolBar->addSeparator();
-
-    actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.png"));
-    ui->mainToolBar->addAction(actionUndo);
-
-    actionRedo->setIcon(QIcon(":/new/toolbar/res/redo.png"));
-    ui->mainToolBar->addAction(actionRedo);
-
-    ui->mainToolBar->addSeparator();
-
-    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
-    findAction->setToolTip(tr("Find and Replace"));
-    findAction->setShortcut(tr("ctrl+F"));
-    //ui->mainToolBar->addAction(findAction);
-    connect(findAction, &QAction::triggered, this, &MainWindow::on_ShowFindReplace);
-
-    lblFindCount = new QLabel("0"); //查找结果计数器
-    ui->mainToolBar->addWidget(lblFindCount);
-    findEdit = new QLineEdit();
-    ui->editFind->setClearButtonEnabled(true);
-    ui->editFind->setPlaceholderText(tr("Find"));
-    ui->editReplace->setClearButtonEnabled(true);
-    ui->editReplace->setPlaceholderText(tr("Replace"));
-
-    //ui->mainToolBar->addWidget(ui->btnMisc);
-    ui->mainToolBar->setContextMenuPolicy(Qt::CustomContextMenu); //屏蔽默认的右键菜单
-    ui->mainToolBar->addWidget(ui->editFind);
-    //ui->mainToolBar->addAction(findAction);
-    ui->mainToolBar->addWidget(ui->btnFind);
-    ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
-    //设置下拉菜单
-    actCaseSensitive->setCheckable(true);
-    btnFindMenu = new QMenu(this);
-    btnFindMenu->addAction(actCaseSensitive);
-
-    ui->btnFind->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->btnFind, &QPushButton::customContextMenuRequested, [=](const QPoint& pos) {
-        //qDebug() << pos;
-        Q_UNUSED(pos);
-        btnFindMenu->exec(QCursor::pos());
-    });
-
-    connect(actClearList, &QAction::triggered, [=]() {
-        ui->editFind->setText("");
-        FindTextList.clear();
-        on_editFind_returnPressed();
-    });
-
-    ui->mainToolBar->addWidget(ui->btnPrevious);
-    ui->btnPrevious->setIcon(QIcon(":/new/toolbar/res/1.png"));
-    ui->mainToolBar->addWidget(ui->btnNext);
-    ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
-    ui->mainToolBar->addWidget(ui->btnShowReplace);
-    ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
-    ui->btnMisc->setVisible(false);
-
-    connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
-    connect(findEdit, &QLineEdit::textChanged, this, &MainWindow::findEdit_textChanged);
-
-    ui->menuEdit->addSeparator();
-    QAction* expandAction = new QAction(tr("Expand") + "/" + tr("Collapse"), this);
-    expandAction->setShortcut(tr("space"));
-    ui->menuEdit->addAction(expandAction);
-    connect(expandAction, &QAction::triggered, this, &MainWindow::on_expandAction);
-
-    QAction* collapseAction = new QAction(tr("Collapse"), this);
-    connect(collapseAction, &QAction::triggered, this, &MainWindow::on_collapseAction);
+    initMenuToolsBar();
 
 #ifdef Q_OS_WIN32
     reg_win();
@@ -410,6 +201,208 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::initMenuToolsBar()
+{
+
+    // create undo and redo actions
+    undoGroup = new QUndoGroup(this);
+    actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
+    actionRedo = undoGroup->createRedoAction(this, tr("Redo"));
+
+    // set shortcuts
+    actionUndo->setShortcuts(QKeySequence::Undo);
+    actionRedo->setShortcuts(QKeySequence::Redo);
+    //actionUndo->setIconVisibleInMenu(false);
+    //actionRedo->setIconVisibleInMenu(false);
+
+    // add actions to menu
+    ui->menuEdit->addAction(actionUndo);
+    ui->menuEdit->addAction(actionRedo);
+
+    connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabWidget_currentChanged(int)));
+
+    connect(undoGroup, SIGNAL(cleanChanged(bool)), this, SLOT(onCleanChanged(bool)));
+
+    //File
+    connect(ui->actionFile1, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile2, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile3, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile4, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile5, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile6, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile7, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile8, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile9, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    connect(ui->actionFile10, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+    updateRecentFiles();
+
+    connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(actionClose_activated()));
+    connect(ui->actionClose_all, SIGNAL(triggered()), this, SLOT(actionClose_all_activated()));
+
+    connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabCloseRequest(int)));
+
+    connect(ui->actionNew_Window, SIGNAL(triggered()), this, SLOT(on_NewWindow()));
+    ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
+
+    //Edit
+    ui->actionCopy->setShortcuts(QKeySequence::Copy);
+    connect(ui->actionCopy, SIGNAL(triggered()), this, SLOT(on_copyAction()));
+
+    ui->actionPaste->setShortcuts(QKeySequence::Paste);
+    connect(ui->actionPaste, SIGNAL(triggered()), this, SLOT(on_pasteAction()));
+
+    ui->actionPaste_as_child->setShortcut(tr("shift+ctrl+v"));
+
+    ui->actionCut->setShortcuts(QKeySequence::Cut);
+    connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(on_cutAction()));
+
+    ui->actionCopy_between_windows->setShortcut(tr("ctrl+b"));
+
+    ui->actionPaste_between_windows->setShortcut(tr("ctrl+alt+b"));
+
+    // 编辑菜单 展开/折叠
+    ui->menuEdit->addSeparator();
+    QAction* expandAction = new QAction(tr("Expand") + "/" + tr("Collapse"), this);
+    expandAction->setShortcut(tr("space"));
+    ui->menuEdit->addAction(expandAction);
+    connect(expandAction, &QAction::triggered, this, &MainWindow::on_expandAction);
+
+    QAction* collapseAction = new QAction(tr("Collapse"), this);
+    connect(collapseAction, &QAction::triggered, this, &MainWindow::on_collapseAction);
+
+    // 初始化工具棒
+    ui->actionNew_Window->setIcon(QIcon(":/new/toolbar/res/nw.png"));
+    ui->mainToolBar->addAction(ui->actionNew_Window);
+
+    ui->mainToolBar->addSeparator();
+
+    ui->mainToolBar->addAction(ui->actionOpen);
+    ui->actionOpen->setIcon(QIcon(":/new/toolbar/res/open.png"));
+
+    ui->actionNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
+    ui->mainToolBar->addAction(ui->actionNew);
+
+    ui->mainToolBar->addAction(ui->actionSave);
+    ui->actionSave->setIcon(QIcon(":/new/toolbar/res/save.png"));
+
+    ui->mainToolBar->addAction(ui->actionSave_as);
+    ui->actionSave_as->setIcon(QIcon(":/new/toolbar/res/saveas.png"));
+
+    ui->mainToolBar->addSeparator();
+
+    actionNewSibling = new QAction(tr("New Sibling"), this);
+    ui->mainToolBar->addAction(actionNewSibling);
+    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
+    connect(actionNewSibling, SIGNAL(triggered()), this, SLOT(on_actionNewSibling()));
+
+    ui->actionNew_Sibling->setShortcut(tr("ctrl++"));
+
+    actionNewChild = new QAction(tr("New Child"), this);
+    ui->mainToolBar->addAction(actionNewChild);
+    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
+    connect(actionNewChild, &QAction::triggered, this, &MainWindow::on_actionNewChild);
+
+    connect(ui->actionNew_Child, &QAction::triggered, this, &MainWindow::on_actionNewChild);
+    ui->actionNew_Child->setShortcut(tr("+"));
+
+    ui->mainToolBar->addAction(ui->actionRemove);
+    ui->actionRemove->setShortcut(Qt::Key_Delete);
+    ui->actionRemove_2->setShortcut(Qt::Key_Delete);
+    ui->actionRemove_2->setShortcut(tr("-"));
+    connect(ui->actionRemove_2, &QAction::triggered, this, &MainWindow::actionRemove_activated);
+
+    ui->mainToolBar->addSeparator();
+
+    ui->mainToolBar->addAction(ui->actionExpand_all);
+    ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+
+    connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
+
+    ui->mainToolBar->addSeparator();
+
+    QAction* actionMoveUp = new QAction(tr("Move up"));
+    actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.png"));
+    actionMoveUp->setShortcut(tr("ctrl+u"));
+    ui->mainToolBar->addAction(actionMoveUp);
+    connect(actionMoveUp, &QAction::triggered, this, &MainWindow::on_actionMoveUp);
+
+    QAction* actionMoveDown = new QAction(tr("Move down"));
+    actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.png"));
+    actionMoveDown->setShortcut(tr("ctrl+d"));
+    ui->mainToolBar->addAction(actionMoveDown);
+    connect(actionMoveDown, &QAction::triggered, this, &MainWindow::on_actionMoveDown);
+
+    ui->mainToolBar->addSeparator();
+
+    actionSort = new QAction(tr("A->Z Sort"));
+    actionSort->setIcon(QIcon(":/new/toolbar/res/sort.png"));
+    ui->mainToolBar->addAction(actionSort);
+    connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
+
+    ui->mainToolBar->addSeparator();
+
+    actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.png"));
+    ui->mainToolBar->addAction(actionUndo);
+
+    actionRedo->setIcon(QIcon(":/new/toolbar/res/redo.png"));
+    ui->mainToolBar->addAction(actionRedo);
+
+    ui->mainToolBar->addSeparator();
+
+    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
+    findAction->setToolTip(tr("Find and Replace"));
+    findAction->setShortcut(tr("ctrl+F"));
+    //ui->mainToolBar->addAction(findAction);
+    connect(findAction, &QAction::triggered, this, &MainWindow::on_ShowFindReplace);
+
+    lblFindCount = new QLabel("0"); //查找结果计数器
+    ui->mainToolBar->addWidget(lblFindCount);
+    findEdit = new QLineEdit();
+    ui->editFind->setClearButtonEnabled(true);
+    ui->editFind->setPlaceholderText(tr("Find"));
+    ui->editReplace->setClearButtonEnabled(true);
+    ui->editReplace->setPlaceholderText(tr("Replace"));
+
+    //ui->mainToolBar->addWidget(ui->btnMisc);
+    ui->mainToolBar->setContextMenuPolicy(Qt::CustomContextMenu); //屏蔽默认的右键菜单
+    ui->mainToolBar->addWidget(ui->editFind);
+    //ui->mainToolBar->addAction(findAction);
+    ui->mainToolBar->addWidget(ui->btnFind);
+    ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
+    //设置下拉菜单
+    actCaseSensitive->setCheckable(true);
+    btnFindMenu = new QMenu(this);
+    btnFindMenu->addAction(actCaseSensitive);
+
+    ui->btnFind->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->btnFind, &QPushButton::customContextMenuRequested, [=](const QPoint& pos) {
+        Q_UNUSED(pos);
+        btnFindMenu->exec(QCursor::pos());
+    });
+
+    connect(actClearList, &QAction::triggered, [=]() {
+        ui->editFind->setText("");
+        FindTextList.clear();
+        on_editFind_returnPressed();
+    });
+
+    ui->mainToolBar->addWidget(ui->btnPrevious);
+    ui->btnPrevious->setIcon(QIcon(":/new/toolbar/res/1.png"));
+    ui->mainToolBar->addWidget(ui->btnNext);
+    ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
+    ui->mainToolBar->addWidget(ui->btnShowReplace);
+    ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
+    ui->btnMisc->setVisible(false);
+
+    connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
+    connect(findEdit, &QLineEdit::textChanged, this, &MainWindow::findEdit_textChanged);
+
+    ui->mainToolBar->addSeparator();
+
+    ui->mainToolBar->addAction(ui->actionCheck_Update);
+    ui->actionCheck_Update->setIcon(QIcon(":/new/toolbar/res/cu.png"));
+}
+
 void MainWindow::actionNew()
 {
 
@@ -427,8 +420,7 @@ void MainWindow::actionNew()
     tabWidget->createTab(model);
 
     EditorTab* tab = tabWidget->getCurentTab();
-    //QTreeView* treeView = new QTreeView;
-    //treeView = (QTreeView*)tab->children().at(1);
+
     tab->treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
 
     tab->treeView->setFocus();
@@ -468,16 +460,6 @@ void MainWindow::openFiles(QStringList list)
 void MainWindow::openPlist(QString filePath)
 {
     if (!filePath.isEmpty()) {
-
-        /*bool opened = false;
-        for(int i = 0; i < tabWidget->tabBar()->count(); i ++)
-        {
-            if(filePath == tabWidget->getTab(i)->getPath())
-            {
-                tabWidget->tabBar()->setCurrentIndex(i);
-                opened = true;
-            }
-        }*/
 
         for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
             if (filePath == tabWidget->getTab(i)->getPath()) {
@@ -904,11 +886,87 @@ void MainWindow::dropEvent(QDropEvent* event)
         return;
 
     QStringList list;
+
     for (int i = 0; i < urls.size(); ++i) {
         list.append(urls.at(i).toLocalFile());
     }
 
-    openFiles(list);
+    QFileInfo fi(list.at(0));
+
+    // plist
+    if (fi.suffix().toLower() == "plist") {
+
+        openFiles(list);
+    }
+
+    // aml
+    if (fi.suffix().toLower() == "aml") {
+
+        for (int i = 0; i < list.count(); i++) {
+            QFileInfo fi(list.at(i));
+            AddACPI(fi.fileName());
+        }
+    }
+
+    // tools
+    if (fi.suffix().toLower() == "efi") {
+
+        for (int i = 0; i < list.count(); i++) {
+            QFileInfo fi(list.at(i));
+            AddMiscTools(fi.fileName(), fi.baseName());
+        }
+    }
+
+    // uefi
+    if (fi.suffix().toLower() == "efi") {
+
+        for (int i = 0; i < list.count(); i++) {
+            QFileInfo fi(list.at(i));
+            AddUEFIDrivers(fi.fileName());
+        }
+    }
+
+    //kext
+    QString fileSuffix;
+#ifdef Q_OS_WIN32
+    fileSuffix = fi.suffix().toLower();
+#endif
+
+#ifdef Q_OS_LINUX
+    fileSuffix = fi.suffix().toLower();
+#endif
+
+#ifdef Q_OS_MAC
+    QString str1 = list.at(0);
+    QString str2 = str1.mid(str1.length() - 5, 4);
+    fileSuffix = str2.toLower();
+#endif
+
+    //qDebug() << fi.suffix().toLower() << fileList.at(0) << fileSuffix;
+    if (fileSuffix == "kext") {
+
+        QStringList kextList;
+        for (int i = 0; i < list.count(); i++) {
+            QString str3 = list.at(i);
+            QString str4;
+#ifdef Q_OS_WIN32
+            str4 = str3.mid(0, str3.length());
+#endif
+
+#ifdef Q_OS_LINUX
+            str4 = str3.mid(0, str3.length());
+#endif
+
+#ifdef Q_OS_MAC
+            str4 = str3.mid(0, str3.length() - 1);
+#endif
+
+            kextList.append(str4);
+            //qDebug() << str4;
+        }
+
+        addKexts(kextList);
+    }
 }
 
 void MainWindow::menu_aboutToShow() //目前废除，去掉1就可正常使用
@@ -963,9 +1021,6 @@ void MainWindow::on_Find()
 
         DomModel* model = tab->getModel();
 
-        //QTreeView* treeView = new QTreeView;
-        //treeView = (QTreeView*)tab->children().at(1);
-
         //treeView->collapseAll();
         tab->treeView->expandToDepth(0);
 
@@ -979,6 +1034,7 @@ void MainWindow::on_Find()
 
         if (index.isValid()) {
             indexFindList.clear();
+            ui->listFind->clear();
             indexCount = -1;
 
             QString strFind = ui->editFind->text().trimmed();
@@ -1010,10 +1066,6 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
         if (value.contains(str.trimmed()) && str.trimmed() != "") {
 
             EditorTab* tab = tabWidget->getCurentTab();
-            //DomModel* model = tab->getModel();
-
-            //QTreeView* treeView = new QTreeView;
-            //treeView = (QTreeView*)tab->children().at(1);
 
             tab->treeView->selectionModel()->setCurrentIndex(index2, QItemSelectionModel::Select);
             //treeView->selectionModel()->setCurrentIndex(index2, QItemSelectionModel::SelectCurrent);
@@ -1027,14 +1079,12 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             //tab->view_expand(index2, model);
 
             indexFindList.append(index2);
+            ui->listFind->addItem(value);
         }
         //搜索键
         if (name.contains(str.trimmed()) && str.trimmed() != "") {
 
             EditorTab* tab = tabWidget->getCurentTab();
-            //DomModel* model = tab->getModel();
-            //QTreeView* treeView = new QTreeView;
-            //treeView = (QTreeView*)tab->children().at(1);
 
             tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Select);
             //treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::SelectCurrent);
@@ -1048,6 +1098,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
             //tab->view_expand(index, model);
 
             indexFindList.append(index);
+            ui->listFind->addItem(name);
         }
 
         if (model->hasChildren(index)) {
@@ -1058,6 +1109,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
     if (find) {
         ui->btnPrevious->setEnabled(true);
         ui->btnNext->setEnabled(true);
+        ui->listFind->setCurrentRow(0);
+        ui->dockShowSearchResults->show();
     }
 }
 
@@ -1267,8 +1320,7 @@ void MainWindow::on_actionMoveUp()
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
-        //QTreeView* treeView = new QTreeView;
-        //treeView = (QTreeView*)tab->children().at(1);
+
         DomModel* model = tab->getModel();
         QModelIndex index, index_bak;
         index = tab->currentIndex();
@@ -1301,16 +1353,6 @@ void MainWindow::on_actionMoveUp()
         tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
         on_pasteAction();
 
-        //之前的老方法
-        /*AddMoveTemp = model->saveItemState(index);
-        model->addMoveItem(index.parent(), index.row() - 1, AddMoveTemp);
-
-        treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
-        index = tab->currentIndex();
-        index = model->index(index.row(), 0, index.parent());
-
-        model->removeItem(index);*/
-
         if (array)
             items->setType("array");
 
@@ -1322,8 +1364,7 @@ void MainWindow::on_actionMoveDown()
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
-        //QTreeView* treeView = new QTreeView;
-        //treeView = (QTreeView*)tab->children().at(1);
+
         DomModel* model = tab->getModel();
         QModelIndex index, index_bak;
         index = tab->currentIndex();
@@ -1371,13 +1412,6 @@ void MainWindow::on_actionMoveDown()
             tab->treeView->setCurrentIndex(model->index(index_bak.row() + 2, 0, index.parent()));
             actionRemove_activated();
         }
-
-        //之前的老方法
-        /*ItemState* temp = model->saveItemState(index);
-        int row = index.row() + 2;
-        model->addMoveItem(index.parent(), row, temp);
-
-        model->removeItem(index_bak);*/
 
         if (array)
             items->setType("array");
@@ -1596,9 +1630,6 @@ void MainWindow::on_expandAction()
         QModelIndex index;
         index = tab->currentIndex();
         DomModel* model = tab->getModel();
-
-        //QTreeView* treeView = new QTreeView;
-        //treeView = (QTreeView*)tab->children().at(1);
 
         if (!tab->treeView->isExpanded(index)) {
             tab->treeView->expand(index);
@@ -1924,10 +1955,10 @@ void MainWindow::on_editFind_textChanged(const QString& arg1)
         if (arg1 == "" || !find) {
             findCount = 0;
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
+            ui->listFind->clear();
 
             EditorTab* tab = tabWidget->getCurentTab();
-            //QTreeView* treeView = new QTreeView;
-            //treeView = (QTreeView*)tab->children().at(1);
+
             QModelIndex index = tab->currentIndex();
             tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Clear);
         }
@@ -1953,82 +1984,34 @@ void MainWindow::on_btnHideFind_clicked()
 
 void MainWindow::on_btnPrevious_clicked()
 {
-    if (ui->editFind->text() == "" || indexFindList.count() == 0)
+    if (ui->listFind->count() == 0)
         return;
 
-    if (findCount == 0)
-        return;
+    int row = ui->listFind->currentRow();
 
-    if (tabWidget->hasTabs()) {
+    if (row - 1 == -1)
+        row = 0;
+    else
+        row = row - 1;
 
-        indexCount--;
-
-        if (indexCount < 0) {
-            indexCount = 0;
-        }
-
-        lblFindCount->setText("  " + QString::number(findCount) + " << " + QString::number(indexCount + 1) + "  ");
-
-        EditorTab* tab = tabWidget->getCurentTab();
-        DomModel* model = tab->getModel();
-        QModelIndex index = model->index(0, 0);
-
-        QModelIndex index0 = indexFindList.at(indexCount);
-        index = model->index(index0.row(), index0.column(), index0.parent());
-        tab->treeView->setCurrentIndex(index);
-
-        tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(indexCount), QItemSelectionModel::SelectCurrent);
-        tab->treeView->setFocus();
-
-        DomItem* item = model->itemForIndex(index);
-        QString name, val;
-        name = item->getName();
-        val = item->getValue();
-        //qDebug() << name << val;
-
-        oneReplace = false;
-        ui->btnReplace->setEnabled(true);
-    }
+    ui->listFind->setCurrentRow(row);
+    on_listFind_itemClicked(NULL);
 }
 
 void MainWindow::on_btnNext_clicked()
 {
-    if (ui->editFind->text() == "" || indexFindList.count() == 0)
+    if (ui->listFind->count() == 0)
         return;
 
-    if (findCount == 0)
-        return;
+    int row = ui->listFind->currentRow();
 
-    if (tabWidget->hasTabs()) {
+    if (row + 1 == ui->listFind->count())
+        row = ui->listFind->count() - 1;
+    else
+        row = row + 1;
 
-        indexCount++;
-
-        if (indexCount >= indexFindList.count()) {
-            indexCount = indexFindList.count() - 1;
-        }
-
-        lblFindCount->setText("  " + QString::number(indexCount + 1) + " >> " + QString::number(findCount) + "  ");
-
-        EditorTab* tab = tabWidget->getCurentTab();
-        DomModel* model = tab->getModel();
-        QModelIndex index = model->index(0, 0);
-
-        QModelIndex index0 = indexFindList.at(indexCount);
-        index = model->index(index0.row(), index0.column(), index0.parent());
-        tab->treeView->setCurrentIndex(index);
-
-        tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(indexCount), QItemSelectionModel::SelectCurrent);
-        tab->treeView->setFocus();
-
-        DomItem* item = model->itemForIndex(index);
-        QString name, val;
-        name = item->getName();
-        val = item->getValue();
-        //qDebug() << name << val;
-
-        oneReplace = false;
-        ui->btnReplace->setEnabled(true);
-    }
+    ui->listFind->setCurrentRow(row);
+    on_listFind_itemClicked(NULL);
 }
 
 void MainWindow::on_btnReplace_clicked()
@@ -2077,6 +2060,9 @@ void MainWindow::on_btnReplace_clicked()
             tab->treeView->setFocus();
 
             indexFindList.remove(indexCount);
+
+            ui->listFind->takeItem(indexCount);
+
             findCount = indexFindList.count();
             indexCount--;
             oneReplace = true;
@@ -2093,6 +2079,9 @@ void MainWindow::on_btnReplace_clicked()
             tab->treeView->setFocus();
 
             indexFindList.remove(indexCount);
+
+            ui->listFind->takeItem(indexCount);
+
             findCount = indexFindList.count();
             indexCount--;
             oneReplace = true;
@@ -2140,8 +2129,6 @@ void MainWindow::on_btnReplaceAll_clicked()
             } else
                 newStr = strModify.replace(strFind, strReplace);
 
-            //qDebug() << name << val << newStr;
-
             if (str == name) {
 
                 QModelIndex index_m = model->index(index.row(), 0, index.parent());
@@ -2172,6 +2159,7 @@ void MainWindow::on_btnReplaceAll_clicked()
 
     ui->btnPrevious->setEnabled(false);
     ui->btnNext->setEnabled(false);
+    ui->listFind->clear();
 }
 
 void MainWindow::on_actionFind_triggered()
@@ -2275,4 +2263,456 @@ void MainWindow::on_actionSave_triggered()
 void MainWindow::on_actionSave_as_triggered()
 {
     actionSaveAs();
+}
+
+void MainWindow::initFindReplace()
+{
+    //初始化查找与替换界面
+
+    QWidget* lEmptyWidget2 = new QWidget();
+    ui->dockWidgetFindReplace->setTitleBarWidget(lEmptyWidget2);
+
+    ui->dockWidgetFindReplace->setMinimumHeight(0);
+    ui->gridLayoutFindReplace->setMargin(1);
+    ui->dockWidgetContentsFindReplace->layout()->setMargin(1);
+
+    ui->dockWidgetFindReplace->close();
+    ui->btnPrevious->setEnabled(false);
+    ui->btnNext->setEnabled(false);
+    ui->btnReplace->setEnabled(false);
+
+    // 显示结果
+    ui->dockShowSearchResults->layout()->setMargin(1);
+    ui->dockWidgetContents_SearchResults->layout()->setMargin(1);
+    ui->dockShowSearchResults->close();
+}
+
+void MainWindow::initPlistTextShow()
+{
+    //初始化plist文本Dock并删除Title棒（暂时）
+    QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
+    QWidget* lEmptyWidget = new QWidget();
+    ui->dockWidget->setTitleBarWidget(lEmptyWidget);
+    delete lTitleBar;
+
+    ui->gridLayout_Main->setMargin(1);
+    ui->dockWidgetContents->layout()->setMargin(1);
+
+    ui->textEdit->setReadOnly(true);
+    resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
+    myHL = new MyHighLighter(ui->textEdit->document());
+    myHL->rehighlight();
+}
+
+void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
+{
+    Q_UNUSED(item);
+
+    if (tabWidget->hasTabs()) {
+
+        indexCount = ui->listFind->currentRow();
+
+        if (indexCount >= indexFindList.count()) {
+            indexCount = indexFindList.count() - 1;
+        }
+
+        lblFindCount->setText(QString::number(indexCount + 1) + " >> " + QString::number(findCount));
+
+        EditorTab* tab = tabWidget->getCurentTab();
+        DomModel* model = tab->getModel();
+        QModelIndex index = model->index(0, 0);
+
+        QModelIndex index0 = indexFindList.at(indexCount);
+
+        index = model->index(index0.row(), index0.column(), index0.parent());
+        tab->treeView->setCurrentIndex(index);
+
+        tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(indexCount), QItemSelectionModel::SelectCurrent);
+        tab->treeView->setFocus();
+
+        DomItem* item = model->itemForIndex(index);
+        QString name, val;
+        name = item->getName();
+        val = item->getValue();
+
+        oneReplace = false;
+        ui->btnReplace->setEnabled(true);
+    }
+}
+
+void MainWindow::AddACPI(QString fileStr)
+{
+    QModelIndex currentIndex;
+    EditorTab* tab = tabWidget->getCurentTab();
+    DomModel* model = tab->getModel();
+    DomItem* parentItem;
+    DomItem* item;
+    currentIndex = tab->currentIndex();
+
+    item = model->itemForIndex(currentIndex);
+    parentItem = model->itemForIndex(currentIndex.parent());
+
+    currentIndex = model->index(item->row(), 0, currentIndex.parent());
+
+    if (item->getName().trimmed() == "Add" && parentItem->getName().trimmed() == "ACPI") {
+
+        item = model->itemForIndex(currentIndex);
+        QModelIndex childIndex;
+        actionAdd_activated();
+        childIndex = model->index(item->childCount() - 1, 0, currentIndex);
+
+        if (!childIndex.isValid())
+            return;
+
+        tab->treeView->setCurrentIndex(childIndex); //设置当前索引
+
+        item = model->itemForIndex(childIndex);
+        item->setType("dict");
+
+        // add aml
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+
+        setItem(childIndex, 0, "Comment", "string", "");
+        setItem(childIndex, 1, "Enabled", "bool", "true");
+        setItem(childIndex, 2, "Path", "string", fileStr);
+
+        tab->treeView->setCurrentIndex(currentIndex);
+
+        tab->treeView->setFocus();
+    }
+}
+
+void MainWindow::setItem(QModelIndex parentIndex, int row, QString key, QString type, QString value)
+{
+
+    EditorTab* tab = tabWidget->getCurentTab();
+    DomModel* model = tab->getModel();
+    DomItem* item;
+
+    QModelIndex nextChildIndex = model->index(row, 0, parentIndex);
+    tab->treeView->setCurrentIndex(nextChildIndex);
+
+    item = model->itemForIndex(nextChildIndex);
+    item->setName(key);
+    item->setType(type);
+    item->setValue(value);
+}
+
+void MainWindow::addKexts(QStringList FileName)
+{
+
+    int file_count = FileName.count();
+
+    if (file_count == 0 || FileName[0] == "")
+
+        return;
+
+    for (int k = 0; k < FileName.count(); k++) {
+        QString file = FileName.at(k);
+        QFileInfo fi(file);
+        if (fi.baseName().toLower() == "lilu") {
+            FileName.removeAt(k);
+            FileName.insert(0, file);
+        }
+
+        if (fi.baseName().toLower() == "virtualsmc") {
+            FileName.removeAt(k);
+            FileName.insert(1, file);
+        }
+    }
+
+    for (int j = 0; j < file_count; j++) {
+        QFileInfo fileInfo(FileName[j]);
+
+        QFileInfo fileInfoList;
+        QString filePath = fileInfo.absolutePath();
+        // qDebug() << filePath;
+        QDir fileDir(filePath + "/" + fileInfo.fileName() + "/Contents/MacOS/");
+        // qDebug() << fileDir;
+        if (fileDir.exists()) //如果目录存在，则遍历里面的文件
+        {
+            fileDir.setFilter(QDir::Files); //只遍历本目录
+            QFileInfoList fileList = fileDir.entryInfoList();
+            int fileCount = fileList.count();
+            for (int i = 0; i < fileCount; i++) //一般只有一个二进制文件
+            {
+                fileInfoList = fileList[i];
+            }
+        }
+
+        QTableWidget* t = new QTableWidget;
+        t->setColumnCount(8);
+        //t = ui->table_kernel_add;
+        int row = t->rowCount() + 1;
+
+        t->setRowCount(row);
+        t->setItem(row - 1, 0, new QTableWidgetItem(QFileInfo(FileName[j]).fileName()));
+        t->setItem(row - 1, 1, new QTableWidgetItem(""));
+
+        if (fileInfoList.fileName() != "")
+            t->setItem(row - 1, 2, new QTableWidgetItem("Contents/MacOS/" + fileInfoList.fileName()));
+        else
+            t->setItem(row - 1, 2, new QTableWidgetItem(""));
+
+        t->setItem(row - 1, 3, new QTableWidgetItem("Contents/Info.plist"));
+        t->setItem(row - 1, 4, new QTableWidgetItem(""));
+        t->setItem(row - 1, 5, new QTableWidgetItem(""));
+
+        //init_enabled_data(t, row - 1, 6, "true");
+        t->setItem(row - 1, 6, new QTableWidgetItem("true"));
+
+        QTableWidgetItem* newItem1 = new QTableWidgetItem("x86_64");
+        newItem1->setTextAlignment(Qt::AlignCenter);
+        t->setItem(row - 1, 7, newItem1);
+
+        initKextTable(row - 1, t);
+
+        //如果里面还有PlugIns目录，则需要继续遍历插件目录
+        QDir piDir(filePath + "/" + fileInfo.fileName() + "/Contents/PlugIns/");
+        // qDebug() << piDir;
+        if (piDir.exists()) {
+
+            piDir.setFilter(QDir::Dirs); //过滤器：只遍历里面的目录
+            QFileInfoList fileList = piDir.entryInfoList();
+            int fileCount = fileList.count();
+            QVector<QString> kext_file;
+            //qDebug() << fileCount;
+            for (int i = 0; i < fileCount; i++) //找出里面的kext文件(目录）
+            {
+                kext_file.push_back(fileList[i].fileName());
+                //qDebug() << kext_file.at(i);
+            }
+
+            if (fileCount >= 3) //里面有目录
+            {
+                for (int i = 0; i < fileCount - 2; i++) {
+                    QDir fileDir(filePath + "/" + fileInfo.fileName() + "/Contents/PlugIns/" + kext_file[i + 2] + "/Contents/MacOS/");
+                    if (fileDir.exists()) {
+                        // qDebug() << fileDir;
+                        fileDir.setFilter(QDir::Files); //只遍历本目录里面的文件
+                        QFileInfoList fileList = fileDir.entryInfoList();
+                        int fileCount = fileList.count();
+                        for (int i = 0; i < fileCount; i++) //一般只有一个二进制文件
+                        {
+                            fileInfoList = fileList[i];
+                        }
+
+                        //写入到表里
+                        int row = t->rowCount() + 1;
+
+                        t->setRowCount(row);
+                        t->setItem(row - 1, 0, new QTableWidgetItem(QFileInfo(FileName[j]).fileName() + "/Contents/PlugIns/" + kext_file[i + 2]));
+                        t->setItem(row - 1, 1, new QTableWidgetItem(""));
+
+                        t->setItem(row - 1, 2, new QTableWidgetItem("Contents/MacOS/" + fileInfoList.fileName()));
+
+                        t->setItem(row - 1, 3, new QTableWidgetItem("Contents/Info.plist"));
+                        t->setItem(row - 1, 4, new QTableWidgetItem(""));
+                        t->setItem(row - 1, 5, new QTableWidgetItem(""));
+                        //init_enabled_data(t, row - 1, 6, "true");
+                        t->setItem(row - 1, 6, new QTableWidgetItem("true"));
+
+                        QTableWidgetItem* newItem1 = new QTableWidgetItem("x86_64");
+                        newItem1->setTextAlignment(Qt::AlignCenter);
+                        t->setItem(row - 1, 7, newItem1);
+
+                        initKextTable(row - 1, t);
+
+                    } else { //不存在二进制文件，只存在一个Info.plist文件的情况
+
+                        QDir fileDir(filePath + "/" + fileInfo.fileName() + "/Contents/PlugIns/" + kext_file[i + 2] + "/Contents/");
+                        if (fileDir.exists()) {
+                            //写入到表里
+                            int row = t->rowCount() + 1;
+
+                            t->setRowCount(row);
+                            t->setItem(row - 1, 0, new QTableWidgetItem(QFileInfo(FileName[j]).fileName() + "/Contents/PlugIns/" + kext_file[i + 2]));
+                            t->setItem(row - 1, 1, new QTableWidgetItem(""));
+                            t->setItem(row - 1, 2, new QTableWidgetItem(""));
+                            t->setItem(row - 1, 3, new QTableWidgetItem("Contents/Info.plist"));
+                            t->setItem(row - 1, 4, new QTableWidgetItem(""));
+                            t->setItem(row - 1, 5, new QTableWidgetItem(""));
+                            //init_enabled_data(t, row - 1, 6, "true");
+                            t->setItem(row - 1, 6, new QTableWidgetItem("true"));
+
+                            QTableWidgetItem* newItem1 = new QTableWidgetItem("x86_64");
+                            newItem1->setTextAlignment(Qt::AlignCenter);
+                            t->setItem(row - 1, 7, newItem1);
+
+                            initKextTable(row - 1, t);
+                        }
+                    }
+                }
+            }
+        }
+
+        t->setFocus();
+        t->setCurrentCell(row - 1, 0);
+    }
+
+    this->setWindowModified(true);
+}
+
+void MainWindow::initKextTable(int row, QTableWidget* w)
+{
+
+    QModelIndex currentIndex;
+    EditorTab* tab = tabWidget->getCurentTab();
+    DomModel* model = tab->getModel();
+    DomItem* parentItem;
+    DomItem* item;
+    currentIndex = tab->currentIndex();
+
+    item = model->itemForIndex(currentIndex);
+    parentItem = model->itemForIndex(currentIndex.parent());
+
+    currentIndex = model->index(item->row(), 0, currentIndex.parent());
+
+    if (item->getName().trimmed() == "Add" && parentItem->getName().trimmed() == "Kernel") {
+
+        item = model->itemForIndex(currentIndex);
+        QModelIndex childIndex;
+        actionAdd_activated();
+        childIndex = model->index(item->childCount() - 1, 0, currentIndex);
+
+        if (!childIndex.isValid())
+            return;
+
+        tab->treeView->setCurrentIndex(childIndex); //设置当前索引
+
+        item = model->itemForIndex(childIndex);
+        item->setType("dict");
+
+        // add kext
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+
+        setItem(childIndex, 0, "Arch", "string", w->item(row, 7)->text());
+        setItem(childIndex, 1, "BundlePath", "string", w->item(row, 0)->text());
+        setItem(childIndex, 2, "Comment", "string", w->item(row, 1)->text());
+        setItem(childIndex, 3, "Enabled", "bool", w->item(row, 6)->text());
+        setItem(childIndex, 4, "ExecutablePath", "string", w->item(row, 2)->text());
+        setItem(childIndex, 5, "MaxKernel", "string", w->item(row, 5)->text());
+        setItem(childIndex, 6, "MinKernel", "string", w->item(row, 4)->text());
+        setItem(childIndex, 7, "PlistPath", "string", w->item(row, 3)->text());
+
+        tab->treeView->setCurrentIndex(currentIndex);
+
+        tab->treeView->setFocus();
+    }
+}
+
+void MainWindow::init_enabled_data(QTableWidget* table, int row, int column, QString str)
+{
+
+    QTableWidgetItem* chkbox = new QTableWidgetItem(str);
+
+    table->setItem(row, column, chkbox);
+    table->item(row, column)->setTextAlignment(Qt::AlignCenter);
+    if (str == "true")
+
+        chkbox->setCheckState(Qt::Checked);
+    else
+
+        chkbox->setCheckState(Qt::Unchecked);
+}
+
+void MainWindow::AddMiscTools(QString fileStr, QString fileStrBaseName)
+{
+    QModelIndex currentIndex;
+    EditorTab* tab = tabWidget->getCurentTab();
+    DomModel* model = tab->getModel();
+    DomItem* parentItem;
+    DomItem* item;
+    currentIndex = tab->currentIndex();
+
+    item = model->itemForIndex(currentIndex);
+    parentItem = model->itemForIndex(currentIndex.parent());
+
+    currentIndex = model->index(item->row(), 0, currentIndex.parent());
+
+    if (item->getName().trimmed() == "Tools" && parentItem->getName().trimmed() == "Misc") {
+
+        item = model->itemForIndex(currentIndex);
+        QModelIndex childIndex;
+        actionAdd_activated();
+        childIndex = model->index(item->childCount() - 1, 0, currentIndex);
+
+        if (!childIndex.isValid())
+            return;
+
+        tab->treeView->setCurrentIndex(childIndex);
+
+        item = model->itemForIndex(childIndex);
+        item->setType("dict");
+
+        // add misc tools
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+        actionAdd_activated();
+
+        setItem(childIndex, 0, "Arguments", "string", "");
+        setItem(childIndex, 1, "Auxiliary", "bool", "false");
+        setItem(childIndex, 2, "Comment", "string", "");
+        setItem(childIndex, 3, "Enabled", "bool", "true");
+        setItem(childIndex, 4, "Name", "string", fileStrBaseName);
+        setItem(childIndex, 5, "Path", "string", fileStr);
+        setItem(childIndex, 6, "RealPath", "bool", "false");
+        setItem(childIndex, 7, "TextMode", "bool", "false");
+
+        tab->treeView->setCurrentIndex(currentIndex);
+
+        tab->treeView->setFocus();
+    }
+}
+
+void MainWindow::AddUEFIDrivers(QString fileStr)
+{
+    QModelIndex currentIndex;
+    EditorTab* tab = tabWidget->getCurentTab();
+    DomModel* model = tab->getModel();
+    DomItem* parentItem;
+    DomItem* item;
+    currentIndex = tab->currentIndex();
+
+    item = model->itemForIndex(currentIndex);
+    parentItem = model->itemForIndex(currentIndex.parent());
+
+    currentIndex = model->index(item->row(), 0, currentIndex.parent());
+
+    if (item->getName().trimmed() == "Drivers" && parentItem->getName().trimmed() == "UEFI") {
+
+        item = model->itemForIndex(currentIndex);
+        QModelIndex childIndex;
+
+        actionAdd_activated();
+
+        childIndex = model->index(item->childCount() - 1, 0, currentIndex);
+
+        if (!childIndex.isValid())
+            return;
+
+        tab->treeView->setCurrentIndex(childIndex);
+
+        item = model->itemForIndex(childIndex);
+        item->setType("string");
+        item->setValue(fileStr);
+
+        tab->treeView->setCurrentIndex(currentIndex);
+
+        tab->treeView->setFocus();
+    }
 }

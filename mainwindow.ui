@@ -30,19 +30,10 @@
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="leftMargin">
-     <number>3</number>
-    </property>
-    <property name="topMargin">
-     <number>3</number>
-    </property>
-    <property name="rightMargin">
-     <number>3</number>
-    </property>
-    <property name="bottomMargin">
-     <number>3</number>
-    </property>
+   <layout class="QGridLayout" name="gridLayout_Main">
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout"/>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -261,6 +252,36 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockShowSearchResults">
+   <property name="minimumSize">
+    <size>
+     <width>130</width>
+     <height>117</height>
+    </size>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>170</width>
+     <height>524287</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Search Results</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_SearchResults">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QListWidget" name="listFind"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionAdd">
    <property name="icon">
     <iconset>
@@ -289,6 +310,10 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/open.png</normaloff>:/new/toolbar/res/open.png</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -299,7 +324,7 @@
     <string>Ctrl+O</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
     <bool>false</bool>
@@ -330,7 +355,7 @@
     <string>Ctrl+S</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
     <bool>false</bool>
@@ -345,6 +370,9 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+S</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
     <bool>false</bool>
@@ -381,7 +409,7 @@
     <string>Ctrl+N</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="shortcutVisibleInContextMenu">
     <bool>false</bool>
@@ -536,15 +564,24 @@
    <property name="text">
     <string>New Sibling</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionNew_Child">
    <property name="text">
     <string>New Child</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionRemove_2">
    <property name="text">
     <string>Remove</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionExpandAllOpenFile">
@@ -593,6 +630,9 @@
    <property name="shortcut">
     <string>Ctrl+F</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionFindNext">
    <property name="text">
@@ -601,6 +641,9 @@
    <property name="shortcut">
     <string>Ctrl+2</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionFindPrevious">
    <property name="text">
@@ -608,6 +651,9 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+1</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
   <action name="actionReplace">

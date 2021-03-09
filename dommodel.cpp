@@ -190,7 +190,7 @@ QModelIndex DomModel::addItem(const QModelIndex& parent, int row, ItemState* sta
 {
 
     if (parent.isValid()) {
-        //QModelIndex index = this->index(parent.row(), 0, parent.parent()); //原始
+        //QModelIndex index = this->index(parent.row(), 0, parent.parent()); //原始,有导致app崩溃的情况发生
         QModelIndex index = parent; //粘贴时使用，否则导致新建子级项无法撤销（索引无效）
         DomItem* item = itemForIndex(index);
 

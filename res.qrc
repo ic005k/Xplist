@@ -27,6 +27,8 @@
         <file>res/3.png</file>
         <file>res/4.png</file>
         <file>res/widgets_zh_cn.qm</file>
+        <file>res/nw.png</file>
+        <file>res/cu.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

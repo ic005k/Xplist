@@ -10,6 +10,7 @@
 #include <QFileInfo>
 #include <QLabel>
 #include <QLineEdit>
+#include <QListWidgetItem>
 #include <QMainWindow>
 #include <QMimeData>
 #include <QPalette>
@@ -19,6 +20,7 @@
 #include <QScrollBar>
 #include <QSortFilterProxyModel>
 #include <QStandardItemModel>
+#include <QTableWidget>
 #include <QTextBlock>
 #include <QTreeView>
 #include <QUndoGroup>
@@ -48,6 +50,14 @@ public:
     ~MainWindow();
 
     Ui::MainWindow* ui;
+
+    void AddACPI(QString fileStr);
+    void addKexts(QStringList FileName);
+    void init_enabled_data(QTableWidget* table, int row, int column, QString str);
+    void initKextTable(int row, QTableWidget* w);
+    void AddUEFIDrivers(QString fileStr);
+    void AddMiscTools(QString fileStr, QString fileStrBaseName);
+    void setItem(QModelIndex parentIndex, int row, QString key, QString type, QString value);
 
     QLineEdit* findEdit;
 
@@ -181,7 +191,13 @@ private slots:
 
     void on_actionSave_as_triggered();
 
+    void on_listFind_itemClicked(QListWidgetItem* item);
+
 private:
+    void initMenuToolsBar();
+    void initFindReplace();
+    void initPlistTextShow();
+
     QNetworkAccessManager* manager;
     int parse_UpdateJSON(QString str);
     bool mac = false;
