@@ -5,6 +5,8 @@ Write in front: The prototype of this software is from: https://github.com/alpex
 
 When writing this software, actually some hesitation, similar software seems to be quite a lot, plus the relationship of time, has not paid substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus...
 
+## New: Add aml, kext, efi files for OpenCore. The operation is very simple, take ACPI as an example: select Add under ACPI, drag and drop one or more aml files to the app window.
+
 ## Features include but are not limited to.
 
 * Lightweight and high performance
@@ -43,7 +45,13 @@ When writing this software, actually some hesitation, similar software seems to 
 
 ...
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p1.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p2.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p3.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p4.png)
 
 ## Discussion forum
 
