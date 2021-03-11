@@ -43,7 +43,20 @@
 
 ...
 
-![截图](https://github.com/ic005k/PlistEDPlus/blob/main/plist.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p1.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p2.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p3.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p4.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p5.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p6.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p7.png)
+
 
 ### [国内建议使用github加速器下载](https://toolwa.com/github/)
 
