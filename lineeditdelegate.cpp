@@ -3,10 +3,12 @@
 #include "dommodel.h"
 #include "editortab.h"
 #include "editortabswidget.h"
+#include <QCompleter>
 #include <QTreeView>
 
 extern EditorTabsWidget* tabWidget;
 QLineEdit* lineEdit;
+void setTextCompleter(QLineEdit* editor);
 
 LineEditDelegate::LineEditDelegate(QObject* parent)
 {
@@ -20,20 +22,22 @@ QWidget* LineEditDelegate::createEditor(QWidget* parent,
 
     EditorTab* tab = tabWidget->getCurentTab();
     DomModel* model = tab->getModel();
-    const QModelIndex index = tab->currentIndex();
+    QModelIndex index = tab->currentIndex();
     DomItem* item = model->itemForIndex(index);
     //数组编号不允许编辑
     //if(index.column() == 0 && item->parent()->getType() == "array" && item->getName().mid(0, 4) == "Item")
     //    return 0;
+
+    if (index.column() == 1) {
+
+        return 0;
+    }
 
     //父节点的数组和字典值，不允许编辑
     if (index.column() == 2 && (item->getType() == "array" || item->getType() == "dict"))
         return 0;
 
     if (index.column() == 2 && item->getType() == "bool")
-        return 0;
-
-    if (index.column() == 1)
         return 0;
 
     if (index.data().toString() == "plist")
@@ -48,11 +52,15 @@ void LineEditDelegate::setEditorData(QWidget* editor,
     const QModelIndex& index) const
 {
     lineEdit = static_cast<QLineEdit*>(editor);
+
+    setTextCompleter(lineEdit);
+
     QString value = index.data().toString();
 
     EditorTab* tab = tabWidget->getCurentTab();
     DomModel* model = tab->getModel();
     DomItem* item = model->itemForIndex(index);
+
     if (item->getType() == "date" && index.column() == 2) {
         if (value == "") //目前格式待定
             //value = QDateTime::currentDateTime().toString("MMM dd,  yyyy at hh:mm:ss");
@@ -123,7 +131,7 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
     if (item->getType() == "array" && col == 0) {
 
         QString str = val.mid(4, val.length() - 4);
-        //qDebug() << str;
+
         if (val.mid(0, 5) != "Item " || !str.toInt() || str.toInt() == 0)
             return 0;
     }
@@ -160,9 +168,61 @@ QSize LineEditDelegate::sizeHint(const QStyleOptionViewItem& option, const QMode
 #endif
 
 #ifdef Q_OS_MAC
-    size.setHeight(size.height() + 5);
+    size.setHeight(size.height() + 6);
 
 #endif
 
     return size;
+}
+
+void setTextCompleter(QLineEdit* editor)
+{
+    QStringList textList;
+
+    textList.append("Any");
+    textList.append("i386");
+    textList.append("x86_64");
+    textList.append("layout-id");
+    textList.append("Auto");
+    textList.append("i386-user32");
+    textList.append("Cacheless");
+    textList.append("Mkext");
+    textList.append("Prelinked");
+    textList.append("None");
+    textList.append("RTC");
+    textList.append("NVRAM");
+    textList.append("Disabled");
+    textList.append("Full");
+    textList.append("Short");
+    textList.append("Default");
+    textList.append("Builtin");
+    textList.append("External");
+    textList.append("Apple");
+    textList.append("Old");
+    textList.append("Modern");
+    textList.append("Signed");
+    textList.append("Secure");
+    textList.append("Optional");
+    textList.append("Basic");
+    textList.append("Create");
+    textList.append("TryOverwrite");
+    textList.append("Overwrite");
+    textList.append("Custom");
+    textList.append("Upgradable");
+    textList.append("Soldered");
+    textList.append("Enabled");
+    textList.append("V1");
+    textList.append("V2");
+    textList.append("AMI");
+    textList.append("ASUS");
+    textList.append("Max");
+    textList.append("BuiltinGraphics");
+    textList.append("SystemGraphics");
+    textList.append("SystemText");
+    textList.append("SystemGeneric");
+
+    QCompleter* editFindCompleter = new QCompleter(textList);
+    editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
+    editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
+    editor->setCompleter(editFindCompleter);
 }

@@ -44,11 +44,13 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
     policy.setVerticalPolicy(QSizePolicy::Expanding);
 
     treeView = new MyTreeView(this);
-    //treeView = ui->treeView;
+
+    lblTips = new QLabel(this);
+    lblTips->setStyleSheet("QLabel{background-color:rgb(255,255,55);color:rgb(55,55,55);}");
+    lblTips->setHidden(true);
 
     ui->gridLayout->addWidget(treeView);
-    //treeView->setGeometry(0, 0, 500, 500);
-    //treeView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->gridLayout->addWidget(lblTips);
 
     treeView->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::EditKeyPressed);
 
@@ -388,16 +390,110 @@ int EditorTab::hex_to_ascii(QString str)
     }
 }
 
+void EditorTab::changeDataType(QString txt)
+{
+    DomItem* item;
+    item = this->model->itemForIndex(this->currentIndex());
+    item->setType(txt);
+}
+
 void EditorTab::treeView_clicked(const QModelIndex& index)
 {
 
-    Q_UNUSED(index);
+    DomItem* item;
+    DomItem* parentItem;
+    DomItem* topParentItem;
+    item = this->model->itemForIndex(index);
+    parentItem = this->model->itemForIndex(index.parent());
+    topParentItem = this->model->itemForIndex(index.parent().parent());
+
+    if (item->getName().contains("Item ") && parentItem->getName() == "Tools" && topParentItem->getName() == "Misc") {
+
+        QModelIndex indexNew = this->model->index(index.row(), 0, index.parent());
+        QString str1, str2;
+        item = this->model->itemForIndex(this->model->index(5, 0, indexNew));
+        str1 = item->getValue();
+        item = this->model->itemForIndex(this->model->index(3, 0, indexNew));
+        str2 = "    Enabled: " + item->getValue();
+
+        lblTips->setText(str1 + str2);
+        lblTips->setHidden(false);
+    } else
+
+        if (item->getName().contains("Item ") && parentItem->getName() == "Add" && topParentItem->getName() == "Kernel") {
+
+        QModelIndex indexNew = this->model->index(index.row(), 0, index.parent());
+        QString str1, str2;
+        item = this->model->itemForIndex(this->model->index(1, 0, indexNew));
+        str1 = item->getValue();
+        item = this->model->itemForIndex(this->model->index(3, 0, indexNew));
+        str2 = "    Enabled: " + item->getValue();
+
+        lblTips->setText(str1 + str2);
+        lblTips->setHidden(false);
+    } else
+
+        if (item->getName().contains("Item ") && parentItem->getName() == "Add" && topParentItem->getName() == "ACPI") {
+        QModelIndex indexNew = this->model->index(index.row(), 0, index.parent());
+        QString str1, str2;
+        item = this->model->itemForIndex(this->model->index(2, 0, indexNew));
+        str1 = item->getValue();
+        item = this->model->itemForIndex(this->model->index(1, 0, indexNew));
+        str2 = "    Enabled: " + item->getValue();
+
+        lblTips->setText(str1 + str2);
+        lblTips->setHidden(false);
+    } else
+
+        if (item->getName() == "Add" && item->getType() == "array" && parentItem->getName() == "ACPI") {
+        lblTips->setHidden(false);
+
+        lblTips->setText(tr("Drag and drop one or more aml files to the window to add this file."));
+
+    } else
+
+        if (item->getName() == "Add" && item->getType() == "array" && parentItem->getName() == "Kernel") {
+        lblTips->setHidden(false);
+        lblTips->setText(tr("Drag and drop one or more kext files to the window to add this file."));
+
+    } else
+
+        if (item->getName() == "Tools" && item->getType() == "array" && parentItem->getName() == "Misc") {
+        lblTips->setHidden(false);
+        lblTips->setText(tr("Drag and drop one or more efi files to the window to add this file."));
+
+    } else
+
+        if (item->getName() == "Drivers" && item->getType() == "array" && parentItem->getName() == "UEFI") {
+        lblTips->setHidden(false);
+        lblTips->setText(tr("Drag and drop one or more efi files to the window to add this file."));
+
+    } else if (item->getType() != "data") {
+
+        lblTips->setText("");
+        lblTips->setHidden(true);
+    }
+
     actionSort->setEnabled(true);
+
     initBoolWidget(index);
 
     mw_one->showMsg();
 
     mw_one->goPlistText();
+
+    QString str0, str;
+    if (item->getType() == "data") // && index.column() == 2)
+    {
+        str = item->getValue().remove(QRegExp("\\s")); //16进制去除所有空格
+        str0 = QString::fromLocal8Bit(HexStrToByte(str));
+
+        lblTips->setText(str + "  ASCII: " + HexStrToByte(str) + "  Base64: " + HexStrToByte(str).toBase64());
+        lblTips->setHidden(false);
+
+    } else {
+        str = index.data().toString();
+    }
 
     //if(item->getType() == "bool")
     //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
@@ -408,23 +504,7 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
 void EditorTab::slotCurrentRowChanged(const QModelIndex index, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
-
-    mw_one->showMsg();
-
-    DomModel* model = this->model;
-    DomItem* item = model->itemForIndex(index);
-
-    QString str0, str;
-    if (item->getType() == "data") // && index.column() == 2)
-    {
-        str = item->getValue().remove(QRegExp("\\s")); //16进制去除所有空格
-        str0 = QString::fromLocal8Bit(HexStrToByte(str));
-        treeView->setToolTip(str + "\nASCII: " + HexStrToByte(str) + "\nBase64: " + HexStrToByte(str).toBase64());
-
-    } else {
-        str = index.data().toString();
-        treeView->setToolTip("");
-    }
+    Q_UNUSED(index);
 }
 
 void EditorTab::initBoolWidget(QModelIndex index)
@@ -439,7 +519,9 @@ void EditorTab::initBoolWidget(QModelIndex index)
             if (item_bool->getType() == "bool")
                 item_bool->setValue(val_bool.trimmed());
 
-            treeView->setIndexWidget(index_bool_bak, NULL);
+            QModelIndex col3Index = model->index(index_bool_bak.row(), 2, index_bool_bak.parent());
+            treeView->setIndexWidget(col3Index, NULL);
+
             chk_null = true;
             index_bool_bak = QModelIndex();
         }
@@ -625,7 +707,7 @@ void EditorTab::view_collapse(const QModelIndex index, DomModel* model)
 {
 
     int childCount = model->rowCount(index);
-    //qDebug() << childCount;
+
     for (int childNo = 0; childNo < childCount; childNo++) {
         //QModelIndex childIndex = index.child(childNo, 0);
         QModelIndex childIndex = model->index(childNo, 0, index);
@@ -693,7 +775,8 @@ void EditorTab::on_actionNewSibling()
     //增加同级项
 
     EditorTab* tab = tabWidget->getCurentTab();
-    const QModelIndex index = tab->currentIndex();
+    QModelIndex index = tab->currentIndex();
+    DomItem* item = tab->model->itemForIndex(index.parent());
 
     if (index.parent().data().toString() == "")
         return;
@@ -703,7 +786,9 @@ void EditorTab::on_actionNewSibling()
         QUndoCommand* addMoveCommand = new AddMoveCommand(tab->getModel(), index.parent());
         undoGroup->activeStack()->push(addMoveCommand);
 
-        //tab->getModel()->addMoveItem(index.parent());
+        // 转到该项
+        QModelIndex newIndex = tab->model->index(item->childCount() - 1, 0, index.parent());
+        treeView->setCurrentIndex(newIndex);
     }
 }
 

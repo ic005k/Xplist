@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.36";
+    CurVerison = "1.0.38";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -152,7 +152,7 @@ MainWindow::MainWindow(QWidget* parent)
             this->setGeometry(x, y, this->width(), this->height());
         }
 
-        //Get search text list
+        // Get search text list
         int count = Reg.value("FindTextListTotal").toInt();
 
         btnFindMenu->addSeparator();
@@ -170,7 +170,6 @@ MainWindow::MainWindow(QWidget* parent)
             btnFindMenu->addAction(btnFindActionList.at(i));
 
             connect(btnFindActionList.at(i), &QAction::triggered, [=]() {
-                qDebug() << "I'm btnFirstAction";
                 ui->editFind->setText(btnFindActionList.at(i)->text());
                 on_btnFind_clicked();
             });
@@ -203,6 +202,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::initMenuToolsBar()
 {
+
+    //ui->frameTip->setVisible(false);
 
     // create undo and redo actions
     undoGroup = new QUndoGroup(this);
@@ -290,6 +291,7 @@ void MainWindow::initMenuToolsBar()
 
     ui->mainToolBar->addSeparator();
 
+    // 增加同级项
     actionNewSibling = new QAction(tr("New Sibling"), this);
     ui->mainToolBar->addAction(actionNewSibling);
     actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
@@ -424,6 +426,8 @@ void MainWindow::actionNew()
     tab->treeView->setCurrentIndex(model->index(0, 0)); //设置当前索引
 
     tab->treeView->setFocus();
+
+    ui->textEdit->clear();
 }
 
 void MainWindow::actionOpen()
@@ -577,6 +581,9 @@ void MainWindow::onTabCloseRequest(int i)
 
     if (tabWidget->currentIndex() != -1)
         tabWidget->getCurentTab()->treeView->setFocus();
+
+    if (tabWidget->tabBar()->count() == 0)
+        ui->textEdit->clear();
 }
 
 void MainWindow::savePlist(QString filePath)
@@ -681,7 +688,7 @@ void MainWindow::actionAdd_activated()
 
     if (tabWidget->hasTabs()) {
         EditorTab* tab = tabWidget->getCurentTab();
-        const QModelIndex index = tab->currentIndex();
+        QModelIndex index = tab->currentIndex();
         DomModel* model = tab->getModel();
         DomItem* item = model->itemForIndex(index);
         if (item->getType() != "dict" && item->getType() != "array")
@@ -694,10 +701,14 @@ void MainWindow::actionAdd_activated()
 
         if (index.isValid()) {
 
+            index = model->index(index.row(), 0, index.parent());
+
             QUndoCommand* addMoveCommand = new AddMoveCommand(model, index);
             undoGroup->activeStack()->push(addMoveCommand);
 
-            //model->addMoveItem(index);
+            // 转到该行
+            QModelIndex childIndex = model->index(item->childCount() - 1, 0, index);
+            tab->treeView->setCurrentIndex(childIndex);
         }
     }
 }
@@ -1811,9 +1822,6 @@ void MainWindow::on_copyBW()
         on_copyAction();
         actionNew();
         on_actionNewChild();
-        QModelIndex index = tabWidget->getCurentTab()->currentIndex();
-        QModelIndex index1 = tabWidget->getCurentTab()->getModel()->index(0, 0, index);
-        tabWidget->getCurentTab()->treeView->setCurrentIndex(index1);
 
         on_pasteAction();
         actionRemove_activated();
@@ -2273,7 +2281,7 @@ void MainWindow::initFindReplace()
     ui->dockWidgetFindReplace->setTitleBarWidget(lEmptyWidget2);
 
     ui->dockWidgetFindReplace->setMinimumHeight(0);
-    ui->gridLayoutFindReplace->setMargin(1);
+    //ui->gridLayoutFindReplace->setMargin(1);
     ui->dockWidgetContentsFindReplace->layout()->setMargin(1);
 
     ui->dockWidgetFindReplace->close();
@@ -2295,7 +2303,8 @@ void MainWindow::initPlistTextShow()
     ui->dockWidget->setTitleBarWidget(lEmptyWidget);
     delete lTitleBar;
 
-    ui->gridLayout_Main->setMargin(1);
+    ui->gridLayout->setMargin(1);
+
     ui->dockWidgetContents->layout()->setMargin(1);
 
     ui->textEdit->setReadOnly(true);
@@ -2354,7 +2363,7 @@ void MainWindow::AddACPI(QString fileStr)
 
     currentIndex = model->index(item->row(), 0, currentIndex.parent());
 
-    if (item->getName().trimmed() == "Add" && parentItem->getName().trimmed() == "ACPI") {
+    if (item->getName().trimmed() == "Add" && item->getType() == "array" && parentItem->getName().trimmed() == "ACPI") {
 
         item = model->itemForIndex(currentIndex);
         QModelIndex childIndex;
@@ -2371,8 +2380,11 @@ void MainWindow::AddACPI(QString fileStr)
 
         // add aml
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
 
         setItem(childIndex, 0, "Comment", "string", "");
         setItem(childIndex, 1, "Enabled", "bool", "true");
@@ -2570,7 +2582,7 @@ void MainWindow::initKextTable(int row, QTableWidget* w)
 
     currentIndex = model->index(item->row(), 0, currentIndex.parent());
 
-    if (item->getName().trimmed() == "Add" && parentItem->getName().trimmed() == "Kernel") {
+    if (item->getName().trimmed() == "Add" && item->getType() == "array" && parentItem->getName().trimmed() == "Kernel") {
 
         item = model->itemForIndex(currentIndex);
         QModelIndex childIndex;
@@ -2587,13 +2599,21 @@ void MainWindow::initKextTable(int row, QTableWidget* w)
 
         // add kext
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
 
         setItem(childIndex, 0, "Arch", "string", w->item(row, 7)->text());
         setItem(childIndex, 1, "BundlePath", "string", w->item(row, 0)->text());
@@ -2639,7 +2659,7 @@ void MainWindow::AddMiscTools(QString fileStr, QString fileStrBaseName)
 
     currentIndex = model->index(item->row(), 0, currentIndex.parent());
 
-    if (item->getName().trimmed() == "Tools" && parentItem->getName().trimmed() == "Misc") {
+    if (item->getName().trimmed() == "Tools" && item->getType() == "array" && parentItem->getName().trimmed() == "Misc") {
 
         item = model->itemForIndex(currentIndex);
         QModelIndex childIndex;
@@ -2656,13 +2676,28 @@ void MainWindow::AddMiscTools(QString fileStr, QString fileStrBaseName)
 
         // add misc tools
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
         actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
 
         setItem(childIndex, 0, "Arguments", "string", "");
         setItem(childIndex, 1, "Auxiliary", "bool", "false");
@@ -2693,12 +2728,14 @@ void MainWindow::AddUEFIDrivers(QString fileStr)
 
     currentIndex = model->index(item->row(), 0, currentIndex.parent());
 
-    if (item->getName().trimmed() == "Drivers" && parentItem->getName().trimmed() == "UEFI") {
+    if (item->getName().trimmed() == "Drivers" && item->getType() == "array" && parentItem->getName().trimmed() == "UEFI") {
 
         item = model->itemForIndex(currentIndex);
         QModelIndex childIndex;
 
         actionAdd_activated();
+
+        tab->treeView->setCurrentIndex(currentIndex);
 
         childIndex = model->index(item->childCount() - 1, 0, currentIndex);
 

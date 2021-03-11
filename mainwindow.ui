@@ -30,7 +30,19 @@
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_Main">
+   <layout class="QGridLayout" name="gridLayout_6">
+    <property name="leftMargin">
+     <number>1</number>
+    </property>
+    <property name="topMargin">
+     <number>1</number>
+    </property>
+    <property name="rightMargin">
+     <number>1</number>
+    </property>
+    <property name="bottomMargin">
+     <number>1</number>
+    </property>
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout"/>
     </item>
@@ -146,7 +158,7 @@
    <property name="minimumSize">
     <size>
      <width>95</width>
-     <height>117</height>
+     <height>175</height>
     </size>
    </property>
    <property name="features">
@@ -156,7 +168,7 @@
     <number>8</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QGridLayout" name="gridLayoutFindReplace">
+    <layout class="QGridLayout" name="gridLayout_5">
      <item row="0" column="0">
       <widget class="QTextEdit" name="textEdit"/>
      </item>
@@ -167,7 +179,7 @@
    <property name="minimumSize">
     <size>
      <width>397</width>
-     <height>0</height>
+     <height>68</height>
     </size>
    </property>
    <attribute name="dockWidgetArea">

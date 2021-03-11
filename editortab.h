@@ -20,6 +20,7 @@
 #include "comboboxdelegate.h"
 #include "comboboxdelegatebool.h"
 #include "commands.h"
+
 #include "dommodel.h"
 #include "lineeditdelegate.h"
 #include "mytreeview.h"
@@ -35,7 +36,9 @@ public:
     explicit EditorTab(DomModel* model, QWidget* parent = 0);
     ~EditorTab();
 
-    //QTreeView* treeView;
+    void changeDataType(QString txt);
+    QLabel* lblTips;
+
     MyTreeView* treeView;
 
     int getCurrentRow();

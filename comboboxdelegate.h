@@ -7,7 +7,6 @@
 #include <QLatin1Char>
 #include <QListView>
 #include <QStyledItemDelegate>
-#include <QTreeView>
 
 #include <domitem.h>
 #include <dommodel.h>

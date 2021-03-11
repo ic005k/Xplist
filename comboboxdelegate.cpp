@@ -1,5 +1,6 @@
 #include "comboboxdelegate.h"
 #include <QDebug>
+#include <QListWidget>
 #include <editortabswidget.h>
 
 extern int red;
@@ -8,8 +9,8 @@ extern EditorTabsWidget* tabWidget;
 QString oldValue;
 QString NewValue;
 QComboBox* comboBox;
+
 DomItem* item;
-QTreeView* treeView;
 
 ComboBoxDelegate::ComboBoxDelegate(QObject* parent)
 {
@@ -23,7 +24,6 @@ QWidget* ComboBoxDelegate::createEditor(QWidget* parent,
     Q_UNUSED(index);
 
     QComboBox* editor = new QComboBox(parent);
-    editor = new QComboBox(parent);
 
     QStringList list;
     list << "array"
@@ -45,7 +45,6 @@ void ComboBoxDelegate::setEditorData(QWidget* editor,
 
     comboBox = static_cast<QComboBox*>(editor);
 
-    //connect(comboBox, SIGNAL(currentIndexChanged(int)), this, &ComboBoxDelegate::on_comboBox_currentIndexChanged);
     connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(OnComboBoxChanged(int)));
 
     //QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
@@ -53,16 +52,16 @@ void ComboBoxDelegate::setEditorData(QWidget* editor,
 
     if (red < 55) //mac = 50
     {
-        comboBox->setStyleSheet("QComboBox {border:none;background:rgba(50,50,50,255);}");
-
+        comboBox->setStyleSheet("QComboBox {border:1px solid gray;background:rgba(50,50,50,255);selection-color: #277BFF;selection-background-color:#FFFFFF;}");
     } else {
-        //comboBox->setStyleSheet("QComboBox {border:none;background:rgba(255,255,255,255);color:rgba(0,0,0,255);}");
-        //comboBox->setStyleSheet("QComboBox {border:none;}");
+        comboBox->setStyleSheet("QComboBox {border:1px solid gray;background:rgba(255,255,255,255);color:rgba(0,0,0,255);selection-color: #FFFFFF;selection-background-color:#277BFF;}");
     }
 
     QString value = index.data().toString();
-    int n = comboBox->findText(value);
+    int n;
+    n = comboBox->findText(value);
     comboBox->setCurrentIndex(n);
+
     oldValue = value;
     comboBox->showPopup();
 }
@@ -73,8 +72,9 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
     Q_UNUSED(model);
     Q_UNUSED(editor);
 
-    //comboBox = static_cast<QComboBox*>(editor);
-    QString val = comboBox->currentText();
+    comboBox = static_cast<QComboBox*>(editor);
+    QString val;
+    val = comboBox->currentText();
 
     if (oldValue != val) {
 
@@ -216,9 +216,9 @@ void ComboBoxDelegate::updateEditorGeometry(QWidget* editor,
     Q_UNUSED(index);
     QRect r;
     r.setTop(option.rect.top() + 0);
-    r.setBottom(option.rect.bottom() + 0);
-    r.setRight(option.rect.right());
-    r.setLeft(option.rect.left());
+    r.setBottom(option.rect.bottom() - 0);
+    r.setRight(option.rect.right() - 0);
+    r.setLeft(option.rect.left() + 0);
 
     editor->setGeometry(r);
 }
@@ -231,10 +231,9 @@ void ComboBoxDelegate::OnComboBoxChanged(int index)
     DomModel* mymodel = tab->getModel();
     QModelIndex in;
     item = mymodel->itemForIndex(in);
-    treeView = tab->treeView;
 
-    treeView->doItemsLayout();
-    treeView->setFocus();
+    tab->treeView->doItemsLayout();
+    tab->treeView->setFocus();
 }
 
 QByteArray ComboBoxDelegate::HexStrToByte(QString value) const
