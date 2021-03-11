@@ -53,6 +53,12 @@ When writing this software, actually some hesitation, similar software seems to 
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p4.png)
 
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p5.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p6.png)
+
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p7.png)
+
 ## Discussion forum
 
 [insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
