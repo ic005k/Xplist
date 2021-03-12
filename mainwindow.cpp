@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.38";
+    CurVerison = "1.0.39";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -428,6 +428,8 @@ void MainWindow::actionNew()
     tab->treeView->setFocus();
 
     ui->textEdit->clear();
+
+    loading = false;
 }
 
 void MainWindow::actionOpen()
@@ -504,7 +506,6 @@ void MainWindow::openPlist(QString filePath)
 
         //列宽自动适应最长的条目
         EditorTab* tab = tabWidget->getCurentTab();
-
         //tab->treeView->resizeColumnToContents(0);
 
         tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
@@ -804,6 +805,7 @@ void MainWindow::tabWidget_currentChanged(int index)
             ui->btnPrevious->setEnabled(false);
             ui->btnNext->setEnabled(false);
             ui->btnReplace->setEnabled(false);
+            ui->listFind->clear();
         }
         //?
         //else this->setWindowFilePath(" ");
@@ -992,6 +994,8 @@ void MainWindow::menu_aboutToShow() //目前废除，去掉1就可正常使用
 void MainWindow::on_Find()
 {
 
+    loading = true;
+
     ui->btnReplace->setEnabled(false);
 
     if (ui->editFind->text() == "")
@@ -1056,6 +1060,8 @@ void MainWindow::on_Find()
         } else
             qDebug() << "index is no valid";
     }
+
+    loading = false;
 }
 
 void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString str)
@@ -1064,12 +1070,14 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
     for (int r = 0; r < model->rowCount(parent); ++r) {
         QModelIndex index2 = model->index(r, 2, parent);
         QString value = model->data(index2, Qt::DisplayRole).toString();
+        QString originalValue = value.trimmed();
         if (!actCaseSensitive->isChecked())
             value = value.toLower();
 
         QModelIndex index = model->index(r, 0, parent);
         //QVariant name = model->data(index);
         QString name = model->data(index, Qt::DisplayRole).toString();
+        QString originalName = name.trimmed();
         if (!actCaseSensitive->isChecked())
             name = name.toLower();
 
@@ -1086,11 +1094,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 
             actionSort->setEnabled(false);
 
-            //treeView->expand(index2);
-            //tab->view_expand(index2, model);
-
             indexFindList.append(index2);
-            ui->listFind->addItem(value);
+            ui->listFind->addItem(originalValue);
         }
         //搜索键
         if (name.contains(str.trimmed()) && str.trimmed() != "") {
@@ -1105,11 +1110,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
 
             actionSort->setEnabled(false);
 
-            //treeView->expand(index);
-            //tab->view_expand(index, model);
-
             indexFindList.append(index);
-            ui->listFind->addItem(name);
+            ui->listFind->addItem(originalName);
         }
 
         if (model->hasChildren(index)) {
@@ -1139,8 +1141,7 @@ void MainWindow::findEdit_textChanged(const QString& arg1)
             lblFindCount->setText("  " + QString::number(findCount) + "  ");
 
             EditorTab* tab = tabWidget->getCurentTab();
-            //QTreeView* treeView = new QTreeView;
-            //treeView = (QTreeView*)tab->children().at(1);
+
             QModelIndex index = tab->currentIndex();
             tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Clear);
         }
@@ -1330,6 +1331,8 @@ void MainWindow::on_actionMoveUp()
 
     if (tabWidget->hasTabs()) {
 
+        loading = true;
+
         EditorTab* tab = tabWidget->getCurentTab();
 
         DomModel* model = tab->getModel();
@@ -1368,11 +1371,15 @@ void MainWindow::on_actionMoveUp()
             items->setType("array");
 
         tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
+
+        loading = false;
     }
 }
 void MainWindow::on_actionMoveDown()
 {
     if (tabWidget->hasTabs()) {
+
+        loading = true;
 
         EditorTab* tab = tabWidget->getCurentTab();
 
@@ -1428,6 +1435,8 @@ void MainWindow::on_actionMoveDown()
             items->setType("array");
 
         tab->treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+
+        loading = false;
     }
 }
 
@@ -1627,8 +1636,6 @@ void MainWindow::paintEvent(QPaintEvent* event)
         myHL = new MyHighLighter(ui->textEdit->document());
         myHL->rehighlight();
         ui->textEdit->repaint();
-
-        //qDebug() << "repaint";
     }
 }
 
@@ -1642,14 +1649,15 @@ void MainWindow::on_expandAction()
         index = tab->currentIndex();
         DomModel* model = tab->getModel();
 
+        index = model->index(index.row(), 0, index.parent());
+
         if (!tab->treeView->isExpanded(index)) {
+
             tab->treeView->expand(index);
-            //tab->view_expand(index, model);
 
         } else if (tab->treeView->isExpanded(index)) {
-            QModelIndex index1 = model->index(index.row(), 0, index.parent());
-            tab->view_collapse(index1.parent(), model);
-            //treeView->setExpanded(index1, false);
+
+            tab->treeView->collapse(index);
         }
     }
 }
@@ -2328,21 +2336,15 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
         lblFindCount->setText(QString::number(indexCount + 1) + " >> " + QString::number(findCount));
 
         EditorTab* tab = tabWidget->getCurentTab();
-        DomModel* model = tab->getModel();
-        QModelIndex index = model->index(0, 0);
-
-        QModelIndex index0 = indexFindList.at(indexCount);
-
-        index = model->index(index0.row(), index0.column(), index0.parent());
-        tab->treeView->setCurrentIndex(index);
-
-        tab->treeView->selectionModel()->setCurrentIndex(indexFindList.at(indexCount), QItemSelectionModel::SelectCurrent);
         tab->treeView->setFocus();
 
-        DomItem* item = model->itemForIndex(index);
-        QString name, val;
-        name = item->getName();
-        val = item->getValue();
+        QModelIndex index = indexFindList.at(indexCount);
+
+        tab->treeView->clearSelection();
+
+        tab->treeView->expandAll();
+
+        tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::SelectCurrent);
 
         oneReplace = false;
         ui->btnReplace->setEnabled(true);
@@ -2351,6 +2353,8 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
 
 void MainWindow::AddACPI(QString fileStr)
 {
+    loading = true;
+
     QModelIndex currentIndex;
     EditorTab* tab = tabWidget->getCurentTab();
     DomModel* model = tab->getModel();
@@ -2394,6 +2398,8 @@ void MainWindow::AddACPI(QString fileStr)
 
         tab->treeView->setFocus();
     }
+
+    loading = false;
 }
 
 void MainWindow::setItem(QModelIndex parentIndex, int row, QString key, QString type, QString value)
@@ -2569,6 +2575,7 @@ void MainWindow::addKexts(QStringList FileName)
 
 void MainWindow::initKextTable(int row, QTableWidget* w)
 {
+    loading = true;
 
     QModelIndex currentIndex;
     EditorTab* tab = tabWidget->getCurentTab();
@@ -2628,6 +2635,8 @@ void MainWindow::initKextTable(int row, QTableWidget* w)
 
         tab->treeView->setFocus();
     }
+
+    loading = false;
 }
 
 void MainWindow::init_enabled_data(QTableWidget* table, int row, int column, QString str)
@@ -2647,6 +2656,8 @@ void MainWindow::init_enabled_data(QTableWidget* table, int row, int column, QSt
 
 void MainWindow::AddMiscTools(QString fileStr, QString fileStrBaseName)
 {
+    loading = true;
+
     QModelIndex currentIndex;
     EditorTab* tab = tabWidget->getCurentTab();
     DomModel* model = tab->getModel();
@@ -2712,10 +2723,15 @@ void MainWindow::AddMiscTools(QString fileStr, QString fileStrBaseName)
 
         tab->treeView->setFocus();
     }
+
+    loading = false;
 }
 
 void MainWindow::AddUEFIDrivers(QString fileStr)
 {
+
+    loading = true;
+
     QModelIndex currentIndex;
     EditorTab* tab = tabWidget->getCurentTab();
     DomModel* model = tab->getModel();
@@ -2752,4 +2768,6 @@ void MainWindow::AddUEFIDrivers(QString fileStr)
 
         tab->treeView->setFocus();
     }
+
+    loading = false;
 }

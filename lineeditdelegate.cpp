@@ -220,6 +220,7 @@ void setTextCompleter(QLineEdit* editor)
     textList.append("SystemGraphics");
     textList.append("SystemText");
     textList.append("SystemGeneric");
+    textList.append("System");
 
     QCompleter* editFindCompleter = new QCompleter(textList);
     editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);

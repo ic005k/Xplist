@@ -36,6 +36,8 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     ui->setupUi(this);
 
+    loading = true;
+
     chkBox = new QCheckBox(this);
     chkBox->setVisible(false);
 
@@ -45,8 +47,9 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     treeView = new MyTreeView(this);
 
-    lblTips = new QLabel(this);
-    lblTips->setStyleSheet("QLabel{background-color:rgb(255,255,55);color:rgb(55,55,55);}");
+    lblTips = new QLineEdit(this);
+    lblTips->setReadOnly(true);
+    lblTips->setStyleSheet("QLineEdit{background-color:rgb(255,255,55);color:rgb(55,55,55);}");
     lblTips->setHidden(true);
 
     ui->gridLayout->addWidget(treeView);
@@ -488,7 +491,7 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
         str = item->getValue().remove(QRegExp("\\s")); //16进制去除所有空格
         str0 = QString::fromLocal8Bit(HexStrToByte(str));
 
-        lblTips->setText(str + "  ASCII: " + HexStrToByte(str) + "  Base64: " + HexStrToByte(str).toBase64());
+        lblTips->setText(str + "     ASCII: " + HexStrToByte(str) + "     Base64: " + HexStrToByte(str).toBase64());
         lblTips->setHidden(false);
 
     } else {
@@ -504,7 +507,8 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
 void EditorTab::slotCurrentRowChanged(const QModelIndex index, const QModelIndex& previous)
 {
     Q_UNUSED(previous);
-    Q_UNUSED(index);
+    if (!loading)
+        treeView_clicked(index);
 }
 
 void EditorTab::initBoolWidget(QModelIndex index)
@@ -533,6 +537,8 @@ void EditorTab::initBoolWidget(QModelIndex index)
         chk_null = false;
         treeView->setFocus();
 
+        //chkBox->setStyleSheet("QCheckBox{Color:rgb(255,255,255); Background-color:rgb(0,0,255); }");
+
         connect(chkBox, &QCheckBox::clicked, this, &EditorTab::on_chkBox);
         QModelIndex index_m = model->index(index.row(), 2, index.parent());
 
@@ -540,14 +546,8 @@ void EditorTab::initBoolWidget(QModelIndex index)
 
         val_bool = item->getValue();
 
-        /*QPalette p = chkBox->palette();
-        p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
-        p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
-        chkBox->setPalette(p);*/
-
         if (item->getValue() == "false") {
             chkBox->setChecked(false);
-
             item->setValue("     " + val_bool);
 
         } else if (item->getValue() == "true") {
@@ -688,21 +688,6 @@ void EditorTab::on_pasteAsChildAction()
     }
 }
 
-void EditorTab::forEach1(QAbstractItemModel* model, QModelIndex parent)
-{
-
-    for (int r = parent.row(); r < model->rowCount(parent); ++r) {
-        QModelIndex index = model->index(0, 0, parent);
-        //QVariant name = model->data(index);
-        QString name = model->data(index, Qt::DisplayRole).toString();
-        qDebug() << name;
-
-        if (model->hasChildren(index)) {
-            forEach1(model, index);
-        }
-    }
-}
-
 void EditorTab::view_collapse(const QModelIndex index, DomModel* model)
 {
 
@@ -805,10 +790,6 @@ void EditorTab::setIcon()
 
 void EditorTab::on_chkBox()
 {
-    /*QPalette p = chkBox->palette();
-    p.setColor(QPalette::Active, QPalette::WindowText, Qt::white);
-    p.setColor(QPalette::Inactive, QPalette::WindowText, Qt::white);
-    chkBox->setPalette(p);*/
 
     if (chkBox->isChecked()) {
         val_bool = "true";

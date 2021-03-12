@@ -13,6 +13,7 @@ extern MainWindow* mw_one;
 extern int childCount;
 extern QUndoGroup* undoGroup;
 extern int currentRow;
+extern bool loading;
 
 DomModel::DomModel(QObject* parent)
     : QAbstractItemModel(parent)
@@ -479,10 +480,7 @@ void DomModel::refrushModel()
 {
     //beginResetModel();
     EditorTab* tab = tabWidget->getCurentTab();
-    QTreeView* treeView = new QTreeView;
-    treeView = (QTreeView*)tab->children().at(1);
-    treeView->doItemsLayout();
-
+    tab->treeView->doItemsLayout();
     //endResetModel();
 }
 
@@ -498,6 +496,8 @@ void DomModel::sort(int column, Qt::SortOrder order)
         index = index.parent();
         if (!index.isValid())
             return;
+
+        loading = true;
 
         QModelIndex indexBak = tab->currentIndex();
         int rowBak = indexBak.row();
@@ -530,7 +530,10 @@ void DomModel::sort(int column, Qt::SortOrder order)
 
                     if (item1->getName() > item2->getName()) {
                         i = -1;
+
                         mw_one->on_actionMoveDown();
+
+                        loading = true;
                     }
                 }
 
@@ -543,6 +546,8 @@ void DomModel::sort(int column, Qt::SortOrder order)
         indexBak = this->index(rowBak, 0, index);
         tab->treeView->setCurrentIndex(indexBak);
         tab->treeView->setFocus();
+
+        loading = false;
 
         mw_one->showMsg();
     }
@@ -639,6 +644,8 @@ bool DomModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int ro
     if (!parent.isValid())
         return false;
 
+    loading = true;
+
     EditorTab* tab = tabWidget->getCurentTab();
     QModelIndex indexNew;
     indexNew = tab->treeView->currentIndex();
@@ -680,6 +687,8 @@ bool DomModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int ro
     }
 
     tab->treeView->setCurrentIndex(indexNew);
+
+    loading = false;
 
     return true;
 }

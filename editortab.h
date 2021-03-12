@@ -37,15 +37,14 @@ public:
     ~EditorTab();
 
     void changeDataType(QString txt);
-    QLabel* lblTips;
+
+    QLineEdit* lblTips;
 
     MyTreeView* treeView;
 
     int getCurrentRow();
 
     QSortFilterProxyModel* proxyModel;
-
-    void forEach1(QAbstractItemModel* model, QModelIndex parent = QModelIndex());
 
     bool isExpanded();
     void expand();
