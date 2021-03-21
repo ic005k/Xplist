@@ -57,6 +57,8 @@
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p7.png)
 
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p8.png)
+
 
 ### [国内建议使用github加速器下载](https://toolwa.com/github/)
 
