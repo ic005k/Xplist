@@ -35,7 +35,7 @@ private:
 
 class PasteCommand : public QUndoCommand {
 public:
-    PasteCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent = 0);
+    PasteCommand(DomModel* model, const QModelIndex& index, DomItem* copy_item, QUndoCommand* parent = 0);
     void undo();
     void redo();
 
@@ -43,6 +43,7 @@ private:
     DomModel* m_model;
     QModelIndex m_index;
     QModelIndex m_parent;
+    DomItem* m_copy_item;
 };
 
 class RemoveCommand : public QUndoCommand {

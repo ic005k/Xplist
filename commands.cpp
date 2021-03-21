@@ -131,7 +131,7 @@ void EditCommand::redo()
     }
 }
 
-PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)
+PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, DomItem* copy_item, QUndoCommand* parent)
 {
 
     Q_UNUSED(parent);
@@ -139,6 +139,7 @@ PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, QUndoComma
     m_model = model;
     m_index = QModelIndex();
     m_parent = index;
+    m_copy_item = copy_item;
 
     // maybe we should create permanent index?
     setText(QObject::tr("Paste entry"));
@@ -156,7 +157,7 @@ void PasteCommand::undo()
 void PasteCommand::redo()
 {
 
-    m_index = m_model->pasteItem(m_parent.parent(), m_parent.row(), NULL);
+    m_index = m_model->pasteItem(m_parent.parent(), m_parent.row(), NULL, m_copy_item);
 }
 
 AddMoveCommand::AddMoveCommand(DomModel* model, const QModelIndex& index, QUndoCommand* parent)

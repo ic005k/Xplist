@@ -94,11 +94,9 @@ public:
 
     DomItem* copyItem(const QModelIndex& parent);
 
-    QModelIndex pasteItem(const QModelIndex& parent, int row, ItemState* state);
+    QModelIndex pasteItem(const QModelIndex& parent, int row, ItemState* state, DomItem* copy_item);
 
     DomItem* getItem(const QModelIndex& index) const;
-
-    void refrushModel();
 
     virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 

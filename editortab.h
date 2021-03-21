@@ -2,6 +2,7 @@
 #define EDITORTAB_H
 
 #include <QAbstractItemView>
+#include <QAbstractTextDocumentLayout>
 #include <QAction>
 #include <QClipboard>
 #include <QDebug>
@@ -10,9 +11,12 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QObject>
+#include <QScrollArea>
 #include <QSortFilterProxyModel>
 #include <QStandardItem>
 #include <QStyleFactory>
+#include <QTextBrowser>
+#include <QTextEdit>
 #include <QUndoStack>
 #include <QUndoView>
 #include <QWidget>
@@ -37,8 +41,9 @@ public:
     ~EditorTab();
 
     void changeDataType(QString txt);
+    void setTipsFixedHeight();
 
-    QLineEdit* lblTips;
+    QTextBrowser* lblTips;
 
     MyTreeView* treeView;
 

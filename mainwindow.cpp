@@ -14,7 +14,6 @@ QToolBar* myToolBar;
 
 EditorTabsWidget* tabWidget;
 ItemState* copy_state;
-DomItem* copy_item;
 
 ItemState* AddMoveTemp;
 
@@ -50,7 +49,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.39";
+    CurVerison = "1.0.40";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -691,7 +690,12 @@ void MainWindow::actionAdd_activated()
         EditorTab* tab = tabWidget->getCurentTab();
         QModelIndex index = tab->currentIndex();
         DomModel* model = tab->getModel();
+
+        if (!index.isValid())
+            return;
+
         DomItem* item = model->itemForIndex(index);
+
         if (item->getType() != "dict" && item->getType() != "array")
             return;
 
@@ -719,25 +723,28 @@ void MainWindow::actionRemove_activated()
     if (tabWidget->hasTabs()) {
 
         EditorTab* tab = tabWidget->getCurentTab();
-        QModelIndex index = tab->currentIndex();
+        DomModel* model = tab->getModel();
 
-        //QItemSelectionModel* selections = tab->treeView->selectionModel();
-        //const QModelIndexList selectedsList = selections->selectedRows();
-        //int count = selectedsList.count();
-        //for (int i = 0; i < count; i++) {
+        QItemSelectionModel* selections = tab->treeView->selectionModel();
+        QModelIndexList selectedsList = selections->selectedRows();
 
-        //QModelIndex index = selectedsList.at(count - 1 - i);
+        qSort(selectedsList.begin(), selectedsList.end(), qGreater<QModelIndex>()); // so that rows are removed from highest index
 
-        if (index.isValid()) {
+        foreach (QModelIndex index, selectedsList) {
 
-            DomModel* model = tab->getModel();
-            index = model->index(index.row(), 0, index.parent());
-            if (model->itemNotPlist(index)) {
-                QUndoCommand* removeCommand = new RemoveCommand(model, index);
-                undoGroup->activeStack()->push(removeCommand);
+            if (index.isValid()) {
+
+                //index = model->index(index.row(), 0, index.parent());
+                if (model->itemNotPlist(index)) {
+                    QUndoCommand* removeCommand = new RemoveCommand(model, index);
+                    undoGroup->activeStack()->push(removeCommand);
+                }
             }
         }
-        //}
+
+        QModelIndex index = tab->currentIndex();
+        if (index.isValid())
+            tab->treeView->setCurrentIndex(index);
     }
 }
 
@@ -1858,13 +1865,18 @@ void MainWindow::on_pasteBW()
         QFileInfo fi(fn);
         if (!fi.exists())
             return;
+
+        bool bak = ui->actionExpandAllOpenFile->isChecked();
+        ui->actionExpandAllOpenFile->setChecked(false);
         openPlist(fn);
+        ui->actionExpandAllOpenFile->setChecked(bak);
 
         QModelIndex index = tabWidget->getCurentTab()->currentIndex();
         QModelIndex index1 = tabWidget->getCurentTab()->getModel()->index(0, 0, index);
         if (index1.isValid())
             tabWidget->getCurentTab()->treeView->setCurrentIndex(index1);
 
+        tabWidget->getCurentTab()->treeView->selectAll();
         on_copyAction();
         actionClose_activated();
 

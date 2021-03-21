@@ -7,7 +7,7 @@
 #include "editortabswidget.h"
 #include "mainwindow.h"
 extern EditorTabsWidget* tabWidget;
-extern DomItem* copy_item;
+extern QVector<DomItem*> copy_item;
 extern bool paste;
 extern MainWindow* mw_one;
 extern int childCount;
@@ -271,7 +271,7 @@ DomItem* DomModel::copyItem(const QModelIndex& parent)
     return item;
 }
 
-QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* state)
+QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* state, DomItem* copy_item)
 {
 
     Q_UNUSED(state);
@@ -426,6 +426,7 @@ void DomModel::removeItem(const QModelIndex& index)
     if (index.isValid()) {
 
         DomItem* item = itemForIndex(index);
+
         int row = index.row();
         const QModelIndex parent = index.parent();
 
@@ -474,14 +475,6 @@ DomItem* DomModel::getItem(const QModelIndex& index) const
             return item;
     }
     return rootItem;
-}
-
-void DomModel::refrushModel()
-{
-    //beginResetModel();
-    EditorTab* tab = tabWidget->getCurentTab();
-    tab->treeView->doItemsLayout();
-    //endResetModel();
 }
 
 void DomModel::sort(int column, Qt::SortOrder order)
