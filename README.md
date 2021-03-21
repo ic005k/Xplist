@@ -11,6 +11,10 @@ When writing this software, actually some hesitation, similar software seems to 
 
 * Lightweight and high performance
 
+* Automatic detection of OpenCore configuration files with corresponding operation prompts
+
+* Support multi-select operations (including copy, cut, delete, etc.)
+
 * Open source, cross-platform (currently supports win, mac, linux)
 
 * Humanized search function (a. Keyboard initial character search for each column of key, data type, and value within the expanded node range; b. Search box global search, one-time display of search results)
