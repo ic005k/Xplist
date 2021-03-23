@@ -193,6 +193,10 @@ private slots:
 
     void on_listFind_itemClicked(QListWidgetItem* item);
 
+    void on_actionBug_Report_triggered();
+
+    void on_actionDiscussion_Forum_triggered();
+
 private:
     void initMenuToolsBar();
     void initFindReplace();

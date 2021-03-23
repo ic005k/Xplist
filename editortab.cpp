@@ -721,6 +721,9 @@ void EditorTab::on_pasteAction()
             undoGroup->activeStack()->push(pasteCommand);
         }
     }
+
+    index = tab->currentIndex();
+    treeView_clicked(index);
 }
 
 void EditorTab::on_pasteAsChildAction()

@@ -119,6 +119,8 @@
      <string>Help</string>
     </property>
     <addaction name="actionCheck_Update"/>
+    <addaction name="actionBug_Report"/>
+    <addaction name="actionDiscussion_Forum"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
@@ -682,6 +684,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+R</string>
+   </property>
+  </action>
+  <action name="actionBug_Report">
+   <property name="text">
+    <string>Bug Report</string>
+   </property>
+  </action>
+  <action name="actionDiscussion_Forum">
+   <property name="text">
+    <string>Discussion Forum</string>
    </property>
   </action>
  </widget>

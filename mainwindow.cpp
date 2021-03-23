@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.40";
+    CurVerison = "1.0.41";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -202,7 +202,7 @@ MainWindow::~MainWindow()
 void MainWindow::initMenuToolsBar()
 {
 
-    //ui->frameTip->setVisible(false);
+    ui->actionAbout->setMenuRole(QAction::AboutRole);
 
     // create undo and redo actions
     undoGroup = new QUndoGroup(this);
@@ -2782,4 +2782,16 @@ void MainWindow::AddUEFIDrivers(QString fileStr)
     }
 
     loading = false;
+}
+
+void MainWindow::on_actionBug_Report_triggered()
+{
+    QUrl url(QString("https://github.com/ic005k/PlistEDPlus/issues"));
+    QDesktopServices::openUrl(url);
+}
+
+void MainWindow::on_actionDiscussion_Forum_triggered()
+{
+    QUrl url(QString("https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/"));
+    QDesktopServices::openUrl(url);
 }
