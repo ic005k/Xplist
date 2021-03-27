@@ -51,6 +51,11 @@ public:
 
     Ui::MainWindow* ui;
 
+    QComboBox* cboxFileType;
+
+    void watchFileModification();
+    void removeWatchFiles();
+
     void AddACPI(QString fileStr);
     void addKexts(QStringList FileName);
     void init_enabled_data(QTableWidget* table, int row, int column, QString str);
@@ -79,6 +84,8 @@ public:
     void loadText(QString textFile);
 
     void goPlistText();
+
+    void closeOpenedFile(QString file);
 
 public slots:
     void on_Find();
@@ -226,8 +233,6 @@ private:
     void reg_win();
 
     QString ver;
-
-    bool SaveAndFind = false;
 
     QStringList FindTextList;
 

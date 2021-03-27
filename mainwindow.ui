@@ -129,7 +129,6 @@
     </property>
     <addaction name="actionRestoreScene"/>
     <addaction name="actionDefaultNodeIcon"/>
-    <addaction name="actionSaveAndFind"/>
     <addaction name="actionExpandAllOpenFile"/>
     <addaction name="actionShowPlistText"/>
    </widget>
@@ -567,11 +566,6 @@
   <action name="actionCheck_Update">
    <property name="text">
     <string>Check Update</string>
-   </property>
-  </action>
-  <action name="actionSaveAndFind">
-   <property name="text">
-    <string>Save and refresh the data before searching</string>
    </property>
   </action>
   <action name="actionNew_Sibling">

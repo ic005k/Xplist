@@ -15,6 +15,7 @@ QString dragFileName;
 extern MainWindow* mw_one;
 extern EditorTabsWidget* tabWidget;
 extern QVector<QString> openFileList;
+extern bool binPlistFile;
 
 EditorTabsWidget::EditorTabsWidget(QWidget* parent)
 {
@@ -71,7 +72,10 @@ EditorTab* EditorTabsWidget::createTab(DomModel* model, QString filePath)
     }
 
     // add tab
-    this->addTab(editorTab, filePath);
+    if (!binPlistFile)
+        this->addTab(editorTab, filePath);
+    else
+        this->addTab(editorTab, "[BIN] " + filePath);
 
     // set as active
     this->setCurrentWidget(editorTab);

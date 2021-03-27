@@ -23,6 +23,8 @@ TRANSLATIONS = translation_ru.ts \
 SOURCES += main.cpp\
     MyTabBar.cpp \
     MyTabPopup.cpp \
+    Plist.cpp \
+    PlistDate.cpp \
     comboboxdelegatebool.cpp \
     filesystemwatcher.cpp \
     mainwindow.cpp \
@@ -37,11 +39,15 @@ SOURCES += main.cpp\
     itemstate.cpp \
     myapp.cpp \
     myhighlighter.cpp \
-    mytreeview.cpp
+    mytreeview.cpp \
+    pugixml.cpp
 
 HEADERS  += mainwindow.h \
     MyTabBar.h \
     MyTabPopup.h \
+    Plist.hpp \
+    PlistDate.hpp \
+    base64.hpp \
     comboboxdelegatebool.h \
     domparser.h \
     dommodel.h \
@@ -55,7 +61,9 @@ HEADERS  += mainwindow.h \
     itemstate.h \
     myapp.h \
     myhighlighter.h \
-    mytreeview.h
+    mytreeview.h \
+    pugiconfig.hpp \
+    pugixml.hpp
 
 FORMS    += mainwindow.ui \
     editortab.ui

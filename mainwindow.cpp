@@ -2,8 +2,15 @@
 #include "filesystemwatcher.h"
 #include "myapp.h"
 
+#include "Plist.hpp"
 #include "mytreeview.h"
 #include "ui_mainwindow.h"
+
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <sstream>
+using namespace std;
 
 #include <QMessageBox>
 #include <QSettings>
@@ -34,8 +41,7 @@ QVector<QString> openFileList;
 int red = 0;
 
 bool defaultIcon = false;
-
-bool SelfSaved = false;
+bool binPlistFile = false;
 
 int windowX = 0;
 int windowY = 0;
@@ -49,7 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.41";
+    CurVerison = "1.0.42";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -98,17 +104,12 @@ MainWindow::MainWindow(QWidget* parent)
     ui->actionNew_Child->setShortcut(tr("alt++"));
 #endif
 
-    ui->actionSaveAndFind->setCheckable(true);
-    ui->actionSaveAndFind->setVisible(false);
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QFileInfo fi(qfile);
     if (fi.exists()) {
         QSettings Reg(qfile, QSettings::IniFormat);
         defaultIcon = Reg.value("DefaultIcon").toBool();
         ui->actionDefaultNodeIcon->setChecked(defaultIcon);
-
-        SaveAndFind = Reg.value("SaveAndFind").toBool();
-        ui->actionSaveAndFind->setChecked(SaveAndFind);
 
         ui->actionExpandAllOpenFile->setChecked(Reg.value("ExpAll").toBool());
 
@@ -349,11 +350,17 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addAction(actionRedo);
 
     ui->mainToolBar->addSeparator();
+    cboxFileType = new QComboBox(this);
+    cboxFileType->setToolTip(tr("Select the file storage format"));
+    cboxFileType->addItem("XML");
+    cboxFileType->addItem("BIN");
+    ui->mainToolBar->addWidget(cboxFileType);
+
+    ui->mainToolBar->addSeparator();
 
     QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
     findAction->setToolTip(tr("Find and Replace"));
     findAction->setShortcut(tr("ctrl+F"));
-    //ui->mainToolBar->addAction(findAction);
     connect(findAction, &QAction::triggered, this, &MainWindow::on_ShowFindReplace);
 
     lblFindCount = new QLabel("0"); //查找结果计数器
@@ -406,6 +413,8 @@ void MainWindow::initMenuToolsBar()
 
 void MainWindow::actionNew()
 {
+    cboxFileType->setCurrentIndex(0);
+    binPlistFile = false;
 
     // create new model
     DomModel* model = new DomModel();
@@ -464,28 +473,67 @@ void MainWindow::openFiles(QStringList list)
 
 void MainWindow::openPlist(QString filePath)
 {
-    if (!filePath.isEmpty()) {
 
-        for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
-            if (filePath == tabWidget->getTab(i)->getPath()) {
-                tabWidget->closeTab(i);
-                break;
+    QFileInfo fi(filePath);
+    map<string, boost::any> dict;
+    string baseName;
+    QString path;
+    QDomDocument document;
+    QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
+
+    if (fi.exists()) {
+
+        path = fi.path();
+        QDir dir;
+        if (dir.exists(path)) {
+            dir.setCurrent(path);
+        }
+
+        QString str = fi.fileName();
+        baseName = string(str.toLocal8Bit());
+        //cout << baseName << endl;
+
+        Plist::readPlist(baseName.c_str(), dict);
+        if (binPlistFile) {
+            if (dir.mkpath(strConfigDir)) { }
+            dir.setCurrent(strConfigDir);
+            Plist::writePlistXML("_temp.plist", dict);
+            cboxFileType->setCurrentIndex(1);
+        } else
+            cboxFileType->setCurrentIndex(0);
+
+        if (binPlistFile) {
+            QString temp = strConfigDir + "/_temp.plist";
+            QFile file(temp);
+            if (file.open(QIODevice::ReadOnly)) // && !opened)
+            {
+                if (document.setContent(&file)) {
+                }
+
+                file.close();
+            }
+
+            QFile::remove(temp);
+
+        } else {
+            QFile file(filePath);
+            if (file.open(QIODevice::ReadOnly)) {
+
+                if (document.setContent(&file)) {
+                }
+
+                file.close();
             }
         }
 
-        QFile file(filePath);
-        if (file.open(QIODevice::ReadOnly)) // && !opened)
-        {
-            QDomDocument document;
-
-            if (document.setContent(&file)) {
-
-                DomModel* model = DomParser::fromDom(document);
-
-                tabWidget->createTab(model, filePath);
-            }
-            file.close();
+        if (dir.exists(path)) {
+            dir.setCurrent(path);
         }
+
+        closeOpenedFile(filePath);
+
+        DomModel* model = DomParser::fromDom(document);
+        tabWidget->createTab(model, filePath);
 
         QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
         if (filePath != fn) {
@@ -493,17 +541,7 @@ void MainWindow::openPlist(QString filePath)
             updateRecentFiles();
         }
 
-        FileSystemWatcher::addWatchPath(filePath); //监控这个文件的变化
-
-        bool re = false;
-        for (int i = 0; i < openFileList.count(); i++) {
-            if (openFileList.at(i) == filePath)
-                re = true;
-        }
-        if (!re)
-            openFileList.append(filePath);
-
-        //列宽自动适应最长的条目
+        // 列宽自动适应最长的条目
         EditorTab* tab = tabWidget->getCurentTab();
         //tab->treeView->resizeColumnToContents(0);
 
@@ -513,10 +551,35 @@ void MainWindow::openPlist(QString filePath)
         if (ui->actionExpandAllOpenFile->isChecked())
             actionExpand_all_activated();
 
-        QFileInfo fi(filePath);
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
 
         loadText(filePath);
+
+        watchFileModification();
+    }
+
+    loading = false;
+}
+
+void MainWindow::closeOpenedFile(QString file)
+{
+    for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
+        if (file == tabWidget->getTab(i)->getPath()) {
+            tabWidget->closeTab(i);
+            break;
+        }
+    }
+}
+
+void MainWindow::watchFileModification()
+{
+    // 监控这个文件的变化
+    removeWatchFiles();
+    openFileList.clear();
+    for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
+        QString file = tabWidget->getTab(i)->getPath();
+        FileSystemWatcher::addWatchPath(file);
+        openFileList.append(file);
     }
 }
 
@@ -554,6 +617,7 @@ void MainWindow::onTabCloseRequest(int i)
 
         case QMessageBox::Discard:
             // Don't Save was clicked
+
             close_flag = 2;
             break;
         }
@@ -565,19 +629,10 @@ void MainWindow::onTabCloseRequest(int i)
     // remove stack from group
     undoGroup->removeStack(stack);
 
-    QString file = tabWidget->getTab(i)->getPath();
-    QFileInfo fi(file);
-    if (fi.exists())
-        FileSystemWatcher::removeWatchPath(file);
-    for (int i = 0; i < openFileList.count(); i++) {
-        if (file == openFileList.at(i)) {
-            openFileList.remove(i);
-            break;
-        }
-    }
-
     // close tab
     tabWidget->closeTab();
+
+    watchFileModification();
 
     if (tabWidget->currentIndex() != -1)
         tabWidget->getCurentTab()->treeView->setFocus();
@@ -589,6 +644,9 @@ void MainWindow::onTabCloseRequest(int i)
 void MainWindow::savePlist(QString filePath)
 {
     if (tabWidget->hasTabs()) {
+
+        removeWatchFiles();
+
         EditorTab* tab = tabWidget->getCurentTab();
 
         // get parsed dom doc
@@ -597,44 +655,54 @@ void MainWindow::savePlist(QString filePath)
         // create and open file
         QFile file(filePath);
         file.open(QIODevice::WriteOnly);
-
-        // create txt stream with file
         QTextStream out(&file);
-
-        // write to file
-        doc.save(out, 4);
-
-        // close file
+        //doc.save(out, 4);
         file.close();
 
-        // set new name
-        tab->setPath(filePath);
+        QFileInfo fi(filePath);
+        if (fi.exists()) {
+            map<string, boost::any> dict;
 
-        //get tab index
-        int index = tabWidget->indexOf(tab);
+            QString path = fi.path();
+            QDir dir;
+            if (dir.exists(path))
+                dir.setCurrent(path);
 
-        // get name
-        QString name = tab->getFileName();
+            string baseName;
+            QString str = fi.fileName();
+            baseName = string(str.toLocal8Bit());
+            //cout << baseName << endl;
 
-        // set text
-        tabWidget->setTabText(index, name);
+            QString strData = doc.toString();
+            std::string mystring = strData.toStdString();
+            std::istringstream is(mystring);
+            Plist::readPlist(is, dict);
+
+            // set new name
+            tab->setPath(filePath);
+
+            //get tab index
+            int index = tabWidget->indexOf(tab);
+
+            // get name
+            QString name = tab->getFileName();
+
+            if (cboxFileType->currentIndex() == 0) {
+                Plist::writePlistXML(baseName.c_str(), dict);
+                tabWidget->setTabText(index, name);
+            }
+            if (cboxFileType->currentIndex() == 1) {
+                Plist::writePlistBinary(baseName.c_str(), dict);
+                tabWidget->setTabText(index, "[BIN] " + name);
+            }
+        }
 
         // set stack clean
         undoGroup->activeStack()->clear();
         //undoGroup->activeStack()->setClean();
 
-        SelfSaved = true;
-        FileSystemWatcher::addWatchPath(filePath); //监控这个文件的变化
+        watchFileModification();
 
-        bool re = false;
-        for (int i = 0; i < openFileList.count(); i++) {
-            if (openFileList.at(i) == filePath)
-                re = true;
-        }
-        if (!re)
-            openFileList.append(filePath);
-
-        QFileInfo fi(filePath);
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
 
         loadText(filePath);
@@ -657,23 +725,13 @@ void MainWindow::actionSave()
 void MainWindow::actionSaveAs()
 {
     if (tabWidget->hasTabs()) {
-        QString cfile = tabWidget->getCurentTab()->getPath();
 
-        QString str = QFileDialog::getSaveFileName(
-            this, tr("Save as"), "", tr("Property list (*.plist)"));
+        QString str = QFileDialog::getSaveFileName(this, tr("Save as"), "", tr("Property list (*.plist)"));
 
         if (!str.isEmpty()) {
-            QFileInfo fi(cfile);
-            if (fi.exists())
-                FileSystemWatcher::removeWatchPath(cfile);
-            for (int i = 0; i < openFileList.count(); i++) {
-                if (cfile == openFileList.at(i)) {
-                    openFileList.removeOne(cfile);
-                    break;
-                }
-            }
 
-            FileSystemWatcher::addWatchPath(str);
+            closeOpenedFile(str);
+
             savePlist(str);
 
             this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
@@ -783,8 +841,15 @@ void MainWindow::tabWidget_currentChanged(int index)
         if (tabWidget->hasTabs()) {
             // get tab widget
             EditorTab* tab = tabWidget->getCurentTab();
-
             setExpandText(tab);
+
+            QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
+            if (strBin.contains("[BIN]")) {
+                cboxFileType->setCurrentIndex(1);
+
+            } else {
+                cboxFileType->setCurrentIndex(0);
+            }
 
             // set window title to filename
             //this->setWindowFilePath(tabWidget->tabText(tabWidget->indexOf(tab)) + "[*]");
@@ -800,13 +865,8 @@ void MainWindow::tabWidget_currentChanged(int index)
             undoGroup->setActiveStack(stack);
 
             if (!loading) {
-                loadText(tabWidget->getCurentTab()->getPath());
-            }
 
-            if (this->isVisible() && !loading) {
-                //if (mac) {
-                //goPlistText();
-                //}
+                loadText(tabWidget->getCurentTab()->getPath());
             }
 
             ui->btnPrevious->setEnabled(false);
@@ -1012,33 +1072,6 @@ void MainWindow::on_Find()
 
         EditorTab* tab = tabWidget->getCurentTab();
 
-        if (ui->actionSaveAndFind->isChecked()) {
-
-            QString fn = tabWidget->getCurentTab()->getPath();
-            if (QFileInfo(fn).exists()) {
-
-                actionSave();
-
-                FileSystemWatcher::removeWatchPath(fn);
-
-                //Open current plist
-                QFile file(fn);
-                if (file.open(QIODevice::ReadOnly)) {
-                    QDomDocument document;
-
-                    if (document.setContent(&file)) {
-
-                        DomModel* model = DomParser::fromDom(document);
-
-                        tab->setModel(model);
-                    }
-                    file.close();
-                }
-
-                FileSystemWatcher::addWatchPath(fn);
-            }
-        }
-
         QModelIndex index;
 
         DomModel* model = tab->getModel();
@@ -1209,7 +1242,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
     Reg.setValue("restore", ui->actionRestoreScene->isChecked());
     Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
-    Reg.setValue("SaveAndFind", ui->actionSaveAndFind->isChecked());
     Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
     Reg.setValue("drag", false);
 
@@ -1225,7 +1257,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
         }
 
         if (FindTextList.count() < tempList.count()) {
-            //FindTextList = tempList;
         }
     }
 
@@ -1247,8 +1278,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
         int count = tabWidget->count();
 
-        Reg.setValue("restore", ui->actionRestoreScene->isChecked());
-        Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
         Reg.setValue("count", count);
         Reg.setValue("index", tabWidget->tabBar()->currentIndex());
 
@@ -1287,6 +1316,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
     } else {
         Reg.setValue("count", 0);
     }
+
+    file.close();
 
     loading = false;
 }
@@ -1479,7 +1510,7 @@ QString MainWindow::getPlistTextValue(QString str)
                 str3 = str2.mid(j, 1);
                 if (str3 == "<") {
                     str4 = str2.mid(0, j);
-                    //qDebug() << str4;
+
                     break;
                 }
             }
@@ -1495,6 +1526,9 @@ void MainWindow::goPlistText()
 {
     //转到plist文本
     if (!loading) {
+
+        if (!ui->actionShowPlistText->isChecked())
+            return;
 
         EditorTab* tab = tabWidget->getCurentTab();
         QModelIndex index;
@@ -1544,7 +1578,7 @@ void MainWindow::goPlistText()
                         if (getPlistTextValue(lineText) == name) {
 
                             QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
-                            QString strBool = strNext.mid(1, strNext.length() - 3);
+                            QString strBool = strNext.mid(1, strNext.length() - 4);
 
                             if (strBool == val) {
                                 setBarMarkers();
@@ -1556,7 +1590,7 @@ void MainWindow::goPlistText()
 
                     if (index.column() == 2) {
 
-                        if (lineText.mid(1, lineText.length() - 3) == val) {
+                        if (lineText.mid(1, lineText.length() - 4) == val) {
 
                             QString strPrevious = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
 
@@ -1824,7 +1858,15 @@ void MainWindow::on_NewWindow()
     arguments << fn;
     QProcess* process = new QProcess;
     process->setEnvironment(process->environment());
+
     process->start(pathSource, arguments);
+}
+
+void MainWindow::removeWatchFiles()
+{
+    for (int i = 0; i < openFileList.count(); i++) {
+        FileSystemWatcher::removeWatchPath(openFileList.at(i));
+    }
 }
 
 void MainWindow::on_copyBW()
@@ -1891,6 +1933,13 @@ void MainWindow::on_pasteBW()
 
 void MainWindow::loadText(QString textFile)
 {
+
+    QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
+    if (strBin.contains("[BIN]")) {
+        ui->textEdit->clear();
+        ui->textEdit->append(tr("This is a file in binary format, with no text displayed."));
+        return;
+    }
 
     QFileInfo fi(textFile);
     if (fi.exists()) {
@@ -2328,6 +2377,9 @@ void MainWindow::initPlistTextShow()
     ui->dockWidgetContents->layout()->setMargin(1);
 
     ui->textEdit->setReadOnly(true);
+    QFontMetrics metrics(ui->textEdit->font());
+    //ui->textEdit->setTabStopWidth(4 * metrics.width(' '));
+
     resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
     myHL = new MyHighLighter(ui->textEdit->document());
     myHL->rehighlight();
