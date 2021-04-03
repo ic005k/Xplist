@@ -151,317 +151,318 @@
         <translation>Недавние файлы</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="93"/>
+        <location filename="mainwindow.ui" line="95"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="119"/>
+        <location filename="mainwindow.ui" line="121"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="128"/>
+        <location filename="mainwindow.ui" line="130"/>
         <source>Preferences</source>
         <translation>Предпочтения</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="143"/>
+        <location filename="mainwindow.ui" line="145"/>
         <source>toolBar</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="194"/>
+        <location filename="mainwindow.ui" line="196"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="214"/>
-        <location filename="mainwindow.ui" line="658"/>
+        <location filename="mainwindow.ui" line="216"/>
+        <location filename="mainwindow.ui" line="660"/>
         <source>Go to the previous</source>
         <oldsource>Find the previous</oldsource>
         <translation>Перейти к предыдущему</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="217"/>
+        <location filename="mainwindow.ui" line="219"/>
         <source>&lt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="224"/>
-        <location filename="mainwindow.ui" line="647"/>
+        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="649"/>
         <source>Go to the next</source>
         <oldsource>Find the next</oldsource>
         <translation>Перейти к следующему</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="227"/>
-        <location filename="mainwindow.ui" line="261"/>
+        <location filename="mainwindow.ui" line="229"/>
+        <location filename="mainwindow.ui" line="263"/>
         <source>&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="237"/>
-        <location filename="mainwindow.ui" line="258"/>
-        <location filename="mainwindow.ui" line="669"/>
+        <location filename="mainwindow.ui" line="239"/>
+        <location filename="mainwindow.ui" line="260"/>
+        <location filename="mainwindow.ui" line="671"/>
         <location filename="mainwindow.cpp" line="372"/>
         <source>Replace</source>
         <translation>Заменить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="244"/>
+        <location filename="mainwindow.ui" line="246"/>
         <source>All</source>
         <translation>Все</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="251"/>
+        <location filename="mainwindow.ui" line="253"/>
         <source>Hide</source>
         <translation>Спрятать</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="285"/>
+        <location filename="mainwindow.ui" line="287"/>
         <source>Search Results</source>
         <translation>Результаты поиска</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="310"/>
+        <location filename="mainwindow.ui" line="312"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="322"/>
-        <location filename="mainwindow.ui" line="589"/>
+        <location filename="mainwindow.ui" line="324"/>
+        <location filename="mainwindow.ui" line="591"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="331"/>
-        <location filename="mainwindow.ui" line="334"/>
+        <location filename="mainwindow.ui" line="333"/>
+        <location filename="mainwindow.ui" line="336"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="337"/>
+        <location filename="mainwindow.ui" line="339"/>
         <source>Ctrl+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="348"/>
-        <location filename="mainwindow.ui" line="351"/>
+        <location filename="mainwindow.ui" line="350"/>
+        <location filename="mainwindow.ui" line="353"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="354"/>
+        <location filename="mainwindow.ui" line="356"/>
         <source>Ctrl+W</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="362"/>
-        <location filename="mainwindow.ui" line="365"/>
-        <location filename="mainwindow.cpp" line="578"/>
+        <location filename="mainwindow.ui" line="364"/>
+        <location filename="mainwindow.ui" line="367"/>
+        <location filename="mainwindow.cpp" line="603"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="368"/>
+        <location filename="mainwindow.ui" line="370"/>
         <source>Ctrl+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="379"/>
-        <location filename="mainwindow.ui" line="382"/>
-        <location filename="mainwindow.cpp" line="707"/>
+        <location filename="mainwindow.ui" line="381"/>
+        <location filename="mainwindow.ui" line="384"/>
+        <location filename="mainwindow.cpp" line="732"/>
         <source>Save as</source>
         <translation>Сохранить как</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="385"/>
+        <location filename="mainwindow.ui" line="387"/>
         <source>Ctrl+Alt+S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="396"/>
+        <location filename="mainwindow.ui" line="398"/>
+        <location filename="mainwindow.ui" line="697"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="399"/>
+        <location filename="mainwindow.ui" line="401"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="411"/>
-        <location filename="mainwindow.cpp" line="914"/>
-        <location filename="mainwindow.cpp" line="917"/>
-        <location filename="mainwindow.cpp" line="919"/>
+        <location filename="mainwindow.ui" line="413"/>
+        <location filename="mainwindow.cpp" line="941"/>
+        <location filename="mainwindow.cpp" line="944"/>
+        <location filename="mainwindow.cpp" line="946"/>
         <source>Expand all</source>
         <translation>Развернуть</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="416"/>
-        <location filename="mainwindow.ui" line="419"/>
+        <location filename="mainwindow.ui" line="418"/>
+        <location filename="mainwindow.ui" line="421"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="422"/>
+        <location filename="mainwindow.ui" line="424"/>
         <source>Ctrl+N</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="433"/>
+        <location filename="mainwindow.ui" line="435"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="438"/>
+        <location filename="mainwindow.ui" line="440"/>
         <source>File1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="446"/>
+        <location filename="mainwindow.ui" line="448"/>
         <source>File2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="454"/>
+        <location filename="mainwindow.ui" line="456"/>
         <source>File3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="462"/>
+        <location filename="mainwindow.ui" line="464"/>
         <source>File4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="470"/>
+        <location filename="mainwindow.ui" line="472"/>
         <source>File5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="478"/>
+        <location filename="mainwindow.ui" line="480"/>
         <source>Clear list</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="483"/>
-        <location filename="mainwindow.ui" line="486"/>
+        <location filename="mainwindow.ui" line="485"/>
+        <location filename="mainwindow.ui" line="488"/>
         <source>Close all</source>
         <translation>Закрыть все</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="489"/>
+        <location filename="mainwindow.ui" line="491"/>
         <source>Ctrl+Alt+W</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="494"/>
+        <location filename="mainwindow.ui" line="496"/>
         <source>File6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="502"/>
+        <location filename="mainwindow.ui" line="504"/>
         <source>File7</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="510"/>
+        <location filename="mainwindow.ui" line="512"/>
         <source>File8</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="518"/>
+        <location filename="mainwindow.ui" line="520"/>
         <source>File9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="526"/>
+        <location filename="mainwindow.ui" line="528"/>
         <source>File10</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="555"/>
+        <location filename="mainwindow.ui" line="557"/>
         <source>RestoreScene</source>
         <translation>Восстановить сцену</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="563"/>
+        <location filename="mainwindow.ui" line="565"/>
         <source>DefaultNodeIcon</source>
         <translation>Значок узла по умолчанию</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="568"/>
+        <location filename="mainwindow.ui" line="570"/>
         <source>Check Update</source>
         <translation>Проверить обновление</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="600"/>
+        <location filename="mainwindow.ui" line="602"/>
         <source>Expand all when opening a file</source>
         <translation>Развернуть все при открытии файла</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="605"/>
+        <location filename="mainwindow.ui" line="607"/>
         <source>New Window</source>
         <translation>Новое окно</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="610"/>
+        <location filename="mainwindow.ui" line="612"/>
         <source>Copy between windows</source>
         <translation>Копия между окнами</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="615"/>
+        <location filename="mainwindow.ui" line="617"/>
         <source>Paste between windows</source>
         <translation>Вставка между окнами</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="626"/>
+        <location filename="mainwindow.ui" line="628"/>
         <source>Show plist text</source>
         <translation>Отображает текст plist</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="631"/>
+        <location filename="mainwindow.ui" line="633"/>
         <source>Paste as child</source>
         <translation>Вставить как подпункт</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="639"/>
+        <location filename="mainwindow.ui" line="641"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="650"/>
+        <location filename="mainwindow.ui" line="652"/>
         <source>Ctrl+2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="661"/>
+        <location filename="mainwindow.ui" line="663"/>
         <source>Ctrl+1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="672"/>
+        <location filename="mainwindow.ui" line="674"/>
         <source>Ctrl+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="677"/>
+        <location filename="mainwindow.ui" line="679"/>
         <source>Replace All</source>
         <translation>Заменить все</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="680"/>
+        <location filename="mainwindow.ui" line="682"/>
         <source>Ctrl+Shift+R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="685"/>
+        <location filename="mainwindow.ui" line="687"/>
         <source>Bug Report</source>
         <translation>Отчет об ошибках</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="690"/>
+        <location filename="mainwindow.ui" line="692"/>
         <source>Discussion Forum</source>
         <translation>Дискуссионный форум</translation>
     </message>
@@ -476,17 +477,17 @@
         <translation>Повторить</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="534"/>
+        <location filename="mainwindow.ui" line="536"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="539"/>
+        <location filename="mainwindow.ui" line="541"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="544"/>
+        <location filename="mainwindow.ui" line="546"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
@@ -496,9 +497,9 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="204"/>
-        <location filename="mainwindow.ui" line="207"/>
-        <location filename="mainwindow.ui" line="636"/>
+        <location filename="mainwindow.ui" line="206"/>
+        <location filename="mainwindow.ui" line="209"/>
+        <location filename="mainwindow.ui" line="638"/>
         <location filename="mainwindow.cpp" line="370"/>
         <source>Find</source>
         <translation>Найти</translation>
@@ -526,7 +527,7 @@
     </message>
     <message>
         <location filename="mainwindow.cpp" line="160"/>
-        <location filename="mainwindow.cpp" line="1981"/>
+        <location filename="mainwindow.cpp" line="2004"/>
         <source>Total</source>
         <translation>Всего</translation>
     </message>
@@ -536,74 +537,74 @@
         <translation>Выберите формат хранения файлов</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="579"/>
-        <location filename="mainwindow.cpp" line="1777"/>
+        <location filename="mainwindow.cpp" line="604"/>
+        <location filename="mainwindow.cpp" line="1802"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="580"/>
+        <location filename="mainwindow.cpp" line="605"/>
         <source>Discard</source>
         <translation>Не сохранять</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="802"/>
+        <location filename="mainwindow.cpp" line="830"/>
         <source>Last modified: </source>
         <translation>Последнее изменение: </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="806"/>
+        <location filename="mainwindow.cpp" line="834"/>
         <source>Thanks: Yaroslav Sushkov (alpex92)</source>
         <oldsource>Thanks: Yaroslav Sushkov (alpex92)&lt;br&gt;</oldsource>
         <translation>Спасибо: Ярослав Сушков (alpex92)</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1741"/>
+        <location filename="mainwindow.cpp" line="1766"/>
         <source>Network error!</source>
         <translation>Ошибка сети!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1776"/>
+        <location filename="mainwindow.cpp" line="1801"/>
         <source>New version detected!</source>
         <translation>Обнаружена новая версия!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1776"/>
+        <location filename="mainwindow.cpp" line="1801"/>
         <source>Version: </source>
         <translation>Версия:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1776"/>
+        <location filename="mainwindow.cpp" line="1801"/>
         <source>Published at: </source>
         <translation>Опубликовано по адресу:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1776"/>
+        <location filename="mainwindow.cpp" line="1801"/>
         <source>Release Notes: </source>
         <translation>Примечания к выпуску:</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1777"/>
+        <location filename="mainwindow.cpp" line="1802"/>
         <source>Download</source>
         <translation>Скачать</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1782"/>
+        <location filename="mainwindow.cpp" line="1807"/>
         <source>It is currently the latest version!</source>
         <translation>На данный момент это последняя версия!</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1917"/>
+        <location filename="mainwindow.cpp" line="1941"/>
         <source>This is a file in binary format, with no text displayed.</source>
         <translation>Это файл в двоичном формате без отображения текста.</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1926"/>
+        <location filename="mainwindow.cpp" line="1949"/>
         <source>Application</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1927"/>
+        <location filename="mainwindow.cpp" line="1950"/>
         <source>Cannot read file %1:
 %2.</source>
         <translation></translation>
@@ -614,23 +615,23 @@
         <translation>Выберите файлы для открытия</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="707"/>
+        <location filename="mainwindow.cpp" line="732"/>
         <source>Property list (*.plist)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="575"/>
+        <location filename="mainwindow.cpp" line="600"/>
         <source>The document has been modified.</source>
         <translation>Документ был изменен.</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="573"/>
+        <location filename="mainwindow.ui" line="575"/>
         <location filename="mainwindow.cpp" line="295"/>
         <source>New Sibling</source>
         <translation>Новая группа</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="581"/>
+        <location filename="mainwindow.ui" line="583"/>
         <location filename="mainwindow.cpp" line="302"/>
         <source>New Child</source>
         <translation>Новый элемент</translation>
@@ -707,24 +708,24 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="576"/>
+        <location filename="mainwindow.cpp" line="601"/>
         <source>Do you want to save your changes?</source>
         <translation>Сохранить изменения?</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="914"/>
-        <location filename="mainwindow.cpp" line="922"/>
-        <location filename="mainwindow.cpp" line="924"/>
+        <location filename="mainwindow.cpp" line="941"/>
+        <location filename="mainwindow.cpp" line="949"/>
+        <location filename="mainwindow.cpp" line="951"/>
         <source>Collapse all</source>
         <translation>Свернуть</translation>
     </message>
     <message>
-        <location filename="mainwindow.h" line="245"/>
+        <location filename="mainwindow.h" line="249"/>
         <source>Case sensitive</source>
         <translation>С учетом регистра букв</translation>
     </message>
     <message>
-        <location filename="mainwindow.h" line="246"/>
+        <location filename="mainwindow.h" line="250"/>
         <source>Clear List</source>
         <translation>Очистить список</translation>
     </message>
@@ -804,30 +805,30 @@
         <translation>Новый элемент</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1466"/>
+        <location filename="mainwindow.cpp" line="1491"/>
         <source>Currently selected: </source>
         <translation>В настоящее время выбрано:  </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1467"/>
+        <location filename="mainwindow.cpp" line="1492"/>
         <source>Row: </source>
         <oldsource>      Row: </oldsource>
         <translation>Ряд:  </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1468"/>
+        <location filename="mainwindow.cpp" line="1493"/>
         <source>Column: </source>
         <oldsource>      Column: </oldsource>
         <translation>Колонка:  </translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1469"/>
+        <location filename="mainwindow.cpp" line="1494"/>
         <source>Parent level：</source>
         <oldsource>      Parent level：</oldsource>
         <translation>Родительский уровень ：</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="1470"/>
+        <location filename="mainwindow.cpp" line="1495"/>
         <source>Children: </source>
         <translation>Дети:  </translation>
     </message>
