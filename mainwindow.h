@@ -204,6 +204,8 @@ private slots:
 
     void on_actionDiscussion_Forum_triggered();
 
+    void on_actionQuit_2_triggered();
+
 private:
     void initMenuToolsBar();
     void initFindReplace();

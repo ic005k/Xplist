@@ -35,7 +35,7 @@ QAction* actionSort;
 QUndoGroup* undoGroup;
 
 QString fileName;
-QVector<QString> filelist;
+//QVector<QString> filelist;
 QVector<QString> openFileList;
 
 int red = 0;
@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.42";
+    CurVerison = "1.0.43";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -64,12 +64,14 @@ MainWindow::MainWindow(QWidget* parent)
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1150, 650));
+    ui->actionQuit_2->setVisible(false);
     mac = true;
     //ui->actionCheck_Update->setVisible(false);
 #endif
 
 #ifdef Q_OS_LINUX
     linuxOS = true;
+    ui->actionQuit_2->setVisible(false);
 #endif
 
     myToolBar = ui->mainToolBar;
@@ -482,7 +484,6 @@ void MainWindow::openPlist(QString filePath)
     QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
 
     if (fi.exists()) {
-
         path = fi.path();
         QDir dir;
         if (dir.exists(path)) {
@@ -563,6 +564,8 @@ void MainWindow::openPlist(QString filePath)
 
 void MainWindow::closeOpenedFile(QString file)
 {
+    file = QDir::fromNativeSeparators(file);
+
     for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
         if (file == tabWidget->getTab(i)->getPath()) {
             tabWidget->closeTab(i);
@@ -588,11 +591,12 @@ void MainWindow::onTabCloseRequest(int i)
     if (i != -1)
         tabWidget->setCurrentIndex(i);
 
+    QString fn = tabWidget->getCurentTab()->getFileName();
+
     if (!undoGroup->isClean()) {
         // make tab active
         //if (i != -1) tabWidget->setCurrentIndex(i);
-        QString fn = tabWidget->getCurentTab()->getFileName();
-        // messageobox for save
+
         QMessageBox msgBox(this);
         msgBox.setIcon(QMessageBox::Question);
         msgBox.setText(tr("The document has been modified.") + "\n" + fn);
@@ -629,10 +633,11 @@ void MainWindow::onTabCloseRequest(int i)
     // remove stack from group
     undoGroup->removeStack(stack);
 
+    openFileList.removeOne(fn);
+    FileSystemWatcher::removeWatchPath(fn);
+
     // close tab
     tabWidget->closeTab();
-
-    watchFileModification();
 
     if (tabWidget->currentIndex() != -1)
         tabWidget->getCurentTab()->treeView->setFocus();
@@ -1022,9 +1027,7 @@ void MainWindow::dropEvent(QDropEvent* event)
     fileSuffix = str2.toLower();
 #endif
 
-    //qDebug() << fi.suffix().toLower() << fileList.at(0) << fileSuffix;
     if (fileSuffix == "kext") {
-
         QStringList kextList;
         for (int i = 0; i < list.count(); i++) {
             QString str3 = list.at(i);
@@ -2846,4 +2849,9 @@ void MainWindow::on_actionDiscussion_Forum_triggered()
 {
     QUrl url(QString("https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/"));
     QDesktopServices::openUrl(url);
+}
+
+void MainWindow::on_actionQuit_2_triggered()
+{
+    this->close();
 }

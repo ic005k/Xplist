@@ -54,7 +54,7 @@
      <x>0</x>
      <y>0</y>
      <width>1050</width>
-     <height>24</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -87,6 +87,8 @@
     <addaction name="actionClose_all"/>
     <addaction name="separator"/>
     <addaction name="actionNew_Window"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit_2"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -158,7 +160,7 @@
   <widget class="QDockWidget" name="dockWidget">
    <property name="minimumSize">
     <size>
-     <width>95</width>
+     <width>133</width>
      <height>175</height>
     </size>
    </property>
@@ -179,8 +181,8 @@
   <widget class="QDockWidget" name="dockWidgetFindReplace">
    <property name="minimumSize">
     <size>
-     <width>397</width>
-     <height>68</height>
+     <width>639</width>
+     <height>82</height>
     </size>
    </property>
    <attribute name="dockWidgetArea">
@@ -268,8 +270,8 @@
   <widget class="QDockWidget" name="dockShowSearchResults">
    <property name="minimumSize">
     <size>
-     <width>130</width>
-     <height>117</height>
+     <width>135</width>
+     <height>166</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -688,6 +690,14 @@
   <action name="actionDiscussion_Forum">
    <property name="text">
     <string>Discussion Forum</string>
+   </property>
+  </action>
+  <action name="actionQuit_2">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>

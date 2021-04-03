@@ -69,7 +69,6 @@ int main(int argc, char* argv[])
     if (!fileName.isEmpty()) {
         a->new_win();
     } else {
-
         mw_one = new MainWindow();
         mw_one->show();
     }
