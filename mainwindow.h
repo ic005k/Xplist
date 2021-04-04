@@ -37,6 +37,7 @@
 #include "domparser.h"
 #include "editortabswidget.h"
 #include "myhighlighter.h"
+#include "recentfiles.h"
 
 namespace Ui {
 class MainWindow;
@@ -53,7 +54,7 @@ public:
 
     QComboBox* cboxFileType;
 
-    void watchFileModification();
+    void addWatchFiles();
     void removeWatchFiles();
 
     void AddACPI(QString fileStr);
@@ -97,6 +98,7 @@ public slots:
     void on_NewWindow();
 
 private slots:
+    void recentOpen(QString filename);
     void on_copyBW();
     void on_pasteBW();
 
@@ -207,6 +209,9 @@ private slots:
     void on_actionQuit_2_triggered();
 
 private:
+    RecentFiles* m_recentFiles;
+    QMenu* reFileMenu;
+    void initRecentFilesForToolBar();
     void initMenuToolsBar();
     void initFindReplace();
     void initPlistTextShow();
@@ -225,8 +230,6 @@ private:
     void savePlist(QString filePath);
 
     enum { MaxRecentFiles = 10 };
-    void setRecentFiles(const QString& fileName);
-    void updateRecentFiles();
 
     int findCount = 0;
     QLabel* lblFindCount;

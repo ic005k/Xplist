@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     myapp.cpp \
     myhighlighter.cpp \
     mytreeview.cpp \
-    pugixml.cpp
+    pugixml.cpp \
+    recentfiles.cpp
 
 HEADERS  += mainwindow.h \
     MyTabBar.h \
@@ -63,7 +64,8 @@ HEADERS  += mainwindow.h \
     myhighlighter.h \
     mytreeview.h \
     pugiconfig.hpp \
-    pugixml.hpp
+    pugixml.hpp \
+    recentfiles.h
 
 FORMS    += mainwindow.ui \
     editortab.ui

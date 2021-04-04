@@ -35,7 +35,6 @@ QAction* actionSort;
 QUndoGroup* undoGroup;
 
 QString fileName;
-//QVector<QString> filelist;
 QVector<QString> openFileList;
 
 int red = 0;
@@ -55,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.43";
+    CurVerison = "1.0.44";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -215,8 +214,6 @@ void MainWindow::initMenuToolsBar()
     // set shortcuts
     actionUndo->setShortcuts(QKeySequence::Undo);
     actionRedo->setShortcuts(QKeySequence::Redo);
-    //actionUndo->setIconVisibleInMenu(false);
-    //actionRedo->setIconVisibleInMenu(false);
 
     // add actions to menu
     ui->menuEdit->addAction(actionUndo);
@@ -227,17 +224,6 @@ void MainWindow::initMenuToolsBar()
     connect(undoGroup, SIGNAL(cleanChanged(bool)), this, SLOT(onCleanChanged(bool)));
 
     //File
-    connect(ui->actionFile1, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile2, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile3, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile4, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile5, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile6, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile7, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile8, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile9, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    connect(ui->actionFile10, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    updateRecentFiles();
 
     connect(ui->actionClose, SIGNAL(triggered()), this, SLOT(actionClose_activated()));
     connect(ui->actionClose_all, SIGNAL(triggered()), this, SLOT(actionClose_all_activated()));
@@ -274,22 +260,38 @@ void MainWindow::initMenuToolsBar()
     connect(collapseAction, &QAction::triggered, this, &MainWindow::on_collapseAction);
 
     // 初始化工具棒
-    ui->actionNew_Window->setIcon(QIcon(":/new/toolbar/res/nw.png"));
     ui->mainToolBar->addAction(ui->actionNew_Window);
 
     ui->mainToolBar->addSeparator();
 
     ui->mainToolBar->addAction(ui->actionOpen);
-    ui->actionOpen->setIcon(QIcon(":/new/toolbar/res/open.png"));
 
-    ui->actionNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
+    //最近打开的文件快捷通道
+    QToolButton* btn0 = new QToolButton(this);
+    btn0->setToolTip(tr("Open Recent..."));
+    btn0->setIcon(QIcon(":/new/toolbar/res/rp.png"));
+    btn0->setPopupMode(QToolButton::InstantPopup);
+    ui->mainToolBar->addWidget(btn0);
+    reFileMenu = new QMenu(this);
+    btn0->setMenu(reFileMenu);
+
+    //最近打开的文件
+    QCoreApplication::setOrganizationName("ic005k");
+    QCoreApplication::setOrganizationDomain("github.com/ic005k");
+    QCoreApplication::setApplicationName("PlistEdPlus");
+
+    m_recentFiles = new RecentFiles(this);
+    //m_recentFiles->attachToMenuAfterItem(ui->menuFile, tr("Save as"), SLOT(recentOpen(QString)));
+    m_recentFiles->setNumOfRecentFiles(10);
+
+    // 最近打开的文件快捷通道
+    initRecentFilesForToolBar();
+
     ui->mainToolBar->addAction(ui->actionNew);
 
     ui->mainToolBar->addAction(ui->actionSave);
-    ui->actionSave->setIcon(QIcon(":/new/toolbar/res/save.png"));
 
     ui->mainToolBar->addAction(ui->actionSave_as);
-    ui->actionSave_as->setIcon(QIcon(":/new/toolbar/res/saveas.png"));
 
     ui->mainToolBar->addSeparator();
 
@@ -413,6 +415,11 @@ void MainWindow::initMenuToolsBar()
     ui->actionCheck_Update->setIcon(QIcon(":/new/toolbar/res/cu.png"));
 }
 
+void MainWindow::recentOpen(QString filename)
+{
+    openPlist(filename);
+}
+
 void MainWindow::actionNew()
 {
     cboxFileType->setCurrentIndex(0);
@@ -444,7 +451,6 @@ void MainWindow::actionNew()
 
 void MainWindow::actionOpen()
 {
-    openFiles();
 }
 
 void MainWindow::actionClose_activated()
@@ -492,7 +498,6 @@ void MainWindow::openPlist(QString filePath)
 
         QString str = fi.fileName();
         baseName = string(str.toLocal8Bit());
-        //cout << baseName << endl;
 
         Plist::readPlist(baseName.c_str(), dict);
         if (binPlistFile) {
@@ -538,8 +543,13 @@ void MainWindow::openPlist(QString filePath)
 
         QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
         if (filePath != fn) {
-            setRecentFiles(filePath);
-            updateRecentFiles();
+
+            QSettings settings;
+            QFileInfo fInfo(filePath);
+            settings.setValue("currentDirectory", fInfo.absolutePath());
+            // qDebug() << settings.fileName(); //最近打开的文件所保存的位置
+            m_recentFiles->setMostRecentFile(filePath);
+            initRecentFilesForToolBar();
         }
 
         // 列宽自动适应最长的条目
@@ -556,7 +566,8 @@ void MainWindow::openPlist(QString filePath)
 
         loadText(filePath);
 
-        watchFileModification();
+        removeWatchFiles();
+        addWatchFiles();
     }
 
     loading = false;
@@ -574,10 +585,9 @@ void MainWindow::closeOpenedFile(QString file)
     }
 }
 
-void MainWindow::watchFileModification()
+void MainWindow::addWatchFiles()
 {
-    // 监控这个文件的变化
-    removeWatchFiles();
+
     openFileList.clear();
     for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
         QString file = tabWidget->getTab(i)->getPath();
@@ -706,7 +716,7 @@ void MainWindow::savePlist(QString filePath)
         undoGroup->activeStack()->clear();
         //undoGroup->activeStack()->setClean();
 
-        watchFileModification();
+        addWatchFiles();
 
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
 
@@ -740,6 +750,13 @@ void MainWindow::actionSaveAs()
             savePlist(str);
 
             this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
+
+            QSettings settings;
+            QFileInfo fInfo(str);
+            settings.setValue("currentDirectory", fInfo.absolutePath());
+            // qDebug() << settings.fileName(); //最近打开的文件所保存的位置
+            m_recentFiles->setMostRecentFile(str);
+            initRecentFilesForToolBar();
         }
     }
 }
@@ -888,43 +905,6 @@ void MainWindow::onCleanChanged(bool clean)
 {
 
     this->setWindowModified(!clean);
-}
-
-void MainWindow::setRecentFiles(const QString& fileName)
-{
-    QSettings settings("PlistEDPlus", "PlistEDPlus");
-
-    QStringList files = settings.value("recentFileList").toStringList();
-
-    // remove all inclusions
-    files.removeAll(fileName);
-
-    // add to begining
-    files.prepend(fileName);
-
-    while (files.size() > MaxRecentFiles)
-        files.removeLast();
-
-    settings.setValue("recentFileList", files);
-}
-
-void MainWindow::updateRecentFiles()
-{
-    QSettings settings("PlistEDPlus", "PlistEDPlus");
-    //settings.clear();
-    QStringList files = settings.value("recentFileList").toStringList();
-
-    int numRecentFiles = qMin(files.size(), (int)MaxRecentFiles);
-
-    for (int i = 0; i < numRecentFiles; ++i) {
-        QAction* action = ui->menuRecent_files->actions().at(i);
-        QString text = files.at(i);
-
-        if (QFileInfo(text).exists()) {
-            action->setText(text);
-            action->setVisible(true);
-        }
-    }
 }
 
 void MainWindow::openRecentFile()
@@ -1582,8 +1562,9 @@ void MainWindow::goPlistText()
 
                             QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
                             QString strBool = strNext.mid(1, strNext.length() - 4);
+                            QString strBool1 = strNext.mid(1, strNext.length() - 3);
 
-                            if (strBool == val) {
+                            if (strBool == val || strBool1 == val) {
                                 setBarMarkers();
 
                                 break;
@@ -1593,7 +1574,7 @@ void MainWindow::goPlistText()
 
                     if (index.column() == 2) {
 
-                        if (lineText.mid(1, lineText.length() - 4) == val) {
+                        if (lineText.mid(1, lineText.length() - 4) == val || lineText.mid(1, lineText.length() - 3) == val) {
 
                             QString strPrevious = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
 
@@ -2327,7 +2308,8 @@ void MainWindow::on_actionNew_Sibling_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
-    actionOpen();
+
+    openFiles();
 }
 
 void MainWindow::on_actionNew_triggered()
@@ -2854,4 +2836,18 @@ void MainWindow::on_actionDiscussion_Forum_triggered()
 void MainWindow::on_actionQuit_2_triggered()
 {
     this->close();
+}
+
+void MainWindow::initRecentFilesForToolBar()
+{
+    QStringList rfList = m_recentFiles->getRecentFiles();
+    reFileMenu->clear();
+    for (int i = 0; i < rfList.count(); i++) {
+        QFileInfo fi(rfList.at(i));
+        QAction* act = new QAction(QString::number(i + 1) + " . " + fi.baseName());
+        reFileMenu->addAction(act);
+        connect(act, &QAction::triggered, [=]() {
+            openPlist(m_recentFiles->getRecentFiles().at(i));
+        });
+    }
 }

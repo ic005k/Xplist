@@ -130,5 +130,6 @@ void FileSystemWatcher::fileUpdated(const QString& path)
         }
     }
 
-    mw_one->watchFileModification();
+    mw_one->removeWatchFiles();
+    mw_one->addWatchFiles();
 }

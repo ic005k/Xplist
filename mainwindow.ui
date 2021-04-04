@@ -54,34 +54,18 @@
      <x>0</x>
      <y>0</y>
      <width>1050</width>
-     <height>30</height>
+     <height>24</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuRecent_files">
-     <property name="title">
-      <string>Recent files</string>
-     </property>
-     <addaction name="actionFile1"/>
-     <addaction name="actionFile2"/>
-     <addaction name="actionFile3"/>
-     <addaction name="actionFile4"/>
-     <addaction name="actionFile5"/>
-     <addaction name="actionFile6"/>
-     <addaction name="actionFile7"/>
-     <addaction name="actionFile8"/>
-     <addaction name="actionFile9"/>
-     <addaction name="actionFile10"/>
-    </widget>
     <addaction name="actionNew"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
     <addaction name="separator"/>
-    <addaction name="menuRecent_files"/>
     <addaction name="separator"/>
     <addaction name="actionClose"/>
     <addaction name="actionClose_all"/>
@@ -134,7 +118,7 @@
     <addaction name="actionExpandAllOpenFile"/>
     <addaction name="actionShowPlistText"/>
    </widget>
-   <addaction name="menu"/>
+   <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuPreferences"/>
    <addaction name="menuHelp"/>
@@ -360,6 +344,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/save.png</normaloff>:/new/toolbar/res/save.png</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -377,6 +365,10 @@
    </property>
   </action>
   <action name="actionSave_as">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/saveas.png</normaloff>:/new/toolbar/res/saveas.png</iconset>
+   </property>
    <property name="text">
     <string>Save as</string>
    </property>
@@ -414,6 +406,10 @@
    </property>
   </action>
   <action name="actionNew">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/new.png</normaloff>:/new/toolbar/res/new.png</iconset>
+   </property>
    <property name="text">
     <string>New</string>
    </property>
@@ -571,6 +567,10 @@
    </property>
   </action>
   <action name="actionNew_Sibling">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/sibling.png</normaloff>:/new/toolbar/res/sibling.png</iconset>
+   </property>
    <property name="text">
     <string>New Sibling</string>
    </property>
@@ -579,6 +579,10 @@
    </property>
   </action>
   <action name="actionNew_Child">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/child.png</normaloff>:/new/toolbar/res/child.png</iconset>
+   </property>
    <property name="text">
     <string>New Child</string>
    </property>
@@ -587,6 +591,10 @@
    </property>
   </action>
   <action name="actionRemove_2">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/Remove.png</normaloff>:/new/toolbar/res/Remove.png</iconset>
+   </property>
    <property name="text">
     <string>Remove</string>
    </property>
@@ -603,6 +611,10 @@
    </property>
   </action>
   <action name="actionNew_Window">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/nw.png</normaloff>:/new/toolbar/res/nw.png</iconset>
+   </property>
    <property name="text">
     <string>New Window</string>
    </property>
@@ -645,6 +657,10 @@
    </property>
   </action>
   <action name="actionFindNext">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/2.png</normaloff>:/new/toolbar/res/2.png</iconset>
+   </property>
    <property name="text">
     <string>Go to the next</string>
    </property>
@@ -656,6 +672,10 @@
    </property>
   </action>
   <action name="actionFindPrevious">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/1.png</normaloff>:/new/toolbar/res/1.png</iconset>
+   </property>
    <property name="text">
     <string>Go to the previous</string>
    </property>
