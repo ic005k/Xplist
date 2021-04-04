@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
-    this->resize(QSize(1150, 650));
+    this->resize(QSize(1200, 650));
     ui->actionQuit_2->setVisible(false);
     mac = true;
     //ui->actionCheck_Update->setVisible(false);
@@ -490,6 +490,10 @@ void MainWindow::openPlist(QString filePath)
     QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
 
     if (fi.exists()) {
+        filePath = QDir::fromNativeSeparators(filePath);
+
+        removeWatchFiles();
+
         path = fi.path();
         QDir dir;
         if (dir.exists(path)) {
@@ -566,7 +570,6 @@ void MainWindow::openPlist(QString filePath)
 
         loadText(filePath);
 
-        removeWatchFiles();
         addWatchFiles();
     }
 
@@ -575,7 +578,7 @@ void MainWindow::openPlist(QString filePath)
 
 void MainWindow::closeOpenedFile(QString file)
 {
-    file = QDir::fromNativeSeparators(file);
+    //file = QDir::fromNativeSeparators(file);
 
     for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
         if (file == tabWidget->getTab(i)->getPath()) {
