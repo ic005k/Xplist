@@ -63,14 +63,13 @@ MainWindow::MainWindow(QWidget* parent)
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1200, 650));
-    ui->actionQuit_2->setVisible(false);
     mac = true;
     //ui->actionCheck_Update->setVisible(false);
 #endif
 
 #ifdef Q_OS_LINUX
     linuxOS = true;
-    ui->actionQuit_2->setVisible(false);
+
 #endif
 
     myToolBar = ui->mainToolBar;
@@ -232,6 +231,9 @@ void MainWindow::initMenuToolsBar()
 
     connect(ui->actionNew_Window, SIGNAL(triggered()), this, SLOT(on_NewWindow()));
     ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
+
+    //Quit
+    ui->actionQuit_2->setMenuRole(QAction::QuitRole);
 
     //Edit
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
@@ -578,7 +580,6 @@ void MainWindow::openPlist(QString filePath)
 
 void MainWindow::closeOpenedFile(QString file)
 {
-    //file = QDir::fromNativeSeparators(file);
 
     for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
         if (file == tabWidget->getTab(i)->getPath()) {
@@ -1028,7 +1029,6 @@ void MainWindow::dropEvent(QDropEvent* event)
 #endif
 
             kextList.append(str4);
-            //qDebug() << str4;
         }
 
         addKexts(kextList);

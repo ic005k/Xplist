@@ -26,7 +26,11 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 signals:
-    void dataChanged(const QModelIndex&, QString) const;
+    void dataChanged(const QModelIndex &, QString) const;
+
+private slots:
+    void on_setText();
+    void on_textChanged();
 
 private:
     static bool checkInput(const QString& type, const QString& val, int col);

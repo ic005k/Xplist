@@ -24,12 +24,8 @@ QWidget* LineEditDelegate::createEditor(QWidget* parent,
     DomModel* model = tab->getModel();
     QModelIndex index = tab->currentIndex();
     DomItem* item = model->itemForIndex(index);
-    //数组编号不允许编辑
-    //if(index.column() == 0 && item->parent()->getType() == "array" && item->getName().mid(0, 4) == "Item")
-    //    return 0;
 
     if (index.column() == 1) {
-
         return 0;
     }
 
@@ -52,8 +48,8 @@ void LineEditDelegate::setEditorData(QWidget* editor,
     const QModelIndex& index) const
 {
     lineEdit = static_cast<QLineEdit*>(editor);
-
-    setTextCompleter(lineEdit);
+    connect(lineEdit, &QLineEdit::editingFinished, this, &LineEditDelegate::on_setText);
+    connect(lineEdit, &QLineEdit::textChanged, this, &LineEditDelegate::on_textChanged);
 
     QString value = index.data().toString();
 
@@ -61,10 +57,20 @@ void LineEditDelegate::setEditorData(QWidget* editor,
     DomModel* model = tab->getModel();
     DomItem* item = model->itemForIndex(index);
 
+    if (item->getType() == "string")
+        setTextCompleter(lineEdit);
+
+    if (item->getType() == "data") {
+        QRegExp regx("[A-Fa-f0-9]{2,1024}");
+        QValidator* validator = new QRegExpValidator(regx, lineEdit);
+        lineEdit->setValidator(validator);
+        //lineEdit->setPlaceholderText(tr("Hexadecimal"));
+    }
+
     if (item->getType() == "date" && index.column() == 2) {
-        if (value == "") //目前格式待定
-            //value = QDateTime::currentDateTime().toString("MMM dd,  yyyy at hh:mm:ss");
-            value = QDate::currentDate().toString("yyyy-MM-ddT") + QTime::currentTime().toString("hh:mm:ssZ");
+        if (value == "")
+            value = QDate::currentDate().toString("yyyy-MM-ddT")
+                + QTime::currentTime().toString("hh:mm:ssZ");
     }
 
     lineEdit->setText(value);
@@ -221,9 +227,25 @@ void setTextCompleter(QLineEdit* editor)
     textList.append("SystemText");
     textList.append("SystemGeneric");
     textList.append("System");
+    textList.append("OEM");
 
     QCompleter* editFindCompleter = new QCompleter(textList);
     editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
-    editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
+    editFindCompleter->setCompletionMode(QCompleter::PopupCompletion);
     editor->setCompleter(editFindCompleter);
 }
+
+void LineEditDelegate::on_setText()
+{
+    EditorTab* tab = tabWidget->getCurentTab();
+    DomModel* model = tab->getModel();
+    QModelIndex index = tab->currentIndex();
+    DomItem* item = model->itemForIndex(index);
+
+    if (item->getType() == "data") {
+        QString str = lineEdit->text();
+        lineEdit->setText(str.toUpper());
+    }
+}
+
+void LineEditDelegate::on_textChanged() { }
