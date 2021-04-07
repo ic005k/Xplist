@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.44";
+    CurVerison = "1.0.45";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -233,7 +233,7 @@ void MainWindow::initMenuToolsBar()
     ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
 
     //Quit
-    ui->actionQuit_2->setMenuRole(QAction::QuitRole);
+    ui->actionQuit->setMenuRole(QAction::QuitRole);
 
     //Edit
     ui->actionCopy->setShortcuts(QKeySequence::Copy);
