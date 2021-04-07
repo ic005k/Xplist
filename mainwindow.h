@@ -103,7 +103,7 @@ private slots:
     void on_pasteBW();
 
     void actionNew();
-    void actionOpen();
+
     void actionClose_activated();
     void actionClose_all_activated();
 

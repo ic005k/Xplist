@@ -451,10 +451,6 @@ void MainWindow::actionNew()
     loading = false;
 }
 
-void MainWindow::actionOpen()
-{
-}
-
 void MainWindow::actionClose_activated()
 {
     if (tabWidget->hasTabs()) {

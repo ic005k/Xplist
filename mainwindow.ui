@@ -328,9 +328,6 @@
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
-   <property name="shortcutVisibleInContextMenu">
-    <bool>false</bool>
-   </property>
   </action>
   <action name="actionClose">
    <property name="text">
@@ -363,9 +360,6 @@
    <property name="iconVisibleInMenu">
     <bool>true</bool>
    </property>
-   <property name="shortcutVisibleInContextMenu">
-    <bool>false</bool>
-   </property>
   </action>
   <action name="actionSave_as">
    <property name="icon">
@@ -383,9 +377,6 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
-   </property>
-   <property name="shortcutVisibleInContextMenu">
-    <bool>false</bool>
    </property>
   </action>
   <action name="actionQuit">
@@ -424,9 +415,6 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
-   </property>
-   <property name="shortcutVisibleInContextMenu">
-    <bool>false</bool>
    </property>
   </action>
   <action name="actionAbout">
