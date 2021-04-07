@@ -1,6 +1,20 @@
 [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 # PlistEDPlus - open source cross-platform lightweight Plist file editor
 
+| [Release][release-link]|[Download][download-link]|[Issues][issues-link]|
+|-----------------|-----------------|-----------------|
+|[![release-badge](https://img.shields.io/github/release/ic005k/PlistEDPlus.svg?style=flat-square "Release status")](https://github.com/ic005k/PlistEDPlus/releases "Release status") | [![download-badge](https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status")](https://github.com/ic005k/PlistEDPlus/releases/latest "Download status")|[![issues-badge](https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues")](https://github.com/ic005k/PlistEDPlus/issues "Issues")|
+
+[download-link]: https://github.com/ic005k/PlistEDPlus/releases/latest "Download status"
+[download-badge]: https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status"
+
+[release-link]: https://github.com/ic005k/PlistEDPlus/releases "Release status"
+[release-badge]: https://img.shields.io/github/release/ic005k/PlistEDPlus.svg?style=flat-square "Release status"
+
+[issues-link]: https://github.com/ic005k/PlistEDPlus/issues "Issues"
+[issues-badge]: https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues"
+
+
 Write in front: The prototype of this software is from: https://github.com/alpex92/PlistED , thanks to this prototype, not to let me start coding from zero, thanks to @alpex92!
 
 When writing this software, actually some hesitation, similar software seems to be quite a lot, plus the relationship of time, has not paid substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus...
