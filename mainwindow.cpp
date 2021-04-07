@@ -2832,11 +2832,6 @@ void MainWindow::on_actionDiscussion_Forum_triggered()
     QDesktopServices::openUrl(url);
 }
 
-void MainWindow::on_actionQuit_2_triggered()
-{
-    this->close();
-}
-
 void MainWindow::initRecentFilesForToolBar()
 {
     QStringList rfList = m_recentFiles->getRecentFiles();
@@ -2849,4 +2844,9 @@ void MainWindow::initRecentFilesForToolBar()
             openPlist(m_recentFiles->getRecentFiles().at(i));
         });
     }
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    this->close();
 }

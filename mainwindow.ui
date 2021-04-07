@@ -54,7 +54,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>24</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -72,7 +72,7 @@
     <addaction name="separator"/>
     <addaction name="actionNew_Window"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit_2"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -377,14 +377,6 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
-   </property>
-  </action>
-  <action name="actionQuit">
-   <property name="text">
-    <string>Quit</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionExpand_all">
@@ -703,7 +695,7 @@
     <string>Discussion Forum</string>
    </property>
   </action>
-  <action name="actionQuit_2">
+  <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
    </property>

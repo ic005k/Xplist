@@ -206,7 +206,7 @@ private slots:
 
     void on_actionDiscussion_Forum_triggered();
 
-    void on_actionQuit_2_triggered();
+    void on_actionQuit_triggered();
 
 private:
     RecentFiles* m_recentFiles;
