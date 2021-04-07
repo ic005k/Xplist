@@ -1,6 +1,20 @@
 [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 # PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
 
+| [最新发布][release-link]|[下载][download-link]|[问题反馈][issues-link]|
+|-----------------|-----------------|-----------------|
+|[![release-badge](https://img.shields.io/github/release/ic005k/PlistEDPlus.svg?style=flat-square "Release status")](https://github.com/ic005k/PlistEDPlus/releases "Release status") | [![download-badge](https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status")](https://github.com/ic005k/PlistEDPlus/releases/latest "Download status")|[![issues-badge](https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues")](https://github.com/ic005k/PlistEDPlus/issues "Issues")|
+
+[download-link]: https://github.com/ic005k/PlistEDPlus/releases/latest "Download status"
+[download-badge]: https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status"
+
+[release-link]: https://github.com/ic005k/PlistEDPlus/releases "Release status"
+[release-badge]: https://img.shields.io/github/release/ic005k/PlistEDPlus.svg?style=flat-square "Release status"
+
+[issues-link]: https://github.com/ic005k/PlistEDPlus/issues "Issues"
+[issues-badge]: https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues"
+
+
 写在前面：该软件的原型来自：https://github.com/alpex92/PlistED  ，由于这个原型的存在，不至于使我从头开始码砖，感谢@alpex92！
 
 写这个软件的时候，其实有些犹豫，类似的软件貌似也不少，再加上时间的关系，一直没有付出实质的行动。但写一款Plist编辑器的想法，一直挥之不去，所以最终促成了PlistEDPlus...
