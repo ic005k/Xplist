@@ -31,8 +31,9 @@ jobs:
           cached: 'false'
       
       - name: ubuntu install GL library
-        run: sudo apt-get install -y libglew-dev libglfw3-dev
-        run: wget -c "https://github.com/jimevins/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+        run: sudo apt-get install -y libglew-dev libglfw3-dev linuxdeployqt
+        
+        #run: wget -c "https://github.com/jimevins/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
       
       - uses: actions/checkout@v2
         with:
