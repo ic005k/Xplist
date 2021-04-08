@@ -33,11 +33,7 @@ jobs:
       - name: ubuntu install GL library
         run: sudo apt-get install -y libglew-dev libglfw3-dev
        
-      - name: linuxqt
-        run: |
-          find appdir/
-          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+      
       
       - uses: actions/checkout@v2
         with:
@@ -46,7 +42,11 @@ jobs:
         run: |
           qmake
           make
-                  
+      - name: linuxqt # find appdir/
+        run: |
+          
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
           
       # 打包
       # 拷贝依赖
@@ -54,7 +54,7 @@ jobs:
       - name: package
         run: |
           
-          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -appimage
+          linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
