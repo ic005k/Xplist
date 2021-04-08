@@ -54,7 +54,7 @@ jobs:
       - name: package
         run: |
           
-          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -appimage
+          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
