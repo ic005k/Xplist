@@ -27,6 +27,7 @@ jobs:
         
     env:
         targetName: PlistEDPlus
+        VERSION: 1.0.46
       
     steps:
       
@@ -65,8 +66,8 @@ jobs:
         with:
           #name: ${{ env.targetName }} # .zip
           #path: bin/release/${{ env.targetName }}.Appimage
-          name: ${{ env.targetName }}-${VERSION}-x86_64.AppImage
-          path: bin/release/${{ env.targetName }}-${VERSION}-x86_64.AppImage
+          name: ${{ env.targetName }}-${{ env.VERSION }}-x86_64.AppImage
+          path: bin/release/${{ env.targetName }}-${{ env.VERSION }}-x86_64.AppImage
           
           
     
