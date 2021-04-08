@@ -65,7 +65,7 @@ jobs:
           #name: ${{ env.targetName }} # .zip
           #path: bin/release/${{ env.targetName }}.Appimage
           name: ${{ env.targetName }}*.Appimage
-          path: bin/release/${{ env.targetName }}*.Appimage
+          path: bin/release/*.Appimage
           
           
     
