@@ -37,7 +37,7 @@ jobs:
           cached: 'false'
       
       - name: ubuntu install GL library
-        run: sudo apt-get install -y libglew-dev libglfw3-dev
+        run: sudo apt-get install -y libglew-dev libglfw3-dev libxcb*
                    
       - uses: actions/checkout@v2
         with:
@@ -53,14 +53,14 @@ jobs:
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
           
       # 打包
-      #- name: package
-      #  run: |
-      #   ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
+      - name: package
+        run: |
+         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
-      #- uses: actions/upload-artifact@v2
-      #  with:
-      #    name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}} # .zip
-      #    path: bin/release/${{ env.targetName }}.Appimage
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}} # .zip
+          path: bin/release/${{ env.targetName }}.Appimage
           
     
