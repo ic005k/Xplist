@@ -53,7 +53,7 @@ jobs:
       - name: package
         run: |
           
-          linuxdeployqt*.AppImage bin/release/${targetName} -appimage
+          ./linuxdeployqt bin/release/${targetName} -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
