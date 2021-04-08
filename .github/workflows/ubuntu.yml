@@ -57,6 +57,7 @@ jobs:
         run: |
          cp icon.png bin/release/icon.png
          cp default.desktop bin/release/default.desktop
+         export VERSION=1.0.46 # linuxdeployqt uses this for naming the file
          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
@@ -64,8 +65,8 @@ jobs:
         with:
           #name: ${{ env.targetName }} # .zip
           #path: bin/release/${{ env.targetName }}.Appimage
-          name: ${{ env.targetName }}*.Appimage
-          path: bin/release/*.Appimage
+          name: ${{ env.targetName }}-${VERSION}-x86_64.AppImage
+          path: bin/release/${{ env.targetName }}-${VERSION}-x86_64.AppImage
           
           
     
