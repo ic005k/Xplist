@@ -32,9 +32,12 @@ jobs:
       
       - name: ubuntu install GL library
         run: sudo apt-get install -y libglew-dev libglfw3-dev linuxdeployqt
-        
-      - wget -c "https://github.com/jimevins/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-      - chmod a+x linuxdeployqt*.AppImage
+       
+      - name: linuxqt
+        run: |
+          wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+      
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
@@ -42,18 +45,14 @@ jobs:
         run: |
           qmake
           make
+                  
           
-          # after_success:
-      # Download AppImage QT deployment tool (local snapshot -- original at github/probono)
-           
-      #- wget -c "https://github.com/jimevins/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" 
-      #- chmod a+x linuxdeployqt*.AppImage
-          
-          # 打包
+      # 打包
+      # 拷贝依赖
+      # macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg
       - name: package
         run: |
-          # 拷贝依赖
-          # macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg
+          
           linuxdeployqt*.AppImage bin/release/${targetName} -appimage
           
       # 上传artifacts          
