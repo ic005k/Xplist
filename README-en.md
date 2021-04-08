@@ -1,9 +1,9 @@
 [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 # PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
 
-| [最新发布][release-link]|[下载][download-link]|[问题反馈][issues-link]|
-|-----------------|-----------------|-----------------|
-|[![release-badge](https://img.shields.io/github/release/ic005k/PlistEDPlus.svg?style=flat-square "Release status")](https://github.com/ic005k/PlistEDPlus/releases "Release status") | [![download-badge](https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status")](https://github.com/ic005k/PlistEDPlus/releases/latest "Download status")|[![issues-badge](https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues")](https://github.com/ic005k/PlistEDPlus/issues "Issues")|
+| [最新发布][release-link]|[下载][download-link]|[问题反馈][issues-link]|[讨论区][discourse-link]|
+|-----------------|-----------------|-----------------|-----------------|
+|[![release-badge](https://img.shields.io/github/release/ic005k/PlistEDPlus.svg?style=flat-square "Release status")](https://github.com/ic005k/PlistEDPlus/releases "Release status") | [![download-badge](https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status")](https://github.com/ic005k/PlistEDPlus/releases/latest "Download status")|[![issues-badge](https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues")](https://github.com/ic005k/PlistEDPlus/issues "Issues")|[![discourse](https://img.shields.io/badge/forum-discourse-orange.svg)](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)|
 
 [download-link]: https://github.com/ic005k/PlistEDPlus/releases/latest "Download status"
 [download-badge]: https://img.shields.io/github/downloads/ic005k/PlistEDPlus/total.svg?style=flat-square "Download status"
@@ -14,6 +14,7 @@
 [issues-link]: https://github.com/ic005k/PlistEDPlus/issues "Issues"
 [issues-badge]: https://img.shields.io/badge/github-issues-red.svg?maxAge=60 "Issues"
 
+[discourse-link]: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
 写在前面：该软件的原型来自：https://github.com/alpex92/PlistED  ，由于这个原型的存在，不至于使我从头开始码砖，感谢@alpex92！
 
