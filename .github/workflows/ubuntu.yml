@@ -55,6 +55,8 @@ jobs:
       # 打包
       - name: package
         run: |
+         cp icon.png bin/release/icon.png
+         cp default.desktop bin/release/default.desktop
          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
