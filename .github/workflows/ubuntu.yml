@@ -42,9 +42,9 @@ jobs:
         run: |
           qmake
           make
-      - name: linuxqt # find appdir/
+      - name: linuxqt # 
         run: |
-          
+          find appdir/
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
           
@@ -54,7 +54,7 @@ jobs:
       - name: package
         run: |
           
-          linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -appimage
+          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
