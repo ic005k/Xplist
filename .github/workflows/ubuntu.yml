@@ -57,14 +57,13 @@ jobs:
         run: |
          cp icon.png bin/release/icon.png
          cp default.desktop bin/release/default.desktop
-         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
+         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} ${{ env.targetName }} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
         with:
-          #name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}} # .zip
-          #path: bin/release/${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}}.Appimage
-          name: ${{ steps.package.outputs.packageName }}
-          path: ${{ steps.package.outputs.packageName }}.Appimage
+          name: ${{ env.targetName }} # .zip
+          path: bin/release/${{ env.targetName }}.Appimage
+          
           
     
