@@ -57,7 +57,7 @@ jobs:
         run: |
          cp icon.png bin/release/icon.png
          cp default.desktop bin/release/default.desktop
-         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/default.desktop -unsupported-allow-new-glibc -appimage
+         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${ env.targetName } -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
