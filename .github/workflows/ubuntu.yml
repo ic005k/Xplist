@@ -46,7 +46,7 @@ jobs:
         run: |
           
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-          sudo chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
+          chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
           
       # 打包
       # 拷贝依赖
