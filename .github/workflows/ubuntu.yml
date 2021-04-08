@@ -22,6 +22,10 @@ jobs:
         os: [ubuntu-20.04]
         qt_ver: [5.15.2]
         qt_arch: [gcc_64]
+        
+    env:
+        targetName: PlistEDPlus
+      
     steps:
       
       - name: Install Qt
@@ -32,9 +36,7 @@ jobs:
       
       - name: ubuntu install GL library
         run: sudo apt-get install -y libglew-dev libglfw3-dev
-       
-      
-      
+                   
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
@@ -42,9 +44,9 @@ jobs:
         run: |
           qmake
           make
-      - name: linuxqt # 
-        run: |
           
+      - name: install linuxdeployqt 
+        run: |
           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
           
@@ -53,8 +55,7 @@ jobs:
       # macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg
       - name: package
         run: |
-          
-          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
+         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
