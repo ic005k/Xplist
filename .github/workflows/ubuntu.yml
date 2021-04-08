@@ -62,8 +62,10 @@ jobs:
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.targetName }} # .zip
-          path: bin/release/${{ env.targetName }}.Appimage
+          #name: ${{ env.targetName }} # .zip
+          #path: bin/release/${{ env.targetName }}.Appimage
+          name: ${targetName}*.Appimage
+          path: bin/release/${targetName}*.Appimage
           
           
     
