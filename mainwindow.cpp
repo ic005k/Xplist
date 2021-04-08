@@ -64,7 +64,9 @@ MainWindow::MainWindow(QWidget* parent)
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1200, 650));
     mac = true;
-    //ui->actionCheck_Update->setVisible(false);
+#if (QT_VERSION <= QT_VERSION_CHECK(5, 9, 9))
+    ui->actionCheck_Update->setVisible(false);
+#endif
 #endif
 
 #ifdef Q_OS_LINUX
