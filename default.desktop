@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=PlistEDPlus
+Exec=AppRun %F
+Icon=icon
+Comment=PlistEditor
+Categories=Application;
+Terminal=true
