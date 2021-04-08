@@ -19,8 +19,10 @@ jobs:
       matrix:
         #os: [ubuntu-18.04,ubuntu-20.04]
         # qt_ver: [5.9.9,5.12.10,5.15.2]
+        
         os: [ubuntu-20.04]
         qt_ver: [5.15.2]
+        
         qt_arch: [gcc_64]
         
     env:
@@ -51,16 +53,14 @@ jobs:
           chmod a+x linuxdeployqt-continuous-x86_64.AppImage            
           
       # 打包
-      # 拷贝依赖
-      # macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg
-      - name: package
-        run: |
-         ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
+      #- name: package
+      #  run: |
+      #   ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
       # 上传artifacts          
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}} # .zip
-          path: bin/release/${{ env.targetName }}.Appimage
+      #- uses: actions/upload-artifact@v2
+      #  with:
+      #    name: ${{ env.targetName }}_${{ matrix.os }}_${{matrix.qt_ver}} # .zip
+      #    path: bin/release/${{ env.targetName }}.Appimage
           
     
