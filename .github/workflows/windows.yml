@@ -85,7 +85,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.package.outputs.packageName }}
-          path: ${{ steps.package.outputs.packageName }}.zip
+          path: ${{ steps.package.outputs.packageName }}.7z
           
       # tag 上传Release
       #- name: uploadRelease
