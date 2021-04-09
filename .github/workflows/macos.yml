@@ -24,8 +24,7 @@ jobs:
     env:
       targetName: PlistEDPlus
       VERSION: 1.0.46
-      qt_ver_osx: 10.12,10.13
-      
+            
     steps:
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.13.0
@@ -48,7 +47,7 @@ jobs:
       # 上传artifacts          
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.targetName }}_${{ matrix.os }}_${{env.VERSION}}_${{env.qt_ver_osx}} # .zip
+          name:  ${{ env.targetName }}_${{ matrix.os }}_${{ matrix.qt_ver }} # .zip
           path: bin/release/${{ env.targetName }}.dmg
           
           
