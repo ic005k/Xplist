@@ -31,7 +31,7 @@ jobs:
             qt_arch_install: msvc2019_64          
           
     env:
-      targetName: OCAuxiliaryTools.exe
+      targetName: PlistEDPlus.exe
     # 步骤
     steps:
       # 安装Qt
