@@ -65,9 +65,7 @@ jobs:
           echo vcToolsInstallDir=%VCToolsInstallDir% >> %GITHUB_ENV%
           echo vcToolsRedistDir=%VCToolsRedistDir% >> %GITHUB_ENV%
           
-          cp ExtBin/libcrypto-1_1-x64.dll libcrypto-1_1-x64.dll
-          cp ExtBin/libssl-1_1-x64.dll libssl-1_1-x64.dll
-          cp ExtBin/msvcr100.dll msvcr100.dll
+          
       # 打包 
       - name: package
         id: package      
