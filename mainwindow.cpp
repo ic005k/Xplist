@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "filesystemwatcher.h"
-#include "myapp.h"
+#include "myapp.h" 
 
 #include "Plist.hpp"
 #include "mytreeview.h"
