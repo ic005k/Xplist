@@ -17,6 +17,7 @@
 [discourse-link]: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
 关于文件名的说明：
+
 PlistEDPlus_macos-10.15_5.9.9.dmg    适用于OSX10.12及以下
 
 PlistEDPlus_macos-10.15_5.15.2.dmg   适用于OSX10.13及以上
