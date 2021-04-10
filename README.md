@@ -18,9 +18,9 @@
 
 Note on file names：
 
-PlistEDPlus_macos-10.15_5.9.9.dmg          For OSX 10.12 and below
+PlistEDPlus_macos-10.15_5.9.9.dmg          （For OSX 10.12 and below）
 
-PlistEDPlus_macos-10.15_5.15.2.dmg         For OSX 10.13 and above
+PlistEDPlus_macos-10.15_5.15.2.dmg         （For OSX 10.13 and above）
 
 
 
