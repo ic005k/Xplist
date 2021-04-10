@@ -24,7 +24,7 @@ jobs:
         qt_arch: [clang_64]
     env:
       targetName: PlistEDPlus
-      VERSION: Mac10.12 And Below
+      VERSION: Mac10.12 and below
               
     steps:
       - name: Install Qt
