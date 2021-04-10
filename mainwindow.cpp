@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.46";
+    CurVerison = "1.0.44";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -64,9 +64,11 @@ MainWindow::MainWindow(QWidget* parent)
     ui->mainToolBar->setIconSize(QSize(28, 28));
     this->resize(QSize(1200, 650));
     mac = true;
+
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 9, 9))
-    ui->actionCheck_Update->setVisible(false);
+    ui->actionCheck_Update->setVisible(true);
 #endif
+
 #endif
 
 #ifdef Q_OS_LINUX
@@ -1757,15 +1759,23 @@ int MainWindow::parse_UpdateJSON(QString str)
         QVariantList list = root_Obj.value("assets").toArray().toVariantList();
         for (int i = 0; i < list.count(); i++) {
             QVariantMap map = list[i].toMap();
-            QFileInfo file(map["name"].toString());
-            if (file.suffix().toLower() == "zip")
+
+            QString fName = map["name"].toString();
+
+            if (fName.contains("5.15.2"))
                 macUrl = map["browser_download_url"].toString();
+            else
+                macUrl = "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
-            if (file.suffix().toLower() == "7z")
+            if (fName.contains("Win"))
                 winUrl = map["browser_download_url"].toString();
+            else
+                macUrl = "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
-            if (file.suffix() == "AppImage")
+            if (fName.contains("Linux"))
                 linuxUrl = map["browser_download_url"].toString();
+            else
+                macUrl = "https://github.com/ic005k/PlistEDPlus/releases/latest";
         }
 
         QJsonObject PulseValue = root_Obj.value("assets").toObject();
