@@ -32,7 +32,7 @@ jobs:
           
     env:
       targetName: PlistEDPlus.exe
-      VERSION: Win64-1.0.46
+      VERSION: Win64
       orgName: PlistEDPlus
       
     # 步骤
