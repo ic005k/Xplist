@@ -1797,6 +1797,7 @@ int MainWindow::parse_UpdateJSON(QString str)
             QString warningStr = tr("New version detected!") + "\n" + tr("Version: ") + "V" + Verison + "\n" + tr("Published at: ") + UpdateTime + "\n" + tr("Release Notes: ") + "\n" + ReleaseNote;
             int ret = QMessageBox::warning(this, "", warningStr, tr("Download"), tr("Cancel"));
             if (ret == 0) {
+                Url = "https://github.com/ic005k/PlistEDPlus/releases/latest";
                 QDesktopServices::openUrl(QUrl(Url));
             }
         } else
