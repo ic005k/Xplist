@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.45";
+    CurVerison = "1.0.46";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -1787,6 +1787,8 @@ int MainWindow::parse_UpdateJSON(QString str)
             Url = winUrl;
         if (linuxOS)
             Url = linuxUrl;
+        if (Url == "")
+            Url = "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
         QString UpdateTime = root_Obj.value("published_at").toString();
         QString ReleaseNote = root_Obj.value("body").toString();
