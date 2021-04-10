@@ -53,6 +53,7 @@ public:
     Ui::MainWindow* ui;
 
     QComboBox* cboxFileType;
+    bool osx1012 = false;
 
     void addWatchFiles();
     void removeWatchFiles();

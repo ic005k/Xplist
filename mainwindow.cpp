@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.46";
+    CurVerison = "1.0.45";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -66,7 +66,8 @@ MainWindow::MainWindow(QWidget* parent)
     mac = true;
 
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 9, 9))
-    ui->actionCheck_Update->setVisible(true);
+    osx1012 = true;
+    mac = false;
 #endif
 
 #endif
@@ -1755,7 +1756,7 @@ int MainWindow::parse_UpdateJSON(QString str)
     if (root_Doc.isObject()) {
         QJsonObject root_Obj = root_Doc.object();
 
-        QString macUrl, winUrl, linuxUrl;
+        QString macUrl, winUrl, linuxUrl, osx1012Url;
         QVariantList list = root_Obj.value("assets").toArray().toVariantList();
         for (int i = 0; i < list.count(); i++) {
             QVariantMap map = list[i].toMap();
@@ -1764,18 +1765,15 @@ int MainWindow::parse_UpdateJSON(QString str)
 
             if (fName.contains("5.15.2"))
                 macUrl = map["browser_download_url"].toString();
-            else
-                macUrl = "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
             if (fName.contains("Win"))
                 winUrl = map["browser_download_url"].toString();
-            else
-                macUrl = "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
             if (fName.contains("Linux"))
                 linuxUrl = map["browser_download_url"].toString();
-            else
-                macUrl = "https://github.com/ic005k/PlistEDPlus/releases/latest";
+
+            if (fName.contains("5.9.9"))
+                osx1012Url = map["browser_download_url"].toString();
         }
 
         QJsonObject PulseValue = root_Obj.value("assets").toObject();
@@ -1783,6 +1781,8 @@ int MainWindow::parse_UpdateJSON(QString str)
         QString Url;
         if (mac)
             Url = macUrl;
+        if (osx1012)
+            Url = osx1012Url;
         if (win)
             Url = winUrl;
         if (linuxOS)
