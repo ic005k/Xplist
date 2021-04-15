@@ -50,7 +50,7 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     lblTips = new QTextBrowser(this);
     lblTips->setLineWrapMode(QTextEdit::NoWrap);
-    lblTips->setStyleSheet("QTextEdit{background-color:rgb(255,255,55);color:rgb(55,55,55);}");
+    lblTips->setStyleSheet("QTextEdit{background-color:rgb(255,255,224);color:rgb(55,55,55);}");
     lblTips->setFixedHeight(0);
     lblTips->setHidden(true);
 
