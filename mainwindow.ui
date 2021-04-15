@@ -54,7 +54,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>30</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -326,7 +326,7 @@
     <string>Ctrl+O</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionClose">
@@ -358,7 +358,7 @@
     <string>Ctrl+S</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionSave_as">
@@ -376,7 +376,7 @@
     <string>Ctrl+Alt+S</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionExpand_all">
@@ -406,7 +406,7 @@
     <string>Ctrl+N</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionAbout">
@@ -545,8 +545,15 @@
    </property>
   </action>
   <action name="actionCheck_Update">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/new/toolbar/res/cu.png</normaloff>:/new/toolbar/res/cu.png</iconset>
+   </property>
    <property name="text">
     <string>Check Update</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionNew_Sibling">
@@ -558,7 +565,7 @@
     <string>New Sibling</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionNew_Child">
@@ -570,7 +577,7 @@
     <string>New Child</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionRemove_2">
@@ -582,7 +589,7 @@
     <string>Remove</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionExpandAllOpenFile">
@@ -600,6 +607,9 @@
    </property>
    <property name="text">
     <string>New Window</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionCopy_between_windows">
@@ -651,7 +661,7 @@
     <string>Ctrl+2</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionFindPrevious">
@@ -666,7 +676,7 @@
     <string>Ctrl+1</string>
    </property>
    <property name="iconVisibleInMenu">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionReplace">

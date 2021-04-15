@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "filesystemwatcher.h"
-#include "myapp.h" 
+#include "myapp.h"
 
 #include "Plist.hpp"
 #include "mytreeview.h"
@@ -214,6 +214,8 @@ void MainWindow::initMenuToolsBar()
     undoGroup = new QUndoGroup(this);
     actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
     actionRedo = undoGroup->createRedoAction(this, tr("Redo"));
+    actionUndo->setIconVisibleInMenu(false);
+    actionRedo->setIconVisibleInMenu(false);
 
     // set shortcuts
     actionUndo->setShortcuts(QKeySequence::Undo);
