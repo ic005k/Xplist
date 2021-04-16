@@ -1886,11 +1886,12 @@ void MainWindow::on_copyBW()
         int ci = tabWidget->currentIndex();
         on_copyAction();
         actionNew();
-        if (win || linuxOS) {
-            int count = tabWidget->tabBar()->count();
-            tabWidget->tabBar()->setTabVisible(count - 1, false);
-            tabWidget->setCurrentIndex(count - 1);
-        }
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        int count = tabWidget->tabBar()->count();
+        tabWidget->tabBar()->setTabVisible(count - 1, false);
+        tabWidget->setCurrentIndex(count - 1);
+#endif
 
         on_actionNewChild();
 
@@ -1926,11 +1927,11 @@ void MainWindow::on_pasteBW()
         ui->actionExpandAllOpenFile->setChecked(false);
         openPlist(fn);
 
-        if (win || linuxOS) {
-            int count = tabWidget->tabBar()->count();
-            tabWidget->tabBar()->setTabVisible(count - 1, false);
-            tabWidget->setCurrentIndex(count - 1);
-        }
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+        int count = tabWidget->tabBar()->count();
+        tabWidget->tabBar()->setTabVisible(count - 1, false);
+        tabWidget->setCurrentIndex(count - 1);
+#endif
 
         ui->actionExpandAllOpenFile->setChecked(bak);
 
