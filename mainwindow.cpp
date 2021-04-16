@@ -1872,10 +1872,10 @@ void MainWindow::removeWatchFiles()
 void MainWindow::on_copyBW()
 {
     if (tabWidget->hasTabs()) {
-        DomModel *model;
-        EditorTab *tab = tabWidget->getCurentTab();
+        DomModel* model;
+        EditorTab* tab = tabWidget->getCurentTab();
         model = tab->getModel();
-        DomItem *item;
+        DomItem* item;
         QModelIndex index = tab->currentIndex();
         item = model->itemForIndex(index);
         if (item->getName() == "plist")
@@ -1886,10 +1886,11 @@ void MainWindow::on_copyBW()
         int ci = tabWidget->currentIndex();
         on_copyAction();
         actionNew();
-
-        int count = tabWidget->tabBar()->count();
-        tabWidget->tabBar()->setTabVisible(count - 1, false);
-        tabWidget->setCurrentIndex(count - 1);
+        if (win || linuxOS) {
+            int count = tabWidget->tabBar()->count();
+            tabWidget->tabBar()->setTabVisible(count - 1, false);
+            tabWidget->setCurrentIndex(count - 1);
+        }
 
         on_actionNewChild();
 
@@ -1925,9 +1926,11 @@ void MainWindow::on_pasteBW()
         ui->actionExpandAllOpenFile->setChecked(false);
         openPlist(fn);
 
-        int count = tabWidget->tabBar()->count();
-        tabWidget->tabBar()->setTabVisible(count - 1, false);
-        tabWidget->setCurrentIndex(count - 1);
+        if (win || linuxOS) {
+            int count = tabWidget->tabBar()->count();
+            tabWidget->tabBar()->setTabVisible(count - 1, false);
+            tabWidget->setCurrentIndex(count - 1);
+        }
 
         ui->actionExpandAllOpenFile->setChecked(bak);
 
