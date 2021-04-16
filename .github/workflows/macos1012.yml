@@ -43,7 +43,7 @@ jobs:
       - name: package
         run: |
           # 拷贝依赖
-          cp -f Info.plist bin/release/${targetName}.app/Contents/Info.plist
+          #cp -f Info.plist bin/release/${targetName}.app/Contents/Info.plist
           
           macdeployqt bin/release/${targetName}.app -qmldir=. -verbose=1 -dmg
           
