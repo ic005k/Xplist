@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.47";
+    CurVerison = "1.0.48";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -1872,12 +1872,25 @@ void MainWindow::removeWatchFiles()
 void MainWindow::on_copyBW()
 {
     if (tabWidget->hasTabs()) {
+        DomModel *model;
+        EditorTab *tab = tabWidget->getCurentTab();
+        model = tab->getModel();
+        DomItem *item;
+        QModelIndex index = tab->currentIndex();
+        item = model->itemForIndex(index);
+        if (item->getName() == "plist")
+            return;
 
         this->repaint();
 
         int ci = tabWidget->currentIndex();
         on_copyAction();
         actionNew();
+
+        int count = tabWidget->tabBar()->count();
+        tabWidget->tabBar()->setTabVisible(count - 1, false);
+        tabWidget->setCurrentIndex(count - 1);
+
         on_actionNewChild();
 
         on_pasteAction();
@@ -1911,6 +1924,11 @@ void MainWindow::on_pasteBW()
         bool bak = ui->actionExpandAllOpenFile->isChecked();
         ui->actionExpandAllOpenFile->setChecked(false);
         openPlist(fn);
+
+        int count = tabWidget->tabBar()->count();
+        tabWidget->tabBar()->setTabVisible(count - 1, false);
+        tabWidget->setCurrentIndex(count - 1);
+
         ui->actionExpandAllOpenFile->setChecked(bak);
 
         QModelIndex index = tabWidget->getCurentTab()->currentIndex();
