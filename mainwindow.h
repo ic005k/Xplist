@@ -54,6 +54,7 @@ public:
 
     QComboBox* cboxFileType;
     bool osx1012 = false;
+    bool pasteBW = false;
 
     void addWatchFiles();
     void removeWatchFiles();

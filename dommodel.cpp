@@ -284,34 +284,39 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
         if (row == -1)
             row = item->childCount();
 
-        int total = 0; //查重
-        bool re = false;
-        int child_count = item->childCount();
-        for (int i = 0; i < child_count; i++) {
-            QString str = this->index(i, 0, index).data().toString();
-            if (str == copy_item->getName())
-                re = true;
-        }
-
-        if (re) {
-            for (int i = 0; i < child_count; i++) {
-                QString str = this->index(i, 0, index).data().toString();
-                if (str.contains(copy_item->getName())) {
-                    total++;
-                }
-            }
-        }
-
         DomItem* child = NULL;
 
         beginInsertRows(index, row, row);
 
         child = item->addChild(row, child);
         QString Name = copy_item->getName();
+        if (!mw_one->pasteBW) {
+            if (Name.mid(0, 4) == "Item" && item->getType() != "array")
+                Name = "_" + Name;
+        }
         QString Type = copy_item->getType();
         QString Value = copy_item->getValue();
         if (Type == "bool")
             Value = Value.trimmed();
+
+        int total = 0; //查重
+        bool re = false;
+        int child_count = item->childCount();
+        for (int i = 0; i < child_count; i++) {
+            QString str = this->index(i, 0, index).data().toString();
+            if (str == Name)
+                re = true;
+        }
+
+        if (re) {
+            for (int i = 0; i < child_count; i++) {
+                QString str = this->index(i, 0, index).data().toString();
+                if (str.contains(Name)) {
+                    total++;
+                }
+            }
+        }
+
         if (!re)
             child->setData(Name, Type, Value);
         else

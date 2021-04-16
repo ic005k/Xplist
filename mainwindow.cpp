@@ -493,8 +493,25 @@ void MainWindow::openPlist(QString filePath)
     QString path;
     QDomDocument document;
     QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
+    QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
 
-    if (fi.exists()) {
+    if (filePath == fn) {
+        QFile file(filePath);
+        if (file.open(QIODevice::ReadOnly)) {
+            QDomDocument document;
+
+            if (document.setContent(&file)) {
+                //qDebug() << QString("File %1 opened").arg(filePath);
+
+                DomModel* model = DomParser::fromDom(document);
+
+                tabWidget->createTab(model, filePath);
+            }
+            file.close();
+        }
+    }
+
+    if (fi.exists() && filePath != fn) {
         filePath = QDir::fromNativeSeparators(filePath);
 
         removeWatchFiles();
@@ -509,6 +526,7 @@ void MainWindow::openPlist(QString filePath)
         baseName = string(str.toLocal8Bit());
 
         Plist::readPlist(baseName.c_str(), dict);
+
         if (binPlistFile) {
             if (dir.mkpath(strConfigDir)) { }
             dir.setCurrent(strConfigDir);
@@ -550,7 +568,6 @@ void MainWindow::openPlist(QString filePath)
         DomModel* model = DomParser::fromDom(document);
         tabWidget->createTab(model, filePath);
 
-        QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
         if (filePath != fn) {
 
             QSettings settings;
@@ -667,7 +684,7 @@ void MainWindow::savePlist(QString filePath)
 {
     if (tabWidget->hasTabs()) {
 
-        removeWatchFiles();
+        QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
 
         EditorTab* tab = tabWidget->getCurentTab();
 
@@ -675,14 +692,19 @@ void MainWindow::savePlist(QString filePath)
         QDomDocument doc = DomParser::toDom(tab->getModel());
 
         // create and open file
-        QFile file(filePath);
-        file.open(QIODevice::WriteOnly);
-        QTextStream out(&file);
-        //doc.save(out, 4);
-        file.close();
+        if (filePath == fn) {
+            QFile file(filePath);
+            file.open(QIODevice::WriteOnly);
+            QTextStream out(&file);
+            doc.save(out, 4);
+            file.close();
+        }
 
         QFileInfo fi(filePath);
-        if (fi.exists()) {
+        if (fi.exists() && filePath != fn) {
+
+            removeWatchFiles();
+
             map<string, boost::any> dict;
 
             QString path = fi.path();
@@ -698,6 +720,7 @@ void MainWindow::savePlist(QString filePath)
             QString strData = doc.toString();
             std::string mystring = strData.toStdString();
             std::istringstream is(mystring);
+
             Plist::readPlist(is, dict);
 
             // set new name
@@ -717,18 +740,17 @@ void MainWindow::savePlist(QString filePath)
                 Plist::writePlistBinary(baseName.c_str(), dict);
                 tabWidget->setTabText(index, "[BIN] " + name);
             }
+
+            addWatchFiles();
+
+            loadText(filePath);
+            //goPlistText();
         }
 
         // set stack clean
         undoGroup->activeStack()->clear();
-        //undoGroup->activeStack()->setClean();
-
-        addWatchFiles();
 
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
-
-        loadText(filePath);
-        goPlistText();
     }
 }
 
@@ -1895,7 +1917,10 @@ void MainWindow::on_copyBW()
 
         on_actionNewChild();
 
+        pasteBW = true;
         on_pasteAction();
+        pasteBW = false;
+
         actionRemove_activated();
 
         QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
