@@ -19,13 +19,6 @@
 [discourse-link]: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
 
-
-Write in front: The prototype of this software is from: https://github.com/alpex92/PlistED , thanks to this prototype, not to let me start coding from zero, thanks to @alpex92!
-
-When writing this software, actually some hesitation, similar software seems to be quite a lot, plus the relationship of time, has not paid substantial action. But the idea of writing a Plist editor has been lingering, so it finally led to PlistEDPlus...
-
-## New: Add aml, kext, efi files for OpenCore. The operation is very simple, take ACPI as an example: select Add under ACPI, drag and drop one or more aml files to the app window.
-
 ## Features include but are not limited to.
 
 * Lightweight and high performance
@@ -84,8 +77,10 @@ When writing this software, actually some hesitation, similar software seems to 
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p8.png)
 
-## Discussion forum
+### Thanks for the support of the following open source software!
 
-[insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
+[PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
+[PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
+[pugixml](https://github.com/zeux/pugixml)&nbsp;
 
 ### Note: This project started in October 2020
