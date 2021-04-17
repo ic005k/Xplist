@@ -21,11 +21,6 @@
 [discourse-link]: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
 
-
-写在前面：该软件的原型来自：https://github.com/alpex92/PlistED  ，由于这个原型的存在，不至于使我从头开始码砖，感谢@alpex92！
-
-写这个软件的时候，其实有些犹豫，类似的软件貌似也不少，再加上时间的关系，一直没有付出实质的行动。但写一款Plist编辑器的想法，一直挥之不去，所以最终促成了PlistEDPlus...
-
 ## 特征包括但不限于：
 
 * 轻量、高性能
@@ -84,13 +79,10 @@
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p8.png)
 
+### 感谢以下开源软件的支持!
 
-### [国内建议使用github加速器下载](https://toolwa.com/github/)
-
-## 讨论区：
-
-[insanelymac](https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/)
-
-
+[PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
+[PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
+[pugixml](https://github.com/zeux/pugixml)&nbsp;
 
 ### 备注：此项目开始于2020年10月
