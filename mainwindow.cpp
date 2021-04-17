@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.48";
+    CurVerison = "1.0.49";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -693,15 +693,25 @@ void MainWindow::savePlist(QString filePath)
 
         // create and open file
         if (filePath == fn) {
+
             QFile file(filePath);
             file.open(QIODevice::WriteOnly);
             QTextStream out(&file);
             doc.save(out, 4);
             file.close();
+
+        } else { // 生成一个空文件，供另存使用
+            QFile file(filePath);
+            file.open(QIODevice::WriteOnly);
+            //QTextStream out(&file);
+            //doc.save(out, 4);
+            file.close();
         }
 
         QFileInfo fi(filePath);
         if (fi.exists() && filePath != fn) {
+
+            qDebug() << filePath;
 
             removeWatchFiles();
 
