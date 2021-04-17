@@ -683,6 +683,7 @@ void MainWindow::onTabCloseRequest(int i)
 void MainWindow::savePlist(QString filePath)
 {
     if (tabWidget->hasTabs()) {
+        removeWatchFiles();
 
         QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
 
@@ -708,9 +709,6 @@ void MainWindow::savePlist(QString filePath)
 
         QFileInfo fi(filePath);
         if (fi.exists() && filePath != fn) {
-
-            removeWatchFiles();
-
             map<string, boost::any> dict;
 
             QString path = fi.path();
