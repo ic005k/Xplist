@@ -703,15 +703,11 @@ void MainWindow::savePlist(QString filePath)
         } else { // 生成一个空文件，供另存使用
             QFile file(filePath);
             file.open(QIODevice::WriteOnly);
-            //QTextStream out(&file);
-            //doc.save(out, 4);
             file.close();
         }
 
         QFileInfo fi(filePath);
         if (fi.exists() && filePath != fn) {
-
-            qDebug() << filePath;
 
             removeWatchFiles();
 
