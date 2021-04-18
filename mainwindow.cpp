@@ -349,6 +349,7 @@ void MainWindow::initMenuToolsBar()
 
     ui->mainToolBar->addSeparator();
 
+    // 排序
     actionSort = new QAction(tr("A->Z Sort"));
     actionSort->setIcon(QIcon(":/new/toolbar/res/sort.png"));
     ui->mainToolBar->addAction(actionSort);
@@ -1844,6 +1845,15 @@ void MainWindow::on_actionSort()
             return;
 
         DomModel* model = tab->getModel();
+
+        DomItem* currentItem = model->itemForIndex(index);
+        if (currentItem->getType() == "bool") {
+            QString strBool = currentItem->getValue().trimmed();
+            currentItem->setValue(strBool);
+
+            QModelIndex col3Index = model->index(index.row(), 2, index.parent());
+            tab->treeView->setIndexWidget(col3Index, NULL);
+        }
 
         //QSortFilterProxyModel* sortModel = new QSortFilterProxyModel(this);
         //sortModel->setSourceModel(model);

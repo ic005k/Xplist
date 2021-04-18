@@ -43,6 +43,8 @@ public:
     void changeDataType(QString txt);
     void setTipsFixedHeight();
 
+    void initBoolWidget(QModelIndex index);
+
     QTextBrowser* lblTips;
 
     MyTreeView* treeView;
@@ -131,8 +133,6 @@ private:
     QComboBox* comBox;
 
     int hex_to_ascii(QString str);
-
-    void initBoolWidget(QModelIndex index);
 };
 
 #endif // EDITORTAB_H
