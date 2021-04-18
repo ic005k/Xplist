@@ -63,21 +63,21 @@
 
 ...
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p1.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p1.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p2.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p2.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p3.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p3.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p4.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p4.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p5.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p5.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p6.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p6.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p7.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p7.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/p8.png)
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p8.png)
 
 ### 感谢以下开源软件的支持!
 
