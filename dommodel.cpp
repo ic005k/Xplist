@@ -686,6 +686,8 @@ bool DomModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int ro
 
     tab->treeView->setCurrentIndex(indexNew);
 
+    tab->treeView_clicked(tab->treeView->currentIndex());
+
     loading = false;
 
     return true;
