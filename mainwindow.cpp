@@ -1401,8 +1401,8 @@ void MainWindow::on_actionMoveUp()
 
         DomItem* currentItem = model->itemForIndex(index);
         if (currentItem->getType() == "bool") {
-            QString strBool = currentItem->getValue().trimmed();
-            currentItem->setValue(strBool);
+            //QString strBool = currentItem->getValue().trimmed();
+            //currentItem->setValue(strBool);
         }
 
         if (items == NULL)
@@ -1425,6 +1425,8 @@ void MainWindow::on_actionMoveUp()
             items->setType("array");
 
         tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
+
+        tab->treeView_clicked(tab->treeView->currentIndex());
 
         loading = false;
     }
@@ -1449,8 +1451,8 @@ void MainWindow::on_actionMoveDown()
 
         DomItem* currentItem = model->itemForIndex(index);
         if (currentItem->getType() == "bool") {
-            QString strBool = currentItem->getValue().trimmed();
-            currentItem->setValue(strBool);
+            //QString strBool = currentItem->getValue().trimmed();
+            //currentItem->setValue(strBool);
         }
 
         if (items == NULL)
@@ -1489,6 +1491,8 @@ void MainWindow::on_actionMoveDown()
             items->setType("array");
 
         tab->treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
+
+        tab->treeView_clicked(tab->treeView->currentIndex());
 
         loading = false;
     }
@@ -1862,6 +1866,8 @@ void MainWindow::on_actionSort()
         //treeView->setModel(sortModel);
 
         model->sort(0, Qt::AscendingOrder);
+
+        tab->treeView_clicked(tab->treeView->currentIndex());
     }
 }
 
