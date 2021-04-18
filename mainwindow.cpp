@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.49";
+    CurVerison = "1.0.50";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
