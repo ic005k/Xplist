@@ -32,7 +32,7 @@
 
 
 
-### 感谢以下开源软件的支持!
+### 感谢
 
 [PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
 [PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
