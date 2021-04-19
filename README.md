@@ -27,17 +27,7 @@ This is a lightweight plist editor with rich features. The file format supports 
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p2.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p3.png)
 
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p4.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p5.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p6.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p7.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p8.png)
 
 ### Thanks for the support of the following open source software!
 
