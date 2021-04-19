@@ -18,7 +18,6 @@ AddCommand::AddCommand(DomModel* model, const QModelIndex& index, QUndoCommand* 
     m_index = QModelIndex();
     m_parent = index;
 
-    // maybe we should create permanent index?
     //setText(QObject::tr("Add new item"));
     mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Add new item"));
     mw_one->actionRedo->setToolTip(QObject::tr("Redo") + " " + QObject::tr("Add new item"));
@@ -141,7 +140,6 @@ PasteCommand::PasteCommand(DomModel* model, const QModelIndex& index, DomItem* c
     m_parent = index;
     m_copy_item = copy_item;
 
-    // maybe we should create permanent index?
     setText(QObject::tr("Paste entry"));
 
     mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Paste entry"));
@@ -169,7 +167,6 @@ AddMoveCommand::AddMoveCommand(DomModel* model, const QModelIndex& index, QUndoC
     m_index = QModelIndex();
     m_parent = index;
 
-    // maybe we should create permanent index?
     setText(QObject::tr("Add new item"));
 
     mw_one->actionUndo->setToolTip(QObject::tr("Undo") + " " + QObject::tr("Add new item"));

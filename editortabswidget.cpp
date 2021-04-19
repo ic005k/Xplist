@@ -28,30 +28,6 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent)
 
     initTabBar();
 
-    QString tabBarStyle0 = "QTabBar::tab {min-width:100px;border: 0px solid;border-top-left-radius: 5px;border-top-right-radius: 5px;padding:2px;}\
-            QTabBar::tab:!selected {margin-top: 2px;}\
-            QTabWidget::pane{border:none;}\
-            QTabBar::tab{background:transparent;color:black;}\
-            QTabBar::tab:hover{background:rgba(0, 0, 255, 80);}\
-            QTabBar::tab:selected{border-color: white;background:rgba(0, 0, 255, 255);color:white;}";
-
-    QString tabBarStyle1 = "QTabBar::tab {min-width:100px;color: rgba(150,150,150);border: 2px solid;border-top-left-radius: 10px;border-top-right-radius: 10px;padding:5px;}\
-            QTabBar::tab:!selected {margin-top: 5px;} \
-            QTabBar::tab:selected {color: rgba(255,255,255);}";
-
-    QString tabBarStyle2 = "QTabBar::tab {min-width:100px;color: black;background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #eeeeee, stop: 1 gray);border: 0px solid;border-top-left-radius: 10px;border-top-right-radius: 10px;padding:5px;}\
-            QTabBar::tab:!selected {margin-top: 5px;} \
-            QTabBar::tab:selected {color: blue;}";
-
-    QString tabBarStyle3 = "QTabWidget::pane{border:none;}\
-            QTabWidget::tab-bar{alignment:left;}\
-            QTabBar::tab{background:transparent;color:black;}\
-            QTabBar::tab:hover{background:rgba(0, 0, 255, 80);}\
-            QTabBar::tab:selected{border-color: white;background:rgba(0, 0, 255, 255);color:white;}";
-
-    QString tabBarStyle4 = "QTabBar::tab:selected{background:rgba(125, 125, 125, 255);color:white;}";
-
-    //this->setStyleSheet(tabBarStyle4);
     this->setDocumentMode(true);
     this->setTabBarAutoHide(true);
 }

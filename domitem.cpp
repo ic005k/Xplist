@@ -57,9 +57,8 @@ DomItem* DomItem::addChild(int i, DomItem* item)
 
 void DomItem::removeChild(int i)
 {
-    //DomItem *item = childItems[i]; //此处无需重新定义item，特别是后面的delete item
+
     childItems.removeAt(i);
-    //delete item;
 }
 
 void DomItem::removeFromParent(int row)

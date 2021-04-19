@@ -47,9 +47,6 @@ void ComboBoxDelegate::setEditorData(QWidget* editor,
 
     connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(OnComboBoxChanged(int)));
 
-    //QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
-    //comboBox->setItemDelegate(itemDelegate);
-
     if (red < 55) //mac = 50
     {
         comboBox->setStyleSheet("QComboBox {border:1px solid gray;background:rgba(50,50,50,255);selection-color: #277BFF;selection-background-color:#FFFFFF;}");
@@ -205,7 +202,6 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
 
         comboBox->clear();
 
-        // model->setData(index, val, Qt::EditRole);
         emit ComboBoxDelegate::dataChanged(QModelIndex(index), val);
     }
 }

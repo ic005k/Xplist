@@ -2,11 +2,6 @@
 
 #include <editortabswidget.h>
 
-//extern EditorTabsWidget* tabWidget;
-//extern int dragRow;
-//extern int currentRow;
-//extern int childCount;
-
 MyTreeView::MyTreeView(QWidget* parent)
     : QTreeView(parent)
 
@@ -41,7 +36,6 @@ void MyTreeView::keyPressEvent(QKeyEvent* event)
 void MyTreeView::dragLeaveEvent(QDragLeaveEvent* event)
 {
 
-    //qDebug() << "dragLeaveEvent";
     QTreeView::dragLeaveEvent(event);
 }
 

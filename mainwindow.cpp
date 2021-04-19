@@ -1399,12 +1399,6 @@ void MainWindow::on_actionMoveUp()
 
         DomItem* items = model->itemForIndex(index.parent());
 
-        DomItem* currentItem = model->itemForIndex(index);
-        if (currentItem->getType() == "bool") {
-            //QString strBool = currentItem->getValue().trimmed();
-            //currentItem->setValue(strBool);
-        }
-
         if (items == NULL)
             return;
 
@@ -1448,12 +1442,6 @@ void MainWindow::on_actionMoveDown()
             return;
 
         DomItem* items = model->itemForIndex(index.parent());
-
-        DomItem* currentItem = model->itemForIndex(index);
-        if (currentItem->getType() == "bool") {
-            //QString strBool = currentItem->getValue().trimmed();
-            //currentItem->setValue(strBool);
-        }
 
         if (items == NULL)
             return;
@@ -1564,9 +1552,6 @@ void MainWindow::goPlistText()
 
             val = tab->HexStrToByte(val).toBase64().trimmed();
         }
-
-        //QTextBlock block = ui->textEdit->document()->findBlockByNumber(0);
-        //ui->textEdit->setTextCursor(QTextCursor(block));
 
         for (int i = 0; i < ui->textEdit->document()->lineCount(); i++) {
 
@@ -1858,12 +1843,6 @@ void MainWindow::on_actionSort()
             QModelIndex col3Index = model->index(index.row(), 2, index.parent());
             tab->treeView->setIndexWidget(col3Index, NULL);
         }
-
-        //QSortFilterProxyModel* sortModel = new QSortFilterProxyModel(this);
-        //sortModel->setSourceModel(model);
-        //QTreeView* treeView = new QTreeView;
-        //treeView = (QTreeView*)tab->children().at(1);
-        //treeView->setModel(sortModel);
 
         model->sort(0, Qt::AscendingOrder);
 
@@ -2191,8 +2170,6 @@ void MainWindow::on_btnReplace_clicked()
         } else
             newStr = strModify.replace(strFind, strReplace);
 
-        //qDebug() << str << name << val << newStr;
-
         if (str == name) {
 
             QModelIndex index_m = model->index(index.row(), 0, index.parent());
@@ -2418,7 +2395,7 @@ void MainWindow::initFindReplace()
     ui->dockWidgetFindReplace->setTitleBarWidget(lEmptyWidget2);
 
     ui->dockWidgetFindReplace->setMinimumHeight(0);
-    //ui->gridLayoutFindReplace->setMargin(1);
+
     ui->dockWidgetContentsFindReplace->layout()->setMargin(1);
 
     ui->dockWidgetFindReplace->close();
@@ -2578,9 +2555,9 @@ void MainWindow::addKexts(QStringList FileName)
 
         QFileInfo fileInfoList;
         QString filePath = fileInfo.absolutePath();
-        // qDebug() << filePath;
+
         QDir fileDir(filePath + "/" + fileInfo.fileName() + "/Contents/MacOS/");
-        // qDebug() << fileDir;
+
         if (fileDir.exists()) //如果目录存在，则遍历里面的文件
         {
             fileDir.setFilter(QDir::Files); //只遍历本目录
@@ -2594,7 +2571,7 @@ void MainWindow::addKexts(QStringList FileName)
 
         QTableWidget* t = new QTableWidget;
         t->setColumnCount(8);
-        //t = ui->table_kernel_add;
+
         int row = t->rowCount() + 1;
 
         t->setRowCount(row);
@@ -2610,7 +2587,6 @@ void MainWindow::addKexts(QStringList FileName)
         t->setItem(row - 1, 4, new QTableWidgetItem(""));
         t->setItem(row - 1, 5, new QTableWidgetItem(""));
 
-        //init_enabled_data(t, row - 1, 6, "true");
         t->setItem(row - 1, 6, new QTableWidgetItem("true"));
 
         QTableWidgetItem* newItem1 = new QTableWidgetItem("x86_64");
@@ -2621,7 +2597,7 @@ void MainWindow::addKexts(QStringList FileName)
 
         //如果里面还有PlugIns目录，则需要继续遍历插件目录
         QDir piDir(filePath + "/" + fileInfo.fileName() + "/Contents/PlugIns/");
-        // qDebug() << piDir;
+
         if (piDir.exists()) {
 
             piDir.setFilter(QDir::Dirs); //过滤器：只遍历里面的目录
@@ -2632,7 +2608,6 @@ void MainWindow::addKexts(QStringList FileName)
             for (int i = 0; i < fileCount; i++) //找出里面的kext文件(目录）
             {
                 kext_file.push_back(fileList[i].fileName());
-                //qDebug() << kext_file.at(i);
             }
 
             if (fileCount >= 3) //里面有目录
@@ -2640,7 +2615,7 @@ void MainWindow::addKexts(QStringList FileName)
                 for (int i = 0; i < fileCount - 2; i++) {
                     QDir fileDir(filePath + "/" + fileInfo.fileName() + "/Contents/PlugIns/" + kext_file[i + 2] + "/Contents/MacOS/");
                     if (fileDir.exists()) {
-                        // qDebug() << fileDir;
+
                         fileDir.setFilter(QDir::Files); //只遍历本目录里面的文件
                         QFileInfoList fileList = fileDir.entryInfoList();
                         int fileCount = fileList.count();

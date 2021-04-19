@@ -94,16 +94,6 @@ bool DomModel::setData(const QModelIndex& index, const QVariant& value, int role
 
 Qt::ItemFlags DomModel::flags(const QModelIndex& index) const
 {
-    /*if (!index.isValid())
-         return 0;
-
-     return Qt::ItemIsEnabled | Qt::ItemIsSelectable| Qt::ItemIsEditable;*/
-
-    //新的
-    /*if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    return Qt::ItemIsEditable | QAbstractItemModel::flags(index);*/
 
     Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
 
@@ -221,8 +211,6 @@ QModelIndex DomModel::addItem(const QModelIndex& parent, int row, ItemState* sta
         return this->index(child->row(), 0, index);
     }
 
-    //QAbstractItemView::viewport()->update();
-
     return QModelIndex();
 }
 
@@ -277,7 +265,7 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
     Q_UNUSED(state);
 
     if (parent.isValid()) {
-        //QModelIndex index = this->index(parent.row(), 0, parent.parent());
+
         QModelIndex index = parent;
         DomItem* item = itemForIndex(parent); //父级
 
@@ -322,7 +310,6 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
         else
             child->setData(Name + "-" + QString::number(total), Type, Value);
 
-        //if (copy_item->getName().contains("Item "))
         if (item->getType() == "array") {
 
             child->setData("Item " + QString::number(child_count + 1), copy_item->getType(), copy_item->getValue());
@@ -418,7 +405,6 @@ QModelIndex DomModel::pasteItem(const QModelIndex& parent, int row, ItemState* s
 
         emit itemAdded(index); //通知treeView自适应列宽和展开节点
 
-        //this->resetInternalData();
         return this->index(child->row(), 0, index);
     }
 
@@ -534,8 +520,6 @@ void DomModel::sort(int column, Qt::SortOrder order)
                         loading = true;
                     }
                 }
-
-                //item->sort(column, order);
             }
         }
 
@@ -568,6 +552,9 @@ QStringList DomModel::mimeTypes() const
 QMimeData* DomModel::mimeData(const QModelIndexList& indexes) const
 //将items中的数据，编译成plain text并存储在QMimeData对象中
 {
+
+    EditorTab* tab = tabWidget->getCurentTab();
+
     QMimeData* mimeData = new QMimeData();
     QByteArray encodedData;
     //存储“8 bit、以'\0'结尾的 字符串”，比const char*更方便；
@@ -580,18 +567,6 @@ QMimeData* DomModel::mimeData(const QModelIndexList& indexes) const
         }
     }
     mimeData->setData("application/vnd.text.list", encodedData);
-
-    /*QMimeData* data = QAbstractItemModel::mimeData(indexes);
-    if (data) {
-        // parent mimeData中已判断indexes有效性，无效的会返回nullptr
-        // 也可以把信息放到model的mutable成员中
-        data->setData("row", QByteArray::number(indexes.at(0).row()));
-        data->setData("col", QByteArray::number(indexes.at(0).column()));
-    }
-
-    return data;*/
-
-    EditorTab* tab = tabWidget->getCurentTab();
 
     currentRow = indexes.at(0).row();
 
@@ -607,37 +582,6 @@ bool DomModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int ro
     Q_UNUSED(action);
 
     //将“拖放的数据(dropped data)”插入到Model中
-    /*if (action == Qt::IgnoreAction)
-        return true;
-    if (!data->hasFormat("application/vnd.text.list"))
-        return false;
-    if (column > 0)
-        return false;
-    //
-    int beginRow;
-    if (row != -1)
-        beginRow = row;
-    else if (parent.isValid())
-        beginRow = parent.row();
-    else
-        beginRow = rowCount(QModelIndex());
-    //
-    QByteArray encodedData = data->data("application/vnd.text.list");
-    QDataStream stream(&encodedData, QIODevice::ReadOnly);
-    QStringList newItems;
-    int rows = 0;
-    while (!stream.atEnd()) {
-        QString text;
-        stream >> text;
-        newItems << text;
-        ++rows;
-    }
-    insertRows(beginRow, rows, QModelIndex());
-    foreach (QString text, newItems) {
-        QModelIndex idx = index(beginRow, 0, QModelIndex());
-        setData(idx, text);
-        beginRow++;
-    }*/
 
     if (!parent.isValid())
         return false;
@@ -651,11 +595,8 @@ bool DomModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int ro
     if (tab->treeView->currentIndex().parent() != parent) //是否同级
         return false;
 
-    //qDebug() << "目标行：" << row << "条目总数：" << childCount << "开始行：" << currentRow;
-
     if (row == -1) {
 
-        //undoGroup->undo();
         tab->treeView->setFocus();
 
         tab->treeView->setCurrentIndex(indexNew);

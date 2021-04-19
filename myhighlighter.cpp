@@ -35,18 +35,6 @@ MyHighLighter::MyHighLighter(QTextDocument* parent)
         highlightingRules.append(rule);
     }
 
-    /*
-    classFormat.setFontWeight(QFont::Bold);
-    classFormat.setForeground(Qt::darkMagenta);
-    rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
-    rule.format = classFormat;
-    highlightingRules.append(rule);
-
-    singleLineCommentFormat.setForeground(Qt::darkGreen);
-    rule.pattern = QRegExp("//[^\n]*");
-    rule.format = singleLineCommentFormat;
-    highlightingRules.append(rule);*/
-
     if (red > 55)
         quotationFormat.setForeground(Qt::blue);
     else

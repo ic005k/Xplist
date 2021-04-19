@@ -26,15 +26,6 @@ QWidget* MyTabPopup::getContentWidget()
 
 bool MyTabPopup::event(QEvent* event)
 {
-    /*switch (event->type()) {
-    case QEvent::MouseButtonRelease:
-    case QEvent::NonClientAreaMouseButtonRelease: {
-        QMouseEvent* e = static_cast<QMouseEvent*>(event);
-        if (e && e->button() == Qt::LeftButton) {
-            emit dragRelease(e->globalPos());
-        }
-    } break;
-    }*/
 
     if (event->type() == QEvent::MouseButtonRelease) {
     }

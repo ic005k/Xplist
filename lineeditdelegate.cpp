@@ -80,8 +80,6 @@ void LineEditDelegate::setModelData(QWidget* editor,
     QAbstractItemModel* model, const QModelIndex& index) const
 {
     Q_UNUSED(editor);
-    // get editor
-    //QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
 
     // get old val form the model
     QString oldVal = model->data(index).toString();
