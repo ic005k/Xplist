@@ -22,7 +22,7 @@
 
 
 ### 简介
----
+
 这是一个轻量级的plist编辑器，功能丰富。支持Windows、MacOS、Linux。文件格式在所有的平台下支持XML和二进制plist文件。
 
 
@@ -34,7 +34,7 @@
 
 
 ### 感谢
----
+
 [PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
 [PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
 [pugixml](https://github.com/zeux/pugixml)&nbsp;
