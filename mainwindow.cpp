@@ -157,7 +157,6 @@ MainWindow::MainWindow(QWidget* parent)
             this->setGeometry(x, y, this->width(), this->height());
         }
 
-        // Get search text list
         int count = Reg.value("FindTextListTotal").toInt();
 
         btnFindMenu->addSeparator();
@@ -385,10 +384,9 @@ void MainWindow::initMenuToolsBar()
     ui->editReplace->setClearButtonEnabled(true);
     ui->editReplace->setPlaceholderText(tr("Replace"));
 
-    //ui->mainToolBar->addWidget(ui->btnMisc);
     ui->mainToolBar->setContextMenuPolicy(Qt::CustomContextMenu); //屏蔽默认的右键菜单
     ui->mainToolBar->addWidget(ui->editFind);
-    //ui->mainToolBar->addAction(findAction);
+
     ui->mainToolBar->addWidget(ui->btnFind);
     ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
     //设置下拉菜单
@@ -502,7 +500,6 @@ void MainWindow::openPlist(QString filePath)
             QDomDocument document;
 
             if (document.setContent(&file)) {
-                //qDebug() << QString("File %1 opened").arg(filePath);
 
                 DomModel* model = DomParser::fromDom(document);
 
@@ -539,8 +536,7 @@ void MainWindow::openPlist(QString filePath)
         if (binPlistFile) {
             QString temp = strConfigDir + "/_temp.plist";
             QFile file(temp);
-            if (file.open(QIODevice::ReadOnly)) // && !opened)
-            {
+            if (file.open(QIODevice::ReadOnly)) {
                 if (document.setContent(&file)) {
                 }
 
@@ -629,8 +625,6 @@ void MainWindow::onTabCloseRequest(int i)
     QString fn = tabWidget->getCurentTab()->getFileName();
 
     if (!undoGroup->isClean()) {
-        // make tab active
-        //if (i != -1) tabWidget->setCurrentIndex(i);
 
         QMessageBox msgBox(this);
         msgBox.setIcon(QMessageBox::Question);
@@ -749,7 +743,6 @@ void MainWindow::savePlist(QString filePath)
             addWatchFiles();
 
             loadText(filePath);
-            //goPlistText();
         }
 
         // set stack clean
@@ -848,7 +841,6 @@ void MainWindow::actionRemove_activated()
 
             if (index.isValid()) {
 
-                //index = model->index(index.row(), 0, index.parent());
                 if (model->itemNotPlist(index)) {
                     QUndoCommand* removeCommand = new RemoveCommand(model, index);
                     undoGroup->activeStack()->push(removeCommand);
@@ -875,8 +867,7 @@ void MainWindow::actionExpand_all_activated()
 
 void MainWindow::actionAbout_activated()
 {
-    //QMessageBox::about(this, tr("About PlistEDPlus"),
-    //                     "PlistEDPlus");
+
     QFileInfo appInfo(qApp->applicationFilePath());
     QString str;
 
@@ -895,7 +886,7 @@ void MainWindow::tabWidget_currentChanged(int index)
 
     if (index >= 0) {
         if (tabWidget->hasTabs()) {
-            // get tab widget
+
             EditorTab* tab = tabWidget->getCurentTab();
             setExpandText(tab);
 
@@ -907,8 +898,6 @@ void MainWindow::tabWidget_currentChanged(int index)
                 cboxFileType->setCurrentIndex(0);
             }
 
-            // set window title to filename
-            //this->setWindowFilePath(tabWidget->tabText(tabWidget->indexOf(tab)) + "[*]");
             this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
 
             // get undo stack
@@ -930,8 +919,6 @@ void MainWindow::tabWidget_currentChanged(int index)
             ui->btnReplace->setEnabled(false);
             ui->listFind->clear();
         }
-        //?
-        //else this->setWindowFilePath(" ");
     }
 }
 
@@ -1092,7 +1079,6 @@ void MainWindow::on_Find()
 
         DomModel* model = tab->getModel();
 
-        //treeView->collapseAll();
         tab->treeView->expandToDepth(0);
 
         index = model->index(0, 0);
@@ -1512,7 +1498,6 @@ QString MainWindow::getPlistTextValue(QString str)
         str1 = str0.mid(i, 1);
         if (str1 == ">") {
             str2 = str0.mid(i + 1, str0.length() - i);
-            //qDebug() << str2;
 
             for (int j = 0; j < str2.length(); j++) {
                 str3 = str2.mid(j, 1);
@@ -1753,8 +1738,6 @@ void MainWindow::replyFinished(QNetworkReply* reply)
     QString str = reply->readAll();
     QMessageBox box;
     box.setText(str);
-    //box.exec();
-    //qDebug() << QSslSocket::supportsSsl() << QSslSocket::sslLibraryBuildVersionString() << QSslSocket::sslLibraryVersionString();
 
     parse_UpdateJSON(str);
 
@@ -2486,7 +2469,7 @@ void MainWindow::AddACPI(QString fileStr)
         if (!childIndex.isValid())
             return;
 
-        tab->treeView->setCurrentIndex(childIndex); //设置当前索引
+        tab->treeView->setCurrentIndex(childIndex);
 
         item = model->itemForIndex(childIndex);
         item->setType("dict");
@@ -2636,7 +2619,7 @@ void MainWindow::addKexts(QStringList FileName)
                         t->setItem(row - 1, 3, new QTableWidgetItem("Contents/Info.plist"));
                         t->setItem(row - 1, 4, new QTableWidgetItem(""));
                         t->setItem(row - 1, 5, new QTableWidgetItem(""));
-                        //init_enabled_data(t, row - 1, 6, "true");
+
                         t->setItem(row - 1, 6, new QTableWidgetItem("true"));
 
                         QTableWidgetItem* newItem1 = new QTableWidgetItem("x86_64");
@@ -2706,7 +2689,7 @@ void MainWindow::initKextTable(int row, QTableWidget* w)
         if (!childIndex.isValid())
             return;
 
-        tab->treeView->setCurrentIndex(childIndex); //设置当前索引
+        tab->treeView->setCurrentIndex(childIndex);
 
         item = model->itemForIndex(childIndex);
         item->setType("dict");

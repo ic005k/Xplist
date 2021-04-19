@@ -9,12 +9,10 @@ MyTreeView::MyTreeView(QWidget* parent)
     setUniformRowHeights(true);
 
     setSelectionMode(QAbstractItemView::SingleSelection);
-    //setSelectionMode(QAbstractItemView::ExtendedSelection);
     setDragDropOverwriteMode(false);
 
     setDragEnabled(true);
     setAcceptDrops(true);
-    //viewport()->setAcceptDrops(true);
     setDragDropMode(QAbstractItemView::InternalMove);
     setDropIndicatorShown(true);
 
@@ -24,9 +22,7 @@ MyTreeView::MyTreeView(QWidget* parent)
 void MyTreeView::keyPressEvent(QKeyEvent* event)
 {
     switch (event->key()) {
-    //case Qt::Key_Down:
-    //case Qt::Key_Up:
-    //    break;
+
     default:
         QTreeView::keyPressEvent(event);
         break;
