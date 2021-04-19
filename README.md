@@ -20,7 +20,7 @@
 
 
 ### Introduction
----
+
 This is a lightweight plist editor with rich features. The file format supports XML and binary plist files under all platforms.
 
 
@@ -31,7 +31,7 @@ This is a lightweight plist editor with rich features. The file format supports 
 
 
 ### Thanks for the support of the following open source software!
----
+
 [PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
 [PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
 [pugixml](https://github.com/zeux/pugixml)&nbsp;
