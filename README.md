@@ -19,47 +19,9 @@
 [discourse-link]: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
 
-## Features include but are not limited to.
+## Introduction
+This is a lightweight plist editor with rich features. The file format supports XML and binary plist files under all platforms.
 
-* Lightweight and high performance
-
-* Automatic detection of OpenCore configuration files with corresponding operation prompts
-
-* Support multi-select operations (including copy, cut, delete, etc.)
-
-* Open source, cross-platform (currently supports win, mac, linux)
-
-* Humanized search function (a. Keyboard initial character search for each column of key, data type, and value within the expanded node range; b. Search box global search, one-time display of search results)
-
-* Fully comply with and conform to the technical specifications of plist files, data types are displayed exactly the same as plist text, without any escaping
-
-* Multi-tab view or edit files
-
-* Multi-language support (currently supports Chinese, Russian, English)
-
-* Drag and drop files to the software interface to open files, double-click to open files, file open history display, automatically load the last opened file
-
-* Add, remove, paste, cut, edit entries, etc., all included in Undo, Redo policy group, support undo and restore
-
-* Expand and collapse entries right-click menu, in different columns, with different effects
-
-* For values of data type, the hover window automatically displays the corresponding ASCII and Base64 values
-
-* When changing the data type, the value is automatically converted with it
-
-* Free to select the children under a node for A->Z sorting (currently no sorting of arrays)
-
-* Drag and drop to adjust the order of sibling items, up or down button to adjust the order of sibling items
-
-* Rich shortcut keys
-
-* Built-in update checking
-
-* If the currently opened file is modified by other programs, it automatically prompts whether to reload
-
-* Software UI adapts to various resolutions, supports winpe, linux livecd, etc.
-
-...
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p1.png)
 
