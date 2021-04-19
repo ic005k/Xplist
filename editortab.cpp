@@ -524,9 +524,14 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
     mw_one->goPlistText();
 
     QString str0, str;
-    if (item->getType() == "data") // && index.column() == 2)
-    {
+    if (item->getType() == "data") {
+
         str = item->getValue().remove(QRegExp("\\s")); //16进制去除所有空格
+        if (str == "") {
+            lblTips->setHidden(true);
+            return;
+        }
+
         str0 = QString::fromLocal8Bit(HexStrToByte(str));
 
         lblTips->setText(QString::number(str.count() / 2) + " " + tr("bytes") + " : " + str + "\nASCII: " + HexStrToByte(str) + "\nBase64: " + HexStrToByte(str).toBase64());
@@ -534,15 +539,7 @@ void EditorTab::treeView_clicked(const QModelIndex& index)
         setTipsFixedHeight();
 
         lblTips->setHidden(false);
-
-    } else {
-        str = index.data().toString();
     }
-
-    //if(item->getType() == "bool")
-    //    ui->treeView->setItemDelegateForColumn(2, delegate_bool);
-    //else
-    //    ui->treeView->setItemDelegateForColumn(2, delegate1);
 }
 
 void EditorTab::setTipsFixedHeight()
