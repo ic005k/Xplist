@@ -1,5 +1,5 @@
 [简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
-# PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
+## PlistEDPlus--开源跨平台的轻量级Plist文件编辑器
 
 | [最新发布][release-link]|[下载][download-link]|[问题反馈][issues-link]|[讨论区][discourse-link]|
 |-----------------|-----------------|-----------------|-----------------|
@@ -21,7 +21,8 @@
 [discourse-link]: https://www.insanelymac.com/forum/topic/345512-open-source-cross-platform-plist-file-editor-plistedplus/
 
 
-## 简介
+### 简介
+---
 这是一个轻量级的plist编辑器，功能丰富。支持Windows、MacOS、Linux。文件格式在所有的平台下支持XML和二进制plist文件。
 
 
