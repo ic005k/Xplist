@@ -1391,18 +1391,9 @@ void MainWindow::on_actionMoveUp()
         if (index.row() == 0)
             return;
 
-        bool array = false;
-        if (items->getType() == "array") {
-            items->setType("dict");
-            array = true;
-        }
-
         on_cutAction();
         tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
         on_pasteAction();
-
-        if (array)
-            items->setType("array");
 
         tab->treeView->setCurrentIndex(model->index(index_bak.row() - 1, 0, index.parent()));
 
@@ -1435,12 +1426,6 @@ void MainWindow::on_actionMoveDown()
         if (index.row() == items->childCount() - 1)
             return;
 
-        bool array = false;
-        if (items->getType() == "array") {
-            items->setType("dict");
-            array = true;
-        }
-
         //倒数第三行及以前
         if (index.row() <= items->childCount() - 3) {
             on_cutAction();
@@ -1460,9 +1445,6 @@ void MainWindow::on_actionMoveDown()
             tab->treeView->setCurrentIndex(model->index(index_bak.row() + 2, 0, index.parent()));
             actionRemove_activated();
         }
-
-        if (array)
-            items->setType("array");
 
         tab->treeView->setCurrentIndex(model->index(index_bak.row() + 1, 0, index.parent()));
 
