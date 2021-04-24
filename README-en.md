@@ -31,6 +31,8 @@
 
 ![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p2.png)
 
+![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p3.png)
+
 
 
 ### 感谢
