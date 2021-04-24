@@ -211,6 +211,7 @@ private slots:
     void on_actionQuit_triggered();
 
 private:
+    bool useQtWriteXML = true;
     RecentFiles* m_recentFiles;
     QMenu* reFileMenu;
     void initRecentFilesForToolBar();

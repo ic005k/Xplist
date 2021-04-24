@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.51";
+    CurVerison = "1.0.52";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -680,15 +680,14 @@ void MainWindow::savePlist(QString filePath)
     if (tabWidget->hasTabs()) {
         removeWatchFiles();
 
-        QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+        QString fileTemp = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
 
         EditorTab* tab = tabWidget->getCurentTab();
 
         // get parsed dom doc
         QDomDocument doc = DomParser::toDom(tab->getModel());
 
-        // create and open file
-        if (filePath == fn) {
+        if (filePath == fileTemp) {
 
             QFile file(filePath);
             file.open(QIODevice::WriteOnly);
@@ -696,14 +695,14 @@ void MainWindow::savePlist(QString filePath)
             doc.save(out, 4);
             file.close();
 
-        } else { // 生成一个空文件，供另存使用
+        } else { // 始终生成一个空文件，供另存使用
             QFile file(filePath);
             file.open(QIODevice::WriteOnly);
             file.close();
         }
 
         QFileInfo fi(filePath);
-        if (fi.exists() && filePath != fn) {
+        if (fi.exists() && filePath != fileTemp) {
             map<string, boost::any> dict;
 
             QString path = fi.path();
@@ -722,19 +721,28 @@ void MainWindow::savePlist(QString filePath)
 
             Plist::readPlist(is, dict);
 
-            // set new name
             tab->setPath(filePath);
 
-            //get tab index
             int index = tabWidget->indexOf(tab);
 
-            // get name
             QString name = tab->getFileName();
 
+            // XML
             if (cboxFileType->currentIndex() == 0) {
-                Plist::writePlistXML(baseName.c_str(), dict);
+                if (useQtWriteXML) {
+                    QFile file(filePath);
+                    file.open(QIODevice::WriteOnly);
+                    QTextStream out(&file);
+                    doc.save(out, 4);
+                    file.close();
+
+                } else
+                    Plist::writePlistXML(baseName.c_str(), dict);
+
                 tabWidget->setTabText(index, name);
             }
+
+            // BIN
             if (cboxFileType->currentIndex() == 1) {
                 Plist::writePlistBinary(baseName.c_str(), dict);
                 tabWidget->setTabText(index, "[BIN] " + name);
@@ -745,7 +753,6 @@ void MainWindow::savePlist(QString filePath)
             loadText(filePath);
         }
 
-        // set stack clean
         undoGroup->activeStack()->clear();
 
         tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
