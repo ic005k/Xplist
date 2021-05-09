@@ -25,6 +25,7 @@ SOURCES += main.cpp\
     MyTabPopup.cpp \
     Plist.cpp \
     PlistDate.cpp \
+    codeeditor.cpp \
     comboboxdelegatebool.cpp \
     filesystemwatcher.cpp \
     mainwindow.cpp \
@@ -49,6 +50,7 @@ HEADERS  += mainwindow.h \
     Plist.hpp \
     PlistDate.hpp \
     base64.hpp \
+    codeeditor.h \
     comboboxdelegatebool.h \
     domparser.h \
     dommodel.h \
@@ -74,6 +76,7 @@ RESOURCES += \
     res.qrc
 
 DISTFILES += \
+    Info.plist \
     myapp.rc
 
 CONFIG(debug,debug|release) {

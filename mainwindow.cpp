@@ -458,7 +458,7 @@ void MainWindow::actionNew()
 
     tab->treeView->setFocus();
 
-    ui->textEdit->clear();
+    plistTextEditor->clear();
 
     loading = false;
 }
@@ -677,8 +677,10 @@ void MainWindow::onTabCloseRequest(int i)
     if (tabWidget->currentIndex() != -1)
         tabWidget->getCurentTab()->treeView->setFocus();
 
-    if (tabWidget->tabBar()->count() == 0)
-        ui->textEdit->clear();
+    if (tabWidget->tabBar()->count() == 0) {
+
+        plistTextEditor->clear();
+    }
 }
 
 void MainWindow::savePlist(QString filePath)
@@ -1533,11 +1535,11 @@ void MainWindow::goPlistText()
             val = tab->HexStrToByte(val).toBase64().trimmed();
         }
 
-        for (int i = 0; i < ui->textEdit->document()->lineCount(); i++) {
+        for (int i = 0; i < plistTextEditor->document()->lineCount(); i++) {
 
-            QTextBlock block = ui->textEdit->document()->findBlockByNumber(i);
-            ui->textEdit->setTextCursor(QTextCursor(block));
-            QString lineText = ui->textEdit->document()->findBlockByNumber(i).text().trimmed();
+            QTextBlock block = plistTextEditor->document()->findBlockByNumber(i);
+            plistTextEditor->setTextCursor(QTextCursor(block));
+            QString lineText = plistTextEditor->document()->findBlockByNumber(i).text().trimmed();
 
             if (name.mid(0, 4) == "Item") {
 
@@ -1562,7 +1564,7 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == name) {
 
-                            QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
+                            QString strNext = plistTextEditor->document()->findBlockByNumber(i + 1).text().trimmed();
                             QString strBool = strNext.mid(1, strNext.length() - 4);
                             QString strBool1 = strNext.mid(1, strNext.length() - 3);
 
@@ -1578,7 +1580,7 @@ void MainWindow::goPlistText()
 
                         if (lineText.mid(1, lineText.length() - 4) == val || lineText.mid(1, lineText.length() - 3) == val) {
 
-                            QString strPrevious = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
+                            QString strPrevious = plistTextEditor->document()->findBlockByNumber(i - 1).text().trimmed();
 
                             if (getPlistTextValue(strPrevious) == name) {
 
@@ -1595,7 +1597,7 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == name) {
 
-                            QString strNext = ui->textEdit->document()->findBlockByNumber(i + 1).text().trimmed();
+                            QString strNext = plistTextEditor->document()->findBlockByNumber(i + 1).text().trimmed();
                             if (getPlistTextValue(strNext) == val) {
 
                                 setBarMarkers();
@@ -1609,7 +1611,7 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == val) {
 
-                            QString strPrevious = ui->textEdit->document()->findBlockByNumber(i - 1).text().trimmed();
+                            QString strPrevious = plistTextEditor->document()->findBlockByNumber(i - 1).text().trimmed();
 
                             if (getPlistTextValue(strPrevious) == name) {
 
@@ -1636,17 +1638,17 @@ void MainWindow::setBarMarkers()
     //lineColor = QColor(Qt::gray).lighter(150);
     selection.format.setBackground(lineColor);
     selection.format.setProperty(QTextFormat::FullWidthSelection, true);
-    selection.cursor = ui->textEdit->textCursor();
+    selection.cursor = plistTextEditor->textCursor();
     selection.cursor.clearSelection();
     //将刚设置的 selection追加到链表当中
     extraSelection.append(selection);
-    ui->textEdit->setExtraSelections(extraSelection);
+    plistTextEditor->setExtraSelections(extraSelection);
 
     QScrollBar* vsBar = new QScrollBar;
-    vsBar = ui->textEdit->verticalScrollBar();
-    int vPos = ui->textEdit->verticalScrollBar()->sliderPosition();
-    if (vPos > ui->textEdit->height() / 3)
-        vsBar->setSliderPosition(vPos + ui->textEdit->height() / 2);
+    vsBar = plistTextEditor->verticalScrollBar();
+    int vPos = plistTextEditor->verticalScrollBar()->sliderPosition();
+    //if (vPos > plistTextEditor->height() / 3)
+    vsBar->setSliderPosition(vPos + 4); //plistTextEditor->height() / 2);
 }
 
 void MainWindow::paintEvent(QPaintEvent* event)
@@ -1660,9 +1662,9 @@ void MainWindow::paintEvent(QPaintEvent* event)
 
     if (c_red != red) {
         red = c_red;
-        myHL = new MyHighLighter(ui->textEdit->document());
+        myHL = new MyHighLighter(plistTextEditor->document());
         myHL->rehighlight();
-        ui->textEdit->repaint();
+        plistTextEditor->repaint();
     }
 }
 
@@ -1960,8 +1962,8 @@ void MainWindow::loadText(QString textFile)
 
     QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
     if (strBin.contains("[BIN]")) {
-        ui->textEdit->clear();
-        ui->textEdit->append(tr("This is a file in binary format, with no text displayed."));
+        plistTextEditor->clear();
+        plistTextEditor->setPlainText(tr("This is a file in binary format, with no text displayed."));
         return;
     }
 
@@ -1978,10 +1980,10 @@ void MainWindow::loadText(QString textFile)
             QTextStream in(&file);
             in.setCodec("UTF-8");
             QString text = in.readAll();
-            ui->textEdit->setPlainText(text);
+            plistTextEditor->setPlainText(text);
         }
     } else
-        ui->textEdit->clear();
+        plistTextEditor->clear();
 }
 
 void MainWindow::on_actionShowPlistText_triggered(bool checked)
@@ -2399,12 +2401,12 @@ void MainWindow::initPlistTextShow()
 
     ui->dockWidgetContents->layout()->setMargin(1);
 
-    ui->textEdit->setReadOnly(true);
-    QFontMetrics metrics(ui->textEdit->font());
-    //ui->textEdit->setTabStopWidth(4 * metrics.width(' '));
+    plistTextEditor = new CodeEditor(this);
+    plistTextEditor->setReadOnly(true);
+    ui->dockWidgetContents->layout()->addWidget(plistTextEditor);
 
     resizeDocks({ ui->dockWidget }, { 150 }, Qt::Vertical);
-    myHL = new MyHighLighter(ui->textEdit->document());
+    myHL = new MyHighLighter(plistTextEditor->document());
     myHL->rehighlight();
 }
 

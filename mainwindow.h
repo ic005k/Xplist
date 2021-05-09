@@ -34,6 +34,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "codeeditor.h"
 #include "domparser.h"
 #include "editortabswidget.h"
 #include "myhighlighter.h"
@@ -51,7 +52,7 @@ public:
     ~MainWindow();
 
     Ui::MainWindow* ui;
-
+    CodeEditor* plistTextEditor;
     QComboBox* cboxFileType;
     bool osx1012 = false;
     bool pasteBW = false;
