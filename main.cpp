@@ -9,14 +9,14 @@ MainWindow* mw_one;
 
 int main(int argc, char* argv[])
 {
-#ifdef Q_OS_LINUX
+    //#ifdef Q_OS_LINUX
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
     QGuiApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 #endif
 
-#endif
+    //#endif
 
     //QApplication a(argc, argv);
     MyApplication* a = new MyApplication(argc, argv);
@@ -57,7 +57,6 @@ int main(int argc, char* argv[])
 
     QFont f;
     f.setFamily("Microsoft YaHei UI");
-    a->setFont(f);
 
 #endif
 
@@ -76,5 +75,7 @@ int main(int argc, char* argv[])
         mw_one->show();
     }
 
+    f.setPixelSize(12);
+    a->setFont(f);
     return a->exec();
 }

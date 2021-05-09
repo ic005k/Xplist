@@ -70,15 +70,18 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     font.setPointSize(9);
     if (!defaultIcon)
-        treeView->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
+        treeView
+            ->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
+                "QTreeView::branch:open:has-children:!has-siblings,"
+                "QTreeView::branch:open:has-children:has-siblings {image: "
+                "url(:/new/toolbar/res/sub.png);}"
+                "QTreeView::branch:has-children:!has-siblings:closed,"
+                "QTreeView::branch:closed:has-children:has-siblings {image: "
+                "url(:/new/toolbar/res/main.png);}"
 
-        );
+            );
 
-    treeView->setColumnWidth(0, 600);
+    treeView->setColumnWidth(0, 370);
     //treeView->setStyle(QStyleFactory::create("windows"));
 
 #endif

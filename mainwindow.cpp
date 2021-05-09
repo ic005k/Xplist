@@ -54,15 +54,17 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.52";
+    CurVerison = "1.0.53";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
     loading = true;
 
+    this->resize(QSize(950, 580));
+
 #ifdef Q_OS_MAC
     ui->mainToolBar->setIconSize(QSize(28, 28));
-    this->resize(QSize(1200, 650));
+
     mac = true;
 
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 9, 9))
@@ -103,7 +105,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 #ifdef Q_OS_WIN32
     reg_win();
-    this->resize(QSize(1350, 750));
+
     win = true;
     ui->actionRemove_2->setShortcut(tr("ctrl+-"));
     ui->actionNew_Child->setShortcut(tr("alt++"));
