@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     loading = true;
 
-    this->resize(QSize(1100, 580));
+    this->resize(QSize(1080, 580));
 
 #ifdef Q_OS_MAC
 
@@ -209,7 +209,9 @@ void MainWindow::initMenuToolsBar()
 {
 
     ui->actionAbout->setMenuRole(QAction::AboutRole);
-    ui->mainToolBar->setIconSize(QSize(22, 22));
+    ui->mainToolBar->setIconSize(QSize(24, 24));
+    ui->mainToolBar->layout()->setMargin(1);
+    ui->mainToolBar->layout()->setSpacing(1);
 
     // create undo and redo actions
     undoGroup = new QUndoGroup(this);
