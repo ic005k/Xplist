@@ -60,10 +60,9 @@ MainWindow::MainWindow(QWidget* parent)
 
     loading = true;
 
-    this->resize(QSize(950, 580));
+    this->resize(QSize(1100, 580));
 
 #ifdef Q_OS_MAC
-    ui->mainToolBar->setIconSize(QSize(28, 28));
 
     mac = true;
 
@@ -210,6 +209,7 @@ void MainWindow::initMenuToolsBar()
 {
 
     ui->actionAbout->setMenuRole(QAction::AboutRole);
+    ui->mainToolBar->setIconSize(QSize(22, 22));
 
     // create undo and redo actions
     undoGroup = new QUndoGroup(this);
@@ -381,12 +381,14 @@ void MainWindow::initMenuToolsBar()
     lblFindCount = new QLabel("0"); //查找结果计数器
     ui->mainToolBar->addWidget(lblFindCount);
     findEdit = new QLineEdit();
+
     ui->editFind->setClearButtonEnabled(true);
     ui->editFind->setPlaceholderText(tr("Find"));
     ui->editReplace->setClearButtonEnabled(true);
     ui->editReplace->setPlaceholderText(tr("Replace"));
 
     ui->mainToolBar->setContextMenuPolicy(Qt::CustomContextMenu); //屏蔽默认的右键菜单
+    ui->editFind->setMinimumWidth(150);
     ui->mainToolBar->addWidget(ui->editFind);
 
     ui->mainToolBar->addWidget(ui->btnFind);
