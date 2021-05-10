@@ -19,13 +19,12 @@ MyTreeView::MyTreeView(QWidget* parent)
 
         "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
 
-        "QTreeView::branch:selected {background: rgba(0, 124, 221, "
-        "255);selection-background-color:rgba(0, 124, 221, 255);}"
+        "QTreeView::branch:selected {background: rgb(0, 124, 221);selection-background-color:rgb(0, 124, 221);}"
 
         "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
         "QTreeView::item:selected{background-color:rgba(0, 124, 221, 255); "
-        "color:rgba(255,255,255,255);}"
+        "color:rgb(255,255,255);}"
 
         "QTreeView::branch:open:has-children:!has-siblings,"
         "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
