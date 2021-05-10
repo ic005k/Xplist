@@ -7,34 +7,56 @@ MyTreeView::MyTreeView(QWidget* parent)
     : QTreeView(parent)
 
 {
+    QString strStyle0 = "QTreeView{outline:none;}"
 
-    QString strStyle0 =
+                        //"QTreeView::branch {background: background: transparent;}"
 
-        "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+                        //"QTreeView::branch:selected {background: transparent;}"
 
-        "QTreeView::item:selected{background-color:rgba(0, 0, 255, 255); "
-        "color:rgba(255,255,255,255);}";
+                        "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
-    QString strStyle =
+                        "QTreeView::item:selected{background-color:rgba(0, 0, 255, 255); "
+                        "color:rgba(255,255,255,255);}";
 
-        "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
+    QString strStyleWin = "QTreeView{outline:none;}"
 
-        "QTreeView::branch:selected {background: rgb(135,206,250);selection-background-color:rgb(135,206,250);}"
+                          "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
-        "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+                          "QTreeView::item:selected{background-color:rgb(135,206,250); "
+                          "color:rgb(5,5,5);}"
 
-        "QTreeView::item:selected{background-color:rgb(135,206,250); "
-        "color:rgb(5,5,5);}"
+                          "QTreeView::branch:open:has-children:!has-siblings,"
+                          "QTreeView::branch:open:has-children:has-siblings {image: "
+                          "url(:/new/toolbar/res/sub.png);}"
+                          "QTreeView::branch:has-children:!has-siblings:closed,"
+                          "QTreeView::branch:closed:has-children:has-siblings {image: "
+                          "url(:/new/toolbar/res/main.png);}";
 
-        "QTreeView::branch:open:has-children:!has-siblings,"
-        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-        "QTreeView::branch:has-children:!has-siblings:closed,"
-        "QTreeView::branch:closed:has-children:has-siblings {image: "
-        "url(:/new/toolbar/res/main.png);}";
+    QString strStyle = "QTreeView{outline:none;}"
+                       "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
 
-    if (!defaultIcon)
+                       "QTreeView::branch:selected {background: "
+                       "rgb(135,206,250);selection-background-color:rgb(135,206,250);}"
+
+                       "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+
+                       "QTreeView::item:selected{background-color:rgb(135,206,250); "
+                       "color:rgb(5,5,5);}"
+
+                       "QTreeView::branch:open:has-children:!has-siblings,"
+                       "QTreeView::branch:open:has-children:has-siblings {image: "
+                       "url(:/new/toolbar/res/sub.png);}"
+                       "QTreeView::branch:has-children:!has-siblings:closed,"
+                       "QTreeView::branch:closed:has-children:has-siblings {image: "
+                       "url(:/new/toolbar/res/main.png);}";
+
+    if (!defaultIcon) {
         setStyleSheet(strStyle);
-    else {
+#ifdef Q_OS_WIN32
+        setStyleSheet(strStyleWin);
+#endif
+    } else {
+
 #ifdef Q_OS_WIN32
         setStyleSheet(strStyle0);
 #endif
