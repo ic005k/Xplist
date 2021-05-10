@@ -1,5 +1,4 @@
 #include "mytreeview.h"
-
 #include <editortabswidget.h>
 
 extern bool defaultIcon;
@@ -20,8 +19,8 @@ MyTreeView::MyTreeView(QWidget* parent)
 
     setAlternatingRowColors(true);
 
-    QString strStyle = //"QTreeView{background-color: rgb(220, 124, 221);color:white;}"
-        //"QTreeView::item : selected : !active{color : white;background : rgb(220, 124, 221);}"
+    QString strStyle = //"QTreeView{background: rgb(220, 124, 221);}"
+        //"QTreeView::item:selected:!active{color:white;background:rgb(220, 124, 221);}"
         "QTreeView::branch:open:has-children:!has-siblings,"
         "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
         "QTreeView::branch:has-children:!has-siblings:closed,"
