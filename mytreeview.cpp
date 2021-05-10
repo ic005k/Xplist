@@ -35,7 +35,9 @@ MyTreeView::MyTreeView(QWidget* parent)
     if (!defaultIcon)
         setStyleSheet(strStyle);
     else {
-        //setStyleSheet(strStyle0);
+#ifdef Q_OS_WIN32
+        setStyleSheet(strStyle0);
+#endif
     }
 
     setUniformRowHeights(true);
