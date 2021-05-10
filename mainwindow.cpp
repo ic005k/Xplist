@@ -1098,7 +1098,7 @@ void MainWindow::on_Find()
 
         index = model->index(0, 0);
         tab->treeView->setCurrentIndex(index); //设置当前索引
-        tab->treeView->setFocus();
+        //tab->treeView->setFocus();
 
         findCount = 0;
         lblFindCount->setText("  " + QString::number(findCount) + "  ");
@@ -1181,6 +1181,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
         ui->btnNext->setEnabled(true);
         ui->listFind->setCurrentRow(0);
         ui->dockShowSearchResults->show();
+        findTextChanged = false;
     }
 }
 
@@ -2002,6 +2003,11 @@ void MainWindow::on_actionPaste_as_child_triggered()
 
 void MainWindow::on_editFind_returnPressed()
 {
+    if (!findTextChanged) {
+        on_btnNext_clicked();
+        return;
+    }
+
     on_Find();
 
     QString str = ui->editFind->text().trimmed();
@@ -2049,6 +2055,7 @@ void MainWindow::on_editFind_returnPressed()
 void MainWindow::on_editFind_textChanged(const QString& arg1)
 {
     if (tabWidget->hasTabs()) {
+        findTextChanged = true;
 
         if (arg1 != "") {
 
@@ -2109,7 +2116,7 @@ void MainWindow::on_btnNext_clicked()
     int row = ui->listFind->currentRow();
 
     if (row + 1 == ui->listFind->count())
-        row = ui->listFind->count() - 1;
+        row = 0;
     else
         row = row + 1;
 
@@ -2416,6 +2423,13 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
 
     if (tabWidget->hasTabs()) {
 
+        bool focus = false;
+        bool focus1 = false;
+        if (ui->editFind->hasFocus())
+            focus = true;
+        if (ui->listFind->hasFocus())
+            focus1 = true;
+
         indexCount = ui->listFind->currentRow();
 
         if (indexCount >= indexFindList.count()) {
@@ -2425,7 +2439,7 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
         lblFindCount->setText(QString::number(indexCount + 1) + " >> " + QString::number(findCount));
 
         EditorTab* tab = tabWidget->getCurentTab();
-        tab->treeView->setFocus();
+        //tab->treeView->setFocus();
 
         QModelIndex index = indexFindList.at(indexCount);
 
@@ -2437,6 +2451,11 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
 
         oneReplace = false;
         ui->btnReplace->setEnabled(true);
+
+        if (focus)
+            ui->editFind->setFocus();
+        if (focus1)
+            ui->listFind->setFocus();
     }
 }
 

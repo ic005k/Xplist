@@ -52,6 +52,7 @@ public:
     ~MainWindow();
 
     Ui::MainWindow* ui;
+    bool findTextChanged = false;
     CodeEditor* plistTextEditor;
     QComboBox* cboxFileType;
     bool osx1012 = false;

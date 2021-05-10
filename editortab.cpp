@@ -87,13 +87,11 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     delegate_bool = new ComboBoxDelegateBool(treeView);
 
-    treeView->setItemDelegateForColumn(0, delegate1);
-
-    treeView->setItemDelegateForColumn(1, delegate2);
-
-    treeView->setItemDelegateForColumn(2, delegate1);
-
     treeView->expandToDepth(0);
+
+    treeView->setItemDelegateForColumn(0, delegate1);
+    treeView->setItemDelegateForColumn(1, delegate2);
+    treeView->setItemDelegateForColumn(2, delegate1);
 
     //treeView->header()->setDefaultSectionSize(150);//表头默认列宽
     //treeView->header()->setMinimumHeight(25); //表头高度

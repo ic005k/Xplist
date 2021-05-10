@@ -11,7 +11,7 @@
 #include <domitem.h>
 #include <dommodel.h>
 
-class ComboBoxDelegate : public QItemDelegate {
+class ComboBoxDelegate : public QStyledItemDelegate {
     Q_OBJECT
 
 public:

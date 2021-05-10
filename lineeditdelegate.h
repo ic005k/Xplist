@@ -5,9 +5,10 @@
 #include <QDateTime>
 #include <QItemDelegate>
 #include <QLineEdit>
+#include <QStyledItemDelegate>
 #include <QTime>
 
-class LineEditDelegate : public QItemDelegate {
+class LineEditDelegate : public QStyledItemDelegate {
     Q_OBJECT
 
 public:
@@ -26,7 +27,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
 signals:
-    void dataChanged(const QModelIndex &, QString) const;
+    void dataChanged(const QModelIndex&, QString) const;
 
 private slots:
     void on_setText();

@@ -159,7 +159,7 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
 //行高(以此为准)
 QSize LineEditDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-    QSize size = QItemDelegate::sizeHint(option, index);
+    QSize size = QStyledItemDelegate::sizeHint(option, index);
 
 #ifdef Q_OS_WIN32
     size.setHeight(size.height() + 4);

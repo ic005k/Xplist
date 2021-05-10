@@ -7,6 +7,24 @@ MyTreeView::MyTreeView(QWidget* parent)
     : QTreeView(parent)
 
 {
+    QString strStyle = //"QTreeView{background: rgb(220, 124, 221);}"
+        //"QTreeView::item:selected:!active{color:white;background:rgb(0, 124, 221);}"
+        "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
+
+        "QTreeView::branch:selected {background: rgba(0, 124, 221, 255);selection-background-color:rgba(0, 124, 221, 255);}"
+
+        "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+
+        "QTreeView::item:selected{background-color:rgba(0, 124, 221, 255); color:rgba(255,255,255,255);}"
+
+        "QTreeView::branch:open:has-children:!has-siblings,"
+        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+        "QTreeView::branch:has-children:!has-siblings:closed,"
+        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}";
+
+    if (!defaultIcon)
+        setStyleSheet(strStyle);
+
     setUniformRowHeights(true);
 
     setSelectionMode(QAbstractItemView::SingleSelection);
@@ -18,16 +36,6 @@ MyTreeView::MyTreeView(QWidget* parent)
     setDropIndicatorShown(true);
 
     setAlternatingRowColors(true);
-
-    QString strStyle = //"QTreeView{background: rgb(220, 124, 221);}"
-        //"QTreeView::item:selected:!active{color:white;background:rgb(220, 124, 221);}"
-        "QTreeView::branch:open:has-children:!has-siblings,"
-        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-        "QTreeView::branch:has-children:!has-siblings:closed,"
-        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}";
-
-    if (!defaultIcon)
-        setStyleSheet(strStyle);
 }
 
 void MyTreeView::keyPressEvent(QKeyEvent* event)
