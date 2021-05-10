@@ -12,19 +12,19 @@ MyTreeView::MyTreeView(QWidget* parent)
 
         "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
-        "QTreeView::item:selected{background-color:rgba(0, 124, 221, 255); "
+        "QTreeView::item:selected{background-color:rgba(0, 0, 255, 255); "
         "color:rgba(255,255,255,255);}";
 
     QString strStyle =
 
         "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
 
-        "QTreeView::branch:selected {background: rgb(0, 124, 221);selection-background-color:rgb(0, 124, 221);}"
+        "QTreeView::branch:selected {background: rgb(135,206,250);selection-background-color:rgb(135,206,250);}"
 
         "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
-        "QTreeView::item:selected{background-color:rgba(0, 124, 221, 255); "
-        "color:rgb(255,255,255);}"
+        "QTreeView::item:selected{background-color:rgb(135,206,250); "
+        "color:rgb(5,5,5);}"
 
         "QTreeView::branch:open:has-children:!has-siblings,"
         "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
@@ -35,7 +35,7 @@ MyTreeView::MyTreeView(QWidget* parent)
     if (!defaultIcon)
         setStyleSheet(strStyle);
     else {
-        setStyleSheet(strStyle0);
+        //setStyleSheet(strStyle0);
     }
 
     setUniformRowHeights(true);
