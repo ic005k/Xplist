@@ -2,6 +2,8 @@
 
 #include <editortabswidget.h>
 
+extern bool defaultIcon;
+
 MyTreeView::MyTreeView(QWidget* parent)
     : QTreeView(parent)
 
@@ -17,6 +19,16 @@ MyTreeView::MyTreeView(QWidget* parent)
     setDropIndicatorShown(true);
 
     setAlternatingRowColors(true);
+
+    QString strStyle = //"QTreeView{background-color: rgb(220, 124, 221);color:white;}"
+        //"QTreeView::item : selected : !active{color : white;background : rgb(220, 124, 221);}"
+        "QTreeView::branch:open:has-children:!has-siblings,"
+        "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
+        "QTreeView::branch:has-children:!has-siblings:closed,"
+        "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}";
+
+    if (!defaultIcon)
+        setStyleSheet(strStyle);
 }
 
 void MyTreeView::keyPressEvent(QKeyEvent* event)

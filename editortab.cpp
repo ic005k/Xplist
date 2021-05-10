@@ -22,8 +22,6 @@ extern QAction* actionSort;
 extern QUndoGroup* undoGroup;
 extern MainWindow* mw_one;
 
-extern bool defaultIcon;
-
 QCheckBox* chkBox;
 bool chk_null = true;
 int childCount = 0;
@@ -65,52 +63,15 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     setModel(m);
 
-    QFont font;
 #ifdef Q_OS_WIN32
-
-    font.setPointSize(9);
-    if (!defaultIcon)
-        treeView
-            ->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-                "QTreeView::branch:open:has-children:!has-siblings,"
-                "QTreeView::branch:open:has-children:has-siblings {image: "
-                "url(:/new/toolbar/res/sub.png);}"
-                "QTreeView::branch:has-children:!has-siblings:closed,"
-                "QTreeView::branch:closed:has-children:has-siblings {image: "
-                "url(:/new/toolbar/res/main.png);}"
-
-            );
-
     treeView->setColumnWidth(0, 370);
-    //treeView->setStyle(QStyleFactory::create("windows"));
-
 #endif
 
 #ifdef Q_OS_LINUX
-    font.setPointSize(11);
-    if (!defaultIcon)
-        treeView->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
-
-        );
-
     treeView->setColumnWidth(0, 500);
-
 #endif
 
 #ifdef Q_OS_MAC
-    font.setPointSize(13);
-    if (!defaultIcon)
-        treeView->setStyleSheet( //"QTreeView{background-color: transparent;color:white;font: bold 14px;outline:none;}"
-            "QTreeView::branch:open:has-children:!has-siblings,"
-            "QTreeView::branch:open:has-children:has-siblings {image: url(:/new/toolbar/res/sub.png);}"
-            "QTreeView::branch:has-children:!has-siblings:closed,"
-            "QTreeView::branch:closed:has-children:has-siblings {image: url(:/new/toolbar/res/main.png);}"
-
-        );
     treeView->setColumnWidth(0, 420);
 #endif
 
@@ -133,8 +94,6 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
     treeView->setItemDelegateForColumn(2, delegate1);
 
     treeView->expandToDepth(0);
-
-    treeView->setFont(font);
 
     //treeView->header()->setDefaultSectionSize(150);//表头默认列宽
     //treeView->header()->setMinimumHeight(25); //表头高度
