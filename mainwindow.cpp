@@ -2439,7 +2439,6 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
         lblFindCount->setText(QString::number(indexCount + 1) + " >> " + QString::number(findCount));
 
         EditorTab* tab = tabWidget->getCurentTab();
-        //tab->treeView->setFocus();
 
         QModelIndex index = indexFindList.at(indexCount);
 
