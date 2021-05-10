@@ -63,9 +63,7 @@ MainWindow::MainWindow(QWidget* parent)
     this->resize(QSize(1080, 580));
 
 #ifdef Q_OS_MAC
-
     mac = true;
-
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 9, 9))
     osx1012 = true;
     mac = false;
@@ -75,7 +73,6 @@ MainWindow::MainWindow(QWidget* parent)
 
 #ifdef Q_OS_LINUX
     linuxOS = true;
-
 #endif
 
     myToolBar = ui->mainToolBar;
