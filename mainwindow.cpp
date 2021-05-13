@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.53";
+    CurVerison = "1.0.54";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -2085,7 +2085,7 @@ void MainWindow::on_btnFind_clicked()
 
 void MainWindow::on_btnHideFind_clicked()
 {
-    ui->dockWidgetFindReplace->close();
+    ui->frame->close();
     ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
 }
 
@@ -2284,8 +2284,8 @@ void MainWindow::on_actionFindPrevious_triggered()
 
 void MainWindow::on_actionReplace_triggered()
 {
-    if (ui->dockWidgetFindReplace->isHidden()) {
-        ui->dockWidgetFindReplace->show();
+    if (ui->frame->isHidden()) {
+        ui->frame->show();
         ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
     }
 
@@ -2299,12 +2299,12 @@ void MainWindow::on_actionReplaceAll_triggered()
 
 void MainWindow::on_btnShowReplace_clicked()
 {
-    if (ui->dockWidgetFindReplace->isHidden()) {
-        ui->dockWidgetFindReplace->show();
+    if (ui->frame->isHidden()) {
+        ui->frame->show();
         ui->editReplace->setFocus();
         ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
     } else {
-        ui->dockWidgetFindReplace->close();
+        ui->frame->close();
 
         ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
     }
@@ -2374,15 +2374,9 @@ void MainWindow::on_actionSave_as_triggered()
 void MainWindow::initFindReplace()
 {
     //初始化查找与替换界面
+    ui->frame->layout()->setMargin(1);
 
-    QWidget* lEmptyWidget2 = new QWidget();
-    ui->dockWidgetFindReplace->setTitleBarWidget(lEmptyWidget2);
-
-    ui->dockWidgetFindReplace->setMinimumHeight(0);
-
-    ui->dockWidgetContentsFindReplace->layout()->setMargin(1);
-
-    ui->dockWidgetFindReplace->close();
+    ui->frame->close();
     ui->btnPrevious->setEnabled(false);
     ui->btnNext->setEnabled(false);
     ui->btnReplace->setEnabled(false);
@@ -2401,6 +2395,7 @@ void MainWindow::initPlistTextShow()
     ui->dockWidget->setTitleBarWidget(lEmptyWidget);
     delete lTitleBar;
 
+    ui->centralWidget->layout()->setMargin(1);
     ui->gridLayout->setMargin(1);
 
     ui->dockWidgetContents->layout()->setMargin(1);
