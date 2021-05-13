@@ -93,13 +93,6 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
     treeView->setItemDelegateForColumn(1, delegate2);
     treeView->setItemDelegateForColumn(2, delegate1);
 
-    //treeView->header()->setDefaultSectionSize(150);//表头默认列宽
-    //treeView->header()->setMinimumHeight(25); //表头高度
-    //treeView->header()->setDefaultAlignment(Qt::AlignCenter);
-    //treeView->header()->setStretchLastSection(true);
-    //treeView->header()->setSortIndicator(0, Qt::AscendingOrder);
-    //treeView->setSortingEnabled(true);
-    //treeView->setStyle(QStyleFactory::create("windows"));
     //treeView->setSelectionBehavior(QAbstractItemView::SelectItems); //不选中一行，分单元格选择
     treeView->setSelectionMode(QAbstractItemView::ExtendedSelection); //选择多行
 
@@ -128,44 +121,34 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
     QMenu menu(treeView);
 
     QAction* expandAction = new QAction(tr("Expand"), this);
-    //expandAction->setIcon(QIcon(":/new/toolbar/res/exp.png"));
     menu.addAction(expandAction);
 
     QAction* collapseAction = new QAction(tr("Collapse"), this);
-    //collapseAction->setIcon(QIcon(":/new/toolbar/res/col.png"));
     menu.addAction(collapseAction);
 
     menu.addSeparator();
 
     copyAction = new QAction(tr("Copy"), this);
-    //copyAction->setIcon(QIcon(":/new/toolbar/res/copy.png"));
-    //copyAction->setShortcuts(QKeySequence::Copy);
     menu.addAction(copyAction);
 
     cutAction = new QAction(tr("Cut"), this);
-    //cutAction->setIcon(QIcon(":/new/toolbar/res/cut.png"));
 
     menu.addAction(cutAction);
 
     menu.addSeparator();
 
     pasteAction = new QAction(tr("Paste"), this);
-    //pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
-    //pasteAction->setShortcut(tr("ctrl+v"));
     menu.addAction(pasteAction);
 
     pasteAsChildAction = new QAction(tr("Paste as child"), this);
-    //pasteAction->setIcon(QIcon(":/new/toolbar/res/paste.png"));
     menu.addAction(pasteAsChildAction);
 
     menu.addSeparator();
 
     actionNewSibling = new QAction(tr("New Sibling"), this);
-    //actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
     menu.addAction(actionNewSibling);
 
     actionNewChild = new QAction(tr("New Child"), this);
-    //actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
     menu.addAction(actionNewChild);
 
     connect(copyAction, SIGNAL(triggered()), this, SLOT(on_copyAction()));
