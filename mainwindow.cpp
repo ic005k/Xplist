@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     loading = true;
 
-    this->resize(QSize(1080, 580));
+    this->resize(QSize(1080, 600));
 
 #ifdef Q_OS_MAC
     mac = true;
@@ -334,13 +334,14 @@ void MainWindow::initMenuToolsBar()
     connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
 
     ui->mainToolBar->addSeparator();
-
+    //条目上移
     QAction* actionMoveUp = new QAction(tr("Move up"));
     actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.png"));
     actionMoveUp->setShortcut(tr("ctrl+u"));
     ui->mainToolBar->addAction(actionMoveUp);
     connect(actionMoveUp, &QAction::triggered, this, &MainWindow::on_actionMoveUp);
 
+    // 条目下移
     QAction* actionMoveDown = new QAction(tr("Move down"));
     actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.png"));
     actionMoveDown->setShortcut(tr("ctrl+d"));
@@ -357,12 +358,14 @@ void MainWindow::initMenuToolsBar()
 
     ui->mainToolBar->addSeparator();
 
+    // Undo、Redo
     actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.png"));
     ui->mainToolBar->addAction(actionUndo);
 
     actionRedo->setIcon(QIcon(":/new/toolbar/res/redo.png"));
     ui->mainToolBar->addAction(actionRedo);
 
+    // 文件存储格式xml或bin
     ui->mainToolBar->addSeparator();
     cboxFileType = new QComboBox(this);
     cboxFileType->setToolTip(tr("Select the file storage format"));
@@ -381,6 +384,7 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addWidget(lblFindCount);
     findEdit = new QLineEdit();
 
+    // 搜索框
     ui->editFind->setClearButtonEnabled(true);
     ui->editFind->setPlaceholderText(tr("Find"));
     ui->editReplace->setClearButtonEnabled(true);
@@ -1095,7 +1099,6 @@ void MainWindow::on_Find()
 
         index = model->index(0, 0);
         tab->treeView->setCurrentIndex(index); //设置当前索引
-        //tab->treeView->setFocus();
 
         findCount = 0;
         lblFindCount->setText("  " + QString::number(findCount) + "  ");
@@ -2898,4 +2901,10 @@ void MainWindow::initRecentFilesForToolBar()
 void MainWindow::on_actionQuit_triggered()
 {
     this->close();
+}
+
+void MainWindow::on_listFind_itemSelectionChanged()
+{
+    if (!loading)
+        on_listFind_itemClicked(NULL);
 }

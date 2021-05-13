@@ -212,6 +212,8 @@ private slots:
 
     void on_actionQuit_triggered();
 
+    void on_listFind_itemSelectionChanged();
+
 private:
     bool useQtWriteXML = true;
     RecentFiles* m_recentFiles;
