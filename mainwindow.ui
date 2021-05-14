@@ -565,7 +565,7 @@
   <action name="actionRemove_2">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/new/toolbar/res/Remove.svg</normaloff>:/new/toolbar/res/Remove.svg</iconset>
+     <normaloff>:/new/toolbar/res/remove.svg</normaloff>:/new/toolbar/res/remove.svg</iconset>
    </property>
    <property name="text">
     <string>Remove</string>
