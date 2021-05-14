@@ -257,7 +257,7 @@
    </property>
    <property name="maximumSize">
     <size>
-     <width>170</width>
+     <width>524287</width>
      <height>524287</height>
     </size>
    </property>
@@ -396,51 +396,6 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionFile1">
-   <property name="text">
-    <string>File1</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile2">
-   <property name="text">
-    <string>File2</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile3">
-   <property name="text">
-    <string>File3</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile4">
-   <property name="text">
-    <string>File4</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile5">
-   <property name="text">
-    <string>File5</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionClear_list">
-   <property name="text">
-    <string>Clear list</string>
-   </property>
-  </action>
   <action name="actionClose_all">
    <property name="text">
     <string>Close all</string>
@@ -450,46 +405,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+W</string>
-   </property>
-  </action>
-  <action name="actionFile6">
-   <property name="text">
-    <string>File6</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile7">
-   <property name="text">
-    <string>File7</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile8">
-   <property name="text">
-    <string>File8</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile9">
-   <property name="text">
-    <string>File9</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionFile10">
-   <property name="text">
-    <string>File10</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
    </property>
   </action>
   <action name="actionCopy">
