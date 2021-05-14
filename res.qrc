@@ -1,35 +1,33 @@
 <RCC>
     <qresource prefix="/new/toolbar">
-        <file>res/Remove.png</file>
-        <file>res/find.png</file>
-        <file>res/redo.png</file>
-        <file>res/undo.png</file>
-        <file>res/new.png</file>
-        <file>res/open.png</file>
-        <file>res/save.png</file>
         <file>res/translation_cn.qm</file>
         <file>res/translation_ru.qm</file>
         <file>res/qt_zh_CN.qm</file>
         <file>res/my.png</file>
-        <file>res/saveas.png</file>
-        <file>res/copy.png</file>
-        <file>res/main.png</file>
-        <file>res/sub.png</file>
-        <file>res/col.png</file>
-        <file>res/exp.png</file>
-        <file>res/child.png</file>
-        <file>res/sibling.png</file>
-        <file>res/down.png</file>
-        <file>res/up.png</file>
-        <file>res/sort.png</file>
-        <file>res/1.png</file>
-        <file>res/2.png</file>
-        <file>res/3.png</file>
-        <file>res/4.png</file>
         <file>res/widgets_zh_cn.qm</file>
-        <file>res/nw.png</file>
-        <file>res/cu.png</file>
-        <file>res/rp.png</file>
+        <file>res/nw.svg</file>
+        <file>res/Remove.svg</file>
+        <file>res/open.svg</file>
+        <file>res/rp.svg</file>
+        <file>res/new.svg</file>
+        <file>res/save.svg</file>
+        <file>res/saveas.svg</file>
+        <file>res/down.svg</file>
+        <file>res/up.svg</file>
+        <file>res/sort.svg</file>
+        <file>res/redo.svg</file>
+        <file>res/undo.svg</file>
+        <file>res/find.svg</file>
+        <file>res/cu.svg</file>
+        <file>res/child.svg</file>
+        <file>res/sibling.svg</file>
+        <file>res/col.svg</file>
+        <file>res/exp.svg</file>
+        <file>res/main.svg</file>
+        <file>res/sub.svg</file>
+        <file>res/next.svg</file>
+        <file>res/pre.svg</file>
+        <file>res/replace.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

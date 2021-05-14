@@ -278,7 +278,7 @@ void MainWindow::initMenuToolsBar()
     //最近打开的文件快捷通道
     QToolButton* btn0 = new QToolButton(this);
     btn0->setToolTip(tr("Open Recent..."));
-    btn0->setIcon(QIcon(":/new/toolbar/res/rp.png"));
+    btn0->setIcon(QIcon(":/new/toolbar/res/rp.svg"));
     btn0->setPopupMode(QToolButton::InstantPopup);
     ui->mainToolBar->addWidget(btn0);
     reFileMenu = new QMenu(this);
@@ -307,21 +307,22 @@ void MainWindow::initMenuToolsBar()
     // 增加同级项
     actionNewSibling = new QAction(tr("New Sibling"), this);
     ui->mainToolBar->addAction(actionNewSibling);
-    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
+    actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.svg"));
     connect(actionNewSibling, SIGNAL(triggered()), this, SLOT(on_actionNewSibling()));
 
     ui->actionNew_Sibling->setShortcut(tr("ctrl++"));
 
+    // 增加子项
     actionNewChild = new QAction(tr("New Child"), this);
     ui->mainToolBar->addAction(actionNewChild);
-    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
+    actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.svg"));
     connect(actionNewChild, &QAction::triggered, this, &MainWindow::on_actionNewChild);
 
     connect(ui->actionNew_Child, &QAction::triggered, this, &MainWindow::on_actionNewChild);
     ui->actionNew_Child->setShortcut(tr("+"));
 
-    ui->mainToolBar->addAction(ui->actionRemove);
-    ui->actionRemove->setShortcut(Qt::Key_Delete);
+    // 删除
+    ui->mainToolBar->addAction(ui->actionRemove_2);
     ui->actionRemove_2->setShortcut(Qt::Key_Delete);
     ui->actionRemove_2->setShortcut(tr("-"));
     connect(ui->actionRemove_2, &QAction::triggered, this, &MainWindow::actionRemove_activated);
@@ -336,14 +337,14 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addSeparator();
     //条目上移
     QAction* actionMoveUp = new QAction(tr("Move up"));
-    actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.png"));
+    actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.svg"));
     actionMoveUp->setShortcut(tr("ctrl+u"));
     ui->mainToolBar->addAction(actionMoveUp);
     connect(actionMoveUp, &QAction::triggered, this, &MainWindow::on_actionMoveUp);
 
     // 条目下移
     QAction* actionMoveDown = new QAction(tr("Move down"));
-    actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.png"));
+    actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.svg"));
     actionMoveDown->setShortcut(tr("ctrl+d"));
     ui->mainToolBar->addAction(actionMoveDown);
     connect(actionMoveDown, &QAction::triggered, this, &MainWindow::on_actionMoveDown);
@@ -352,17 +353,17 @@ void MainWindow::initMenuToolsBar()
 
     // 排序
     actionSort = new QAction(tr("A->Z Sort"));
-    actionSort->setIcon(QIcon(":/new/toolbar/res/sort.png"));
+    actionSort->setIcon(QIcon(":/new/toolbar/res/sort.svg"));
     ui->mainToolBar->addAction(actionSort);
     connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
 
     ui->mainToolBar->addSeparator();
 
     // Undo、Redo
-    actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.png"));
+    actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.svg"));
     ui->mainToolBar->addAction(actionUndo);
 
-    actionRedo->setIcon(QIcon(":/new/toolbar/res/redo.png"));
+    actionRedo->setIcon(QIcon(":/new/toolbar/res/redo.svg"));
     ui->mainToolBar->addAction(actionRedo);
 
     // 文件存储格式xml或bin
@@ -375,7 +376,7 @@ void MainWindow::initMenuToolsBar()
 
     ui->mainToolBar->addSeparator();
 
-    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.png"), tr(""), this);
+    QAction* findAction = new QAction(QIcon(":/new/toolbar/res/find.svg"), tr(""), this);
     findAction->setToolTip(tr("Find and Replace"));
     findAction->setShortcut(tr("ctrl+F"));
     connect(findAction, &QAction::triggered, this, &MainWindow::on_ShowFindReplace);
@@ -395,7 +396,7 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addWidget(ui->editFind);
 
     ui->mainToolBar->addWidget(ui->btnFind);
-    ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
+    ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.svg"));
     //设置下拉菜单
     actCaseSensitive->setCheckable(true);
     btnFindMenu = new QMenu(this);
@@ -414,11 +415,11 @@ void MainWindow::initMenuToolsBar()
     });
 
     ui->mainToolBar->addWidget(ui->btnPrevious);
-    ui->btnPrevious->setIcon(QIcon(":/new/toolbar/res/1.png"));
+    //ui->btnPrevious->setIcon(QIcon(":/new/toolbar/res/1.png"));
     ui->mainToolBar->addWidget(ui->btnNext);
-    ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
+    //ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
     ui->mainToolBar->addWidget(ui->btnShowReplace);
-    ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
+    //ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
     ui->btnMisc->setVisible(false);
 
     connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
@@ -427,7 +428,6 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addSeparator();
 
     ui->mainToolBar->addAction(ui->actionCheck_Update);
-    ui->actionCheck_Update->setIcon(QIcon(":/new/toolbar/res/cu.png"));
 }
 
 void MainWindow::recentOpen(QString filename)
@@ -961,12 +961,12 @@ void MainWindow::setExpandText(EditorTab* tab)
     ui->actionExpand_all->setIconText(text);
 
     if (ui->actionExpand_all->iconText() == tr("Expand all")) {
-        ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+        ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.svg"));
         ui->actionExpand_all->setToolTip(tr("Expand all"));
     }
 
     if (ui->actionExpand_all->iconText() == tr("Collapse all")) {
-        ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/col.png"));
+        ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/col.svg"));
         ui->actionExpand_all->setToolTip(tr("Collapse all"));
     }
 }
@@ -2089,7 +2089,7 @@ void MainWindow::on_btnFind_clicked()
 void MainWindow::on_btnHideFind_clicked()
 {
     ui->frame->close();
-    ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
+    //ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
 }
 
 void MainWindow::on_btnPrevious_clicked()
@@ -2289,7 +2289,7 @@ void MainWindow::on_actionReplace_triggered()
 {
     if (ui->frame->isHidden()) {
         ui->frame->show();
-        ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
+        //ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
     }
 
     on_btnReplace_clicked();
@@ -2305,11 +2305,11 @@ void MainWindow::on_btnShowReplace_clicked()
     if (ui->frame->isHidden()) {
         ui->frame->show();
         ui->editReplace->setFocus();
-        ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
+        //ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
     } else {
         ui->frame->close();
 
-        ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
+        //ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
     }
 }
 
@@ -2404,6 +2404,7 @@ void MainWindow::initPlistTextShow()
     ui->dockWidgetContents->layout()->setMargin(1);
 
     plistTextEditor = new CodeEditor(this);
+    plistTextEditor->setFont(getFont());
     plistTextEditor->setReadOnly(true);
     ui->dockWidgetContents->layout()->addWidget(plistTextEditor);
 
@@ -2907,4 +2908,62 @@ void MainWindow::on_listFind_itemSelectionChanged()
 {
     if (!loading)
         on_listFind_itemClicked(NULL);
+}
+
+void MainWindow::on_actionFont_triggered()
+{
+    bool ok;
+    QFontDialog fd;
+
+    font = fd.getFont(&ok, font);
+
+    if (ok) {
+
+        if (tabWidget->hasTabs()) {
+            int index = tabWidget->currentIndex();
+            for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
+                tabWidget->setCurrentIndex(i);
+                tabWidget->getCurentTab()->treeView->setFont(font);
+            }
+
+            tabWidget->setCurrentIndex(index);
+        }
+
+        plistTextEditor->setFont(font);
+
+        //存储字体信息
+        QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+        QFile file(qfile);
+
+        QSettings Reg(qfile, QSettings::IniFormat);
+        Reg.setValue("FontName", font.family());
+        Reg.setValue("FontSize", font.pointSize());
+        Reg.setValue("FontBold", font.bold());
+        Reg.setValue("FontItalic", font.italic());
+        Reg.setValue("FontUnderline", font.underline());
+
+        file.close();
+    }
+}
+
+QFont MainWindow::getFont()
+{
+    QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+    QFileInfo fi(qfile);
+    QFont font;
+    if (fi.exists()) {
+
+        QSettings Reg(qfile, QSettings::IniFormat);
+        if (Reg.value("FontName").toString() != "") {
+            font.setFamily(Reg.value("FontName").toString());
+            font.setPointSize(Reg.value("FontSize").toInt());
+            font.setBold(Reg.value("FontBold").toBool());
+            font.setItalic(Reg.value("FontItalic").toBool());
+            font.setUnderline(Reg.value("FontUnderline").toBool());
+
+            return font;
+        }
+    }
+
+    return font;
 }

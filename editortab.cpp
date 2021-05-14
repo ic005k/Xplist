@@ -45,6 +45,7 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
     policy.setVerticalPolicy(QSizePolicy::Expanding);
 
     treeView = new MyTreeView(this);
+    treeView->setFont(mw_one->getFont());
 
     lblTips = new QTextBrowser(this);
     lblTips->setLineWrapMode(QTextEdit::NoWrap);

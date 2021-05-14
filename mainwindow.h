@@ -8,6 +8,7 @@
 #include <QDropEvent>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFontDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidgetItem>
@@ -51,6 +52,7 @@ public:
     explicit MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
+    QFont font;
     Ui::MainWindow* ui;
     bool findTextChanged = false;
     CodeEditor* plistTextEditor;
@@ -92,6 +94,7 @@ public:
 
     void closeOpenedFile(QString file);
 
+    QFont getFont();
 public slots:
     void on_Find();
     void on_actionMoveUp();
@@ -213,6 +216,8 @@ private slots:
     void on_actionQuit_triggered();
 
     void on_listFind_itemSelectionChanged();
+
+    void on_actionFont_triggered();
 
 private:
     bool useQtWriteXML = true;

@@ -27,12 +27,17 @@ MyTreeView::MyTreeView(QWidget* parent)
 
                           "QTreeView::branch:open:has-children:!has-siblings,"
                           "QTreeView::branch:open:has-children:has-siblings {image: "
-                          "url(:/new/toolbar/res/sub.png);}"
+                          "url(:/new/toolbar/res/sub.svg);}"
                           "QTreeView::branch:has-children:!has-siblings:closed,"
                           "QTreeView::branch:closed:has-children:has-siblings {image: "
-                          "url(:/new/toolbar/res/main.png);}";
+                          "url(:/new/toolbar/res/main.svg);}";
 
     QString strStyle = "QTreeView{outline:none;}"
+
+                       //"QTreeView::branch {background: background: rgb(255,255,255);}"
+
+                       //"QTreeView::branch:selected {background: transparent;}"
+
                        "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
 
                        "QTreeView::branch:selected {background: "
@@ -45,10 +50,10 @@ MyTreeView::MyTreeView(QWidget* parent)
 
                        "QTreeView::branch:open:has-children:!has-siblings,"
                        "QTreeView::branch:open:has-children:has-siblings {image: "
-                       "url(:/new/toolbar/res/sub.png);}"
+                       "url(:/new/toolbar/res/sub.svg);}"
                        "QTreeView::branch:has-children:!has-siblings:closed,"
                        "QTreeView::branch:closed:has-children:has-siblings {image: "
-                       "url(:/new/toolbar/res/main.png);}";
+                       "url(:/new/toolbar/res/main.svg);}";
 
     if (!defaultIcon) {
         setStyleSheet(strStyle);
