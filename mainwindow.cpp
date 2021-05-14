@@ -107,6 +107,22 @@ MainWindow::MainWindow(QWidget* parent)
     ui->actionNew_Child->setShortcut(tr("alt++"));
 #endif
 
+    init_iniData();
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
+
+    loading = false;
+}
+
+MainWindow::~MainWindow()
+{
+    delete undoGroup;
+    delete ui;
+}
+
+void MainWindow::init_iniData()
+{
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QFileInfo fi(qfile);
     if (fi.exists()) {
@@ -188,18 +204,25 @@ MainWindow::MainWindow(QWidget* parent)
             ui->dockWidget->setHidden(false);
         else
             ui->dockWidget->setHidden(true);
+
+        // 主窗口位置和大小
+        int x, y, width, height;
+        x = Reg.value("x", 0).toInt();
+        y = Reg.value("y", 0).toInt();
+        width = Reg.value("width", 1200).toInt();
+        height = Reg.value("height", 600).toInt();
+        if (x < 0) {
+            width = width + x;
+            x = 0;
+        }
+        if (y < 0) {
+            height = height + y;
+            y = 0;
+        }
+        QRect rect(x, y, width, height);
+        move(rect.topLeft());
+        resize(rect.size());
     }
-
-    manager = new QNetworkAccessManager(this);
-    connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
-
-    loading = false;
-}
-
-MainWindow::~MainWindow()
-{
-    delete undoGroup;
-    delete ui;
 }
 
 void MainWindow::initMenuToolsBar()
@@ -415,11 +438,8 @@ void MainWindow::initMenuToolsBar()
     });
 
     ui->mainToolBar->addWidget(ui->btnPrevious);
-    //ui->btnPrevious->setIcon(QIcon(":/new/toolbar/res/1.png"));
     ui->mainToolBar->addWidget(ui->btnNext);
-    //ui->btnNext->setIcon(QIcon(":/new/toolbar/res/2.png"));
     ui->mainToolBar->addWidget(ui->btnShowReplace);
-    //ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
     ui->btnMisc->setVisible(false);
 
     connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
@@ -1262,6 +1282,12 @@ void MainWindow::closeEvent(QCloseEvent* event)
     Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
     Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
     Reg.setValue("drag", false);
+
+    // 存储窗口大小和位置
+    Reg.setValue("x", this->x());
+    Reg.setValue("y", this->y());
+    Reg.setValue("width", this->width());
+    Reg.setValue("height", this->height());
 
     //记录搜索文本列表
     //先读取，采用增量保存的方式，以免覆盖之前的已有数据

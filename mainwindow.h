@@ -265,6 +265,8 @@ private:
     QAction* actClearList = new QAction(tr("Clear List"), this);
     QVector<QAction*> btnFindActionList;
 
+    void init_iniData();
+
 protected:
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
