@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     loading = true;
 
-    this->resize(QSize(1080, 600));
+    this->resize(QSize(1350, 720));
 
 #ifdef Q_OS_MAC
     mac = true;
