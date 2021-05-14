@@ -330,7 +330,7 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addSeparator();
 
     ui->mainToolBar->addAction(ui->actionExpand_all);
-    ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.png"));
+    ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.svg"));
 
     connect(ui->actionExpand_all, SIGNAL(triggered()), this, SLOT(actionExpand_all_activated()));
 
