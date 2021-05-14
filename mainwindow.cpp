@@ -2914,7 +2914,7 @@ void MainWindow::on_actionFont_triggered()
 {
     bool ok;
     QFontDialog fd;
-
+    font = getFont();
     font = fd.getFont(&ok, font);
 
     if (ok) {
