@@ -9,9 +9,11 @@ MainWindow* mw_one;
 
 int main(int argc, char* argv[])
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     {
-        QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+        qputenv("QT_ENABLE_HIGHDPI_SCALING", "1");
+        QGuiApplication::setHighDpiScaleFactorRoundingPolicy(
+            Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
         QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     }
 #endif
@@ -74,7 +76,6 @@ int main(int argc, char* argv[])
         mw_one->show();
     }
 
-    //f.setPixelSize(12);
     a->setFont(f);
     return a->exec();
 }
