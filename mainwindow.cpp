@@ -1275,7 +1275,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
     //记录当前文件
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-    QFile file(qfile);
     QSettings Reg(qfile, QSettings::IniFormat);
 
     Reg.setValue("restore", ui->actionRestoreScene->isChecked());
@@ -1361,8 +1360,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
         Reg.setValue("count", 0);
     }
 
-    file.close();
-
     loading = false;
 }
 
@@ -1404,7 +1401,6 @@ void MainWindow::reg_win()
 
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-
     Q_UNUSED(event);
 }
 
