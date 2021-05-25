@@ -46,6 +46,7 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
     treeView = new MyTreeView(this);
     treeView->setFont(mw_one->getFont());
+    treeView->header()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignCenter);
 
     lblTips = new QTextBrowser(this);
     lblTips->setLineWrapMode(QTextEdit::NoWrap);
@@ -61,7 +62,6 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
     treeExpanded = false;
 
     model = NULL;
-
     setModel(m);
 
 #ifdef Q_OS_WIN32

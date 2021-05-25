@@ -43,8 +43,14 @@ QVariant DomModel::data(const QModelIndex& index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole)
+    if (role != Qt::DisplayRole) {
+        if (role == Qt::TextAlignmentRole) {
+            if (index.column() == 1)
+                return QVariant(Qt::AlignCenter);
+        }
+
         return QVariant();
+    }
 
     DomItem* item = itemForIndex(index);
 
@@ -106,11 +112,16 @@ Qt::ItemFlags DomModel::flags(const QModelIndex& index) const
 QVariant DomModel::headerData(int section, Qt::Orientation orientation,
     int role) const
 {
+    if (role == Qt::TextAlignmentRole)
+        return QVariant();
+
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+
         switch (section) {
         case 0:
             return tr("Key");
         case 1:
+
             return tr("Type");
         case 2:
             return tr("Value");

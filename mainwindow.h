@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFontDialog>
+#include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidgetItem>
