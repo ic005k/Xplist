@@ -74,6 +74,7 @@ void LineEditDelegate::setEditorData(QWidget* editor,
     }
 
     lineEdit->setText(value);
+    tab->treeView->resizeColumnToContents(0);
 }
 
 void LineEditDelegate::setModelData(QWidget* editor,
@@ -143,7 +144,6 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
     if (type == "date") {
         QDateTime date = QDateTime::fromString(val);
         if (!date.isValid()) {
-            //return 0;
         }
     }
 

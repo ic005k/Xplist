@@ -168,7 +168,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event)
 void EditorTab::onItemAdded(const QModelIndex& index)
 {
 
-    //treeView->resizeColumnToContents(0);
+    treeView->resizeColumnToContents(0);
 
     treeView->expand(index);
     treeView->doItemsLayout(); //重要：刷新数据的显示
@@ -210,7 +210,7 @@ void EditorTab::expand()
         }
     }
 
-    //treeView->resizeColumnToContents(0);
+    treeView->resizeColumnToContents(0);
 
     loading = false;
 }
@@ -752,7 +752,7 @@ void EditorTab::on_expandAction()
     treeView->expand(index);
     view_expand(index, model);
 
-    //treeView->resizeColumnToContents(0);
+    treeView->resizeColumnToContents(0);
 
     loading = false;
 }
@@ -765,7 +765,7 @@ void EditorTab::on_collapseAction()
     DomModel* model = this->getModel();
     view_collapse(index.parent(), model);
 
-    //treeView->resizeColumnToContents(0);
+    treeView->resizeColumnToContents(0);
 
     loading = false;
 }

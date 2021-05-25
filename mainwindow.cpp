@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.55";
+    CurVerison = "1.0.56";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -604,7 +604,7 @@ void MainWindow::openPlist(QString filePath)
 
         // 列宽自动适应最长的条目
         EditorTab* tab = tabWidget->getCurentTab();
-        //tab->treeView->resizeColumnToContents(0);
+        tab->treeView->resizeColumnToContents(0);
 
         tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
         tab->treeView->setFocus();
@@ -887,6 +887,7 @@ void MainWindow::actionRemove_activated()
         QModelIndex index = tab->currentIndex();
         if (index.isValid())
             tab->treeView->setCurrentIndex(index);
+        tab->treeView->resizeColumnToContents(0);
     }
 }
 
@@ -1711,6 +1712,8 @@ void MainWindow::on_expandAction()
 
             tab->treeView->collapse(index);
         }
+
+        tab->treeView->resizeColumnToContents(0);
     }
 }
 
