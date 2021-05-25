@@ -45,7 +45,7 @@ QVariant DomModel::data(const QModelIndex& index, int role) const
 
     if (role != Qt::DisplayRole) {
         if (role == Qt::TextAlignmentRole) {
-            if (index.column() == 1)
+            if (index.column() == 1) // 设置第二列数据的对齐方式
                 return QVariant(Qt::AlignCenter);
         }
 

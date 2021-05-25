@@ -152,9 +152,17 @@ void CodeEditor::highlightCurrentLine()
 
 void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
 {
+    //获取背景色
+    QPalette pal = this->palette();
+    QBrush brush = pal.window();
+    int red = brush.color().red();
+
     QPainter painter(lineNumberArea);
     QColor color;
-    color.setRgb(255, 255, 224);
+    if (red <= 55)
+        color.setRgb(25, 25, 25);
+    else
+        color.setRgb(250, 250, 250);
     painter.fillRect(event->rect(), color);
 
     //![extraAreaPaintEvent_0]
@@ -170,7 +178,10 @@ void CodeEditor::lineNumberAreaPaintEvent(QPaintEvent* event)
     while (block.isValid() && top <= event->rect().bottom()) {
         if (block.isVisible() && bottom >= event->rect().top()) {
             QString number = QString::number(blockNumber + 1);
-            painter.setPen(Qt::black);
+            if (red <= 55)
+                painter.setPen(Qt::white);
+            else
+                painter.setPen(Qt::black);
             painter.drawText(0, top, lineNumberArea->width(), fontMetrics().height(),
                 Qt::AlignRight, number);
         }
