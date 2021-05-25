@@ -104,6 +104,8 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
     connect(delegate_bool, SIGNAL(dataChanged(const QModelIndex&, QString)), this, SLOT(editorDataAboutToBeSet(const QModelIndex&, QString)));
 
     connect(treeView, &QTreeView::clicked, this, &EditorTab::treeView_clicked);
+    connect(treeView, &QTreeView::expanded, this, &EditorTab::treeView_expanded);
+    connect(treeView, &QTreeView::collapsed, this, &EditorTab::treeView_collapsed);
     //connect(treeView, &QTreeView::doubleClicked, this, &EditorTab::treeView_doubleClicked);
     connect(treeView->selectionModel(), &QItemSelectionModel::currentRowChanged, this, &EditorTab::slotCurrentRowChanged);
 }
@@ -725,7 +727,6 @@ void EditorTab::view_collapse(const QModelIndex index, DomModel* model)
 
 void EditorTab::view_expand(const QModelIndex index, DomModel* model)
 {
-
     int childCount = model->rowCount(index);
 
     for (int childNo = 0; childNo < childCount; childNo++) {
