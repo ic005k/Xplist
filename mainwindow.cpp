@@ -1137,6 +1137,8 @@ void MainWindow::on_Find()
             forEach(model, index, strFind);
         } else
             qDebug() << "index is no valid";
+
+        tab->treeView->resizeColumnToContents(0);
     }
 
     loading = false;
@@ -2465,7 +2467,10 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item)
 
         tab->treeView->clearSelection();
 
+        loading = true;
         tab->treeView->expandAll();
+        loading = false;
+        tab->treeView->resizeColumnToContents(0);
 
         tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::SelectCurrent);
 
