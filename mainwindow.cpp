@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.56";
+    CurVerison = "1.0.57";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -1561,16 +1561,19 @@ void MainWindow::goPlistText()
             val = tab->HexStrToByte(val).toBase64().trimmed();
         }
 
-        for (int i = 0; i < plistTextEditor->document()->lineCount(); i++) {
+        QTextEdit *editTemp = new QTextEdit;
+        editTemp->setPlainText(plistTextEditor->document()->toPlainText());
 
-            QTextBlock block = plistTextEditor->document()->findBlockByNumber(i);
-            plistTextEditor->setTextCursor(QTextCursor(block));
-            QString lineText = plistTextEditor->document()->findBlockByNumber(i).text().trimmed();
+        for (int i = 0; i < editTemp->document()->lineCount(); i++) {
+
+            QTextBlock block = editTemp->document()->findBlockByNumber(i);
+            editTemp->setTextCursor(QTextCursor(block));
+            QString lineText = editTemp->document()->findBlockByNumber(i).text().trimmed();
 
             if (name.mid(0, 4) == "Item") {
 
                 if (getPlistTextValue(lineText) == val) {
-                    setBarMarkers();
+                    setBarMarkers(i);
 
                     break;
                 }
@@ -1578,7 +1581,7 @@ void MainWindow::goPlistText()
 
                 if (datatype == "array" || datatype == "dict") {
                     if (getPlistTextValue(lineText) == name) {
-                        setBarMarkers();
+                        setBarMarkers(i);
 
                         break;
                     }
@@ -1590,12 +1593,12 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == name) {
 
-                            QString strNext = plistTextEditor->document()->findBlockByNumber(i + 1).text().trimmed();
+                            QString strNext = editTemp->document()->findBlockByNumber(i + 1).text().trimmed();
                             QString strBool = strNext.mid(1, strNext.length() - 4);
                             QString strBool1 = strNext.mid(1, strNext.length() - 3);
 
                             if (strBool == val || strBool1 == val) {
-                                setBarMarkers();
+                                setBarMarkers(i);
 
                                 break;
                             }
@@ -1606,11 +1609,11 @@ void MainWindow::goPlistText()
 
                         if (lineText.mid(1, lineText.length() - 4) == val || lineText.mid(1, lineText.length() - 3) == val) {
 
-                            QString strPrevious = plistTextEditor->document()->findBlockByNumber(i - 1).text().trimmed();
+                            QString strPrevious = editTemp->document()->findBlockByNumber(i - 1).text().trimmed();
 
                             if (getPlistTextValue(strPrevious) == name) {
 
-                                setBarMarkers();
+                                setBarMarkers(i);
 
                                 break;
                             }
@@ -1623,10 +1626,10 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == name) {
 
-                            QString strNext = plistTextEditor->document()->findBlockByNumber(i + 1).text().trimmed();
+                            QString strNext = editTemp->document()->findBlockByNumber(i + 1).text().trimmed();
                             if (getPlistTextValue(strNext) == val) {
 
-                                setBarMarkers();
+                                setBarMarkers(i);
 
                                 break;
                             }
@@ -1637,11 +1640,11 @@ void MainWindow::goPlistText()
 
                         if (getPlistTextValue(lineText) == val) {
 
-                            QString strPrevious = plistTextEditor->document()->findBlockByNumber(i - 1).text().trimmed();
+                            QString strPrevious = editTemp->document()->findBlockByNumber(i - 1).text().trimmed();
 
                             if (getPlistTextValue(strPrevious) == name) {
 
-                                setBarMarkers();
+                                setBarMarkers(i);
 
                                 break;
                             }
@@ -1655,8 +1658,11 @@ void MainWindow::goPlistText()
     this->repaint();
 }
 
-void MainWindow::setBarMarkers()
+void MainWindow::setBarMarkers(int line)
 {
+    QTextBlock block = plistTextEditor->document()->findBlockByNumber(line);
+    plistTextEditor->setTextCursor(QTextCursor(block));
+
     QList<QTextEdit::ExtraSelection> extraSelection;
     QTextEdit::ExtraSelection selection;
     QColor lineColor;
@@ -1674,7 +1680,7 @@ void MainWindow::setBarMarkers()
     vsBar = plistTextEditor->verticalScrollBar();
     int vPos = plistTextEditor->verticalScrollBar()->sliderPosition();
     //if (vPos > plistTextEditor->height() / 3)
-    vsBar->setSliderPosition(vPos + 4); //plistTextEditor->height() / 2);
+    vsBar->setSliderPosition(vPos + 0); //plistTextEditor->height() / 2);
 }
 
 void MainWindow::paintEvent(QPaintEvent* event)

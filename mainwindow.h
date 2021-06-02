@@ -254,7 +254,7 @@ private:
 
     QStringList FindTextList;
 
-    void setBarMarkers();
+    void setBarMarkers(int line);
     QString getPlistTextValue(QString str);
 
     MyHighLighter* myHL;
