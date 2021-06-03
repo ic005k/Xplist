@@ -72,8 +72,6 @@ public:
     void AddMiscTools(QString fileStr, QString fileStrBaseName);
     void setItem(QModelIndex parentIndex, int row, QString key, QString type, QString value);
 
-    QLineEdit* findEdit;
-
     void forEach(QAbstractItemModel* model, QModelIndex parent, QString str);
     QModelIndex indexFind;
     QVector<QModelIndex> indexFindList;
@@ -129,10 +127,6 @@ private slots:
     void openRecentFile();
 
     void onTabCloseRequest(int i = -1);
-
-    void findEdit_textChanged(const QString& arg1);
-
-    void findEdit_returnPressed();
 
     void on_copyAction();
     void on_cutAction();
@@ -195,8 +189,6 @@ private slots:
     void on_actionAbout_triggered();
 
     void on_actionAdd_triggered();
-
-    void on_actionRemove_triggered();
 
     void on_actionNew_Sibling_triggered();
 

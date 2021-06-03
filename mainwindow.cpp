@@ -406,7 +406,6 @@ void MainWindow::initMenuToolsBar()
 
     lblFindCount = new QLabel("0"); //查找结果计数器
     ui->mainToolBar->addWidget(lblFindCount);
-    findEdit = new QLineEdit();
 
     // 搜索框
     ui->editFind->setClearButtonEnabled(true);
@@ -441,9 +440,6 @@ void MainWindow::initMenuToolsBar()
     ui->mainToolBar->addWidget(ui->btnNext);
     ui->mainToolBar->addWidget(ui->btnShowReplace);
     ui->btnMisc->setVisible(false);
-
-    connect(findEdit, &QLineEdit::returnPressed, this, &MainWindow::findEdit_returnPressed);
-    connect(findEdit, &QLineEdit::textChanged, this, &MainWindow::findEdit_textChanged);
 
     ui->mainToolBar->addSeparator();
 
@@ -1208,49 +1204,6 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent, QString 
     }
 }
 
-void MainWindow::findEdit_textChanged(const QString& arg1)
-{
-    if (tabWidget->hasTabs()) {
-
-        if (arg1 != "") {
-
-            //on_Find();
-        }
-
-        if (arg1 == "" || !find) {
-            findCount = 0;
-            lblFindCount->setText("  " + QString::number(findCount) + "  ");
-
-            EditorTab* tab = tabWidget->getCurentTab();
-
-            QModelIndex index = tab->currentIndex();
-            tab->treeView->selectionModel()->setCurrentIndex(index, QItemSelectionModel::Clear);
-        }
-    }
-}
-
-void MainWindow::findEdit_returnPressed()
-{
-    on_Find();
-
-    QString str = findEdit->text().trimmed();
-    bool re = false;
-    for (int i = 0; i < FindTextList.count(); i++) {
-        if (FindTextList.at(i) == str) {
-            re = true;
-            break;
-        }
-    }
-
-    if (!re)
-        FindTextList.insert(0, str);
-
-    QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
-    editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
-    editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
-    findEdit->setCompleter(editFindCompleter);
-}
-
 void MainWindow::on_copyAction()
 {
 
@@ -1561,7 +1514,7 @@ void MainWindow::goPlistText()
             val = tab->HexStrToByte(val).toBase64().trimmed();
         }
 
-        QTextEdit *editTemp = new QTextEdit;
+        QTextEdit* editTemp = new QTextEdit;
         editTemp->setPlainText(plistTextEditor->document()->toPlainText());
 
         for (int i = 0; i < editTemp->document()->lineCount(); i++) {
@@ -2374,11 +2327,6 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_actionAdd_triggered()
 {
     actionAdd_activated();
-}
-
-void MainWindow::on_actionRemove_triggered()
-{
-    actionRemove_activated();
 }
 
 void MainWindow::on_actionNew_Sibling_triggered()
