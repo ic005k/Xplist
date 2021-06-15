@@ -226,11 +226,26 @@ void setTextCompleter(QLineEdit* editor)
     textList.append("SystemGeneric");
     textList.append("System");
     textList.append("OEM");
+    textList.append("Reserved");
+    textList.append("LoaderCode");
+    textList.append("LoaderData");
+    textList.append("BootServiceCode");
+    textList.append("BootServiceData");
+    textList.append("RuntimeCode");
+    textList.append("RuntimeData");
+    textList.append("Available");
+    textList.append("Persistent");
+    textList.append("UnusableMemory");
+    textList.append("ACPIReclaimMemory");
+    textList.append("ACPIMemoryNVS");
+    textList.append("MemoryMappedIO");
+    textList.append("MemoryMappedIOPortSpace");
+    textList.append("PalCode");
 
-    QCompleter* editFindCompleter = new QCompleter(textList);
-    editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
-    editFindCompleter->setCompletionMode(QCompleter::PopupCompletion);
-    editor->setCompleter(editFindCompleter);
+    QCompleter* editCompleter = new QCompleter(textList);
+    editCompleter->setCaseSensitivity(Qt::CaseSensitive);
+    editCompleter->setCompletionMode(QCompleter::PopupCompletion);
+    editor->setCompleter(editCompleter);
 }
 
 void LineEditDelegate::on_setText()
