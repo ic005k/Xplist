@@ -60,7 +60,7 @@ void LineEditDelegate::setEditorData(QWidget* editor,
     if (item->getType() == "string")
         setTextCompleter(lineEdit);
 
-    if (item->getType() == "data") {
+    if (item->getType() == "data" && index.column() == 2) {
         QRegExp regx("[A-Fa-f0-9]{2,1024}");
         QValidator* validator = new QRegExpValidator(regx, lineEdit);
         lineEdit->setValidator(validator);
@@ -255,7 +255,7 @@ void LineEditDelegate::on_setText()
     QModelIndex index = tab->currentIndex();
     DomItem* item = model->itemForIndex(index);
 
-    if (item->getType() == "data") {
+    if (item->getType() == "data" && index.column() == 2) {
         QString str = lineEdit->text();
         lineEdit->setText(str.toUpper());
     }
