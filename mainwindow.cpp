@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.59";
+    CurVerison = "1.0.60";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -2158,7 +2158,9 @@ void MainWindow::on_btnReplace_clicked()
 
             indexFindList.remove(indexCount);
 
+            loading = true;
             ui->listFind->takeItem(indexCount);
+            loading = false;
 
             findCount = indexFindList.count();
             indexCount--;
@@ -2177,7 +2179,9 @@ void MainWindow::on_btnReplace_clicked()
 
             indexFindList.remove(indexCount);
 
+            loading = true;
             ui->listFind->takeItem(indexCount);
+            loading = false;
 
             findCount = indexFindList.count();
             indexCount--;
@@ -2256,7 +2260,9 @@ void MainWindow::on_btnReplaceAll_clicked()
 
     ui->btnPrevious->setEnabled(false);
     ui->btnNext->setEnabled(false);
+    loading = true;
     ui->listFind->clear();
+    loading = false;
 }
 
 void MainWindow::on_actionFind_triggered()
