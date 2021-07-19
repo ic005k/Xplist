@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.60";
+    CurVerison = "1.0.61";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -2780,38 +2780,20 @@ void MainWindow::AddMiscTools(QString fileStr, QString fileStrBaseName)
         item->setType("dict");
 
         // add misc tools
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
-
-        actionAdd_activated();
-        tab->treeView->setCurrentIndex(childIndex);
+        for (int i = 0; i < 9; i++) {
+            actionAdd_activated();
+            tab->treeView->setCurrentIndex(childIndex);
+        }
 
         setItem(childIndex, 0, "Arguments", "string", "");
         setItem(childIndex, 1, "Auxiliary", "bool", "false");
         setItem(childIndex, 2, "Comment", "string", "");
         setItem(childIndex, 3, "Enabled", "bool", "true");
-        setItem(childIndex, 4, "Name", "string", fileStrBaseName);
-        setItem(childIndex, 5, "Path", "string", fileStr);
-        setItem(childIndex, 6, "RealPath", "bool", "false");
-        setItem(childIndex, 7, "TextMode", "bool", "false");
+        setItem(childIndex, 4, "Flavour", "string", "Auto");
+        setItem(childIndex, 5, "Name", "string", fileStrBaseName);
+        setItem(childIndex, 6, "Path", "string", fileStr);
+        setItem(childIndex, 7, "RealPath", "bool", "false");
+        setItem(childIndex, 8, "TextMode", "bool", "false");
 
         tab->treeView->setCurrentIndex(currentIndex);
 
