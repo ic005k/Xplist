@@ -1086,6 +1086,9 @@ void MainWindow::dropEvent(QDropEvent* event)
 
         addKexts(kextList);
     }
+
+    EditorTab* tab = tabWidget->getCurentTab();
+    tab->treeView->resizeColumnToContents(0);
 }
 
 void MainWindow::menu_aboutToShow() //目前废除，去掉1就可正常使用
