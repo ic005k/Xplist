@@ -910,8 +910,8 @@ void MainWindow::actionAbout_activated()
 
     QString last = str + appInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
     QString str1 = "<a style='color:blue;' href = https://github.com/ic005k/PlistEDPlus>PlistEDPlus</a><br><br>";
-    QString str2 = tr("Thanks: Yaroslav Sushkov (alpex92)");
-    QString str3 = "<br>";
+    QString str2 = "V" + CurVerison;
+    QString str3 = "<br><br>";
 
     QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
