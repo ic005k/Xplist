@@ -61,10 +61,10 @@ void LineEditDelegate::setEditorData(QWidget* editor,
         setTextCompleter(lineEdit);
 
     if (item->getType() == "data" && index.column() == 2) {
-        QRegExp regx("[A-Fa-f0-9]{2,1024}");
+        QRegExp regx("[A-Fa-f0-9- ]{2,1024}");
         QValidator* validator = new QRegExpValidator(regx, lineEdit);
         lineEdit->setValidator(validator);
-        //lineEdit->setPlaceholderText(tr("Hexadecimal"));
+        lineEdit->setPlaceholderText(tr("Hexadecimal"));
     }
 
     if (item->getType() == "date" && index.column() == 2) {

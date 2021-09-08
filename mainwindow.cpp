@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.61";
+    CurVerison = "1.0.62";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -2840,8 +2840,21 @@ void MainWindow::AddUEFIDrivers(QString fileStr)
         tab->treeView->setCurrentIndex(childIndex);
 
         item = model->itemForIndex(childIndex);
-        item->setType("string");
-        item->setValue(fileStr);
+        item->setType("dict");
+
+        //item->setValue(fileStr); //OC0.7.3之前
+
+        // add efi
+        actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+        actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+        actionAdd_activated();
+        tab->treeView->setCurrentIndex(childIndex);
+
+        setItem(childIndex, 0, "Arguments", "string", "");
+        setItem(childIndex, 1, "Enabled", "bool", "true");
+        setItem(childIndex, 2, "Path", "string", fileStr);
 
         tab->treeView->setCurrentIndex(currentIndex);
 
