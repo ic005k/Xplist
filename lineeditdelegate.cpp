@@ -128,7 +128,7 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
         }
     }
 
-    //数组元素数据检查
+    // array
     EditorTab* tab = tabWidget->getCurentTab();
     DomModel* model = tab->getModel();
     const QModelIndex index = tab->currentIndex();
@@ -145,6 +145,11 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
         QDateTime date = QDateTime::fromString(val);
         if (!date.isValid()) {
         }
+    }
+
+    if (type == "data") {
+        if (val.trimmed().count() % 2 != 0)
+            return 0;
     }
 
     if (val.trimmed() == "plist")

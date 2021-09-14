@@ -124,13 +124,17 @@ void ComboBoxDelegate::setModelData(QWidget* editor,
 
             if (oldValue == "integer") {
                 qulonglong dec = CurrentValue.toULongLong();
-                NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper(); // 保留四位，不足补零
+                NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper(); // 最少保留四位，不足补零
+                if (NewValue.trimmed().count() % 2 != 0)
+                    NewValue = "0" + NewValue;
             }
 
             if (oldValue == "real") {
                 qreal r = CurrentValue.toDouble();
                 qulonglong dec = r;
-                NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper(); // 保留四位，不足补零
+                NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper();
+                if (NewValue.trimmed().count() % 2 != 0)
+                    NewValue = "0" + NewValue;
             }
 
             if (oldValue == "bool") {
