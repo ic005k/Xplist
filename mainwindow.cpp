@@ -41,6 +41,7 @@ int red = 0;
 
 bool defaultIcon = false;
 bool binPlistFile = false;
+bool Save = false;
 
 int windowX = 0;
 int windowY = 0;
@@ -54,7 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     ui->setupUi(this);
 
-    CurVerison = "1.0.64";
+    CurVerison = "1.0.65";
     ver = "PlistEDPlus  V" + CurVerison + "        ";
     setWindowTitle(ver);
 
@@ -703,7 +704,7 @@ void MainWindow::onTabCloseRequest(int i)
 void MainWindow::savePlist(QString filePath)
 {
     if (tabWidget->hasTabs()) {
-        removeWatchFiles();
+        Save = true;
 
         QString fileTemp = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
 
@@ -772,8 +773,6 @@ void MainWindow::savePlist(QString filePath)
                 Plist::writePlistBinary(baseName.c_str(), dict);
                 tabWidget->setTabText(index, "[BIN] " + name);
             }
-
-            addWatchFiles();
 
             loadText(filePath);
         }

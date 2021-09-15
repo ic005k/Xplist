@@ -7,6 +7,7 @@
 
 extern MainWindow* mw_one;
 extern QVector<QString> openFileList;
+extern bool Save;
 
 FileSystemWatcher* FileSystemWatcher::m_pInstance = NULL;
 
@@ -108,7 +109,7 @@ void FileSystemWatcher::fileUpdated(const QString& path)
 
     //qDebug() << QString("The file %1 at path %2 is updated").arg(strName).arg(strPath);
 
-    if (msgClose) {
+    if (msgClose && !Save) {
 
         msgClose = false;
 
@@ -130,6 +131,7 @@ void FileSystemWatcher::fileUpdated(const QString& path)
         }
     }
 
+    Save = false;
     mw_one->removeWatchFiles();
     mw_one->addWatchFiles();
 }
