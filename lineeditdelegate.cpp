@@ -147,7 +147,7 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val, int c
         }
     }
 
-    if (type == "data") {
+    if (type == "data" && col == 2) {
         if (val.trimmed().count() % 2 != 0)
             return 0;
     }
