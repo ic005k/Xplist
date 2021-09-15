@@ -121,7 +121,6 @@ void FileSystemWatcher::fileUpdated(const QString& path)
         int choice = message.exec();
         switch (choice) {
         case QMessageBox::Yes:
-            //ReLoad = true;
             mw_one->openPlist(path); //重新装入文件
             msgClose = true;
             break;
@@ -131,7 +130,7 @@ void FileSystemWatcher::fileUpdated(const QString& path)
         }
     }
 
-    Save = false;
     mw_one->removeWatchFiles();
     mw_one->addWatchFiles();
+    Save = false;
 }

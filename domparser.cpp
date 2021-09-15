@@ -264,17 +264,5 @@ QByteArray DomParser::HexStrToByte(QString value)
         k = k + 2;
     }
 
-    /*QString c1 , c2 , c3 , c4;
-    c1 = value.mid(0 , 2);
-    c2 = value.mid(2 , 2);
-    c3 = value.mid(4 , 2);
-    c4 = value.mid(6 , 2);
-
-    ba.resize(4);
-    ba[0] = c1.toUInt(nullptr , 16);
-    ba[1] = c2.toUInt(nullptr , 16);
-    ba[2] = c3.toUInt(nullptr , 16);
-    ba[3] = c4.toUInt(nullptr , 16);*/
-
     return ba;
 }

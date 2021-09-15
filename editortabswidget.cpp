@@ -163,9 +163,6 @@ void EditorTabsWidget::initTabBar()
         pixmap.fill(Qt::transparent);
         QPainter painter(&pixmap);
         if (painter.isActive()) {
-            //这里想做标题栏贴在内容之上
-            //但是没法获取默认标题栏的图像啊，就随便画一个矩形框
-            //如果设置了外部主题颜色，需要改下
             QRect title_rect { 0, 0, pixmap.width(), 30 };
             painter.fillRect(title_rect, Qt::white);
             painter.drawText(title_rect, Qt::AlignLeft | Qt::AlignVCenter, "  " + drag_tab->windowTitle());
