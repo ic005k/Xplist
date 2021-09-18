@@ -1277,11 +1277,11 @@ void MainWindow::closeEvent(QCloseEvent* event)
         Reg.setValue("FindTextList" + QString::number(i), FindTextList.at(i));
     }
 
+    // 处理TAB
+    int count = tabWidget->count();
+    Reg.setValue("count", count);
     if (tabWidget->hasTabs()) {
 
-        int count = tabWidget->count();
-
-        Reg.setValue("count", count);
         Reg.setValue("index", tabWidget->tabBar()->currentIndex());
 
         for (int i = 0; i < count; i++) {
@@ -1316,8 +1316,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
         if (tabWidget->count() == 0)
             event->accept();
-    } else {
-        Reg.setValue("count", 0);
     }
 
     loading = false;
