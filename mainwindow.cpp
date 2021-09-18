@@ -1238,6 +1238,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
     QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
     QSettings Reg(qfile, QSettings::IniFormat);
 
+    //记录是否显示Plist文本
+    Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
     Reg.setValue("restore", ui->actionRestoreScene->isChecked());
     Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
     Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
@@ -1274,9 +1276,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
         Reg.setValue("FindTextList" + QString::number(i), FindTextList.at(i));
     }
-
-    //记录是否显示Plist文本
-    Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
 
     if (tabWidget->hasTabs()) {
 
