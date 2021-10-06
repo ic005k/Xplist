@@ -31,7 +31,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
-//JSON相关头文件
+// JSON相关头文件
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -47,225 +47,228 @@ class MainWindow;
 }
 
 class MainWindow : public QMainWindow {
-    Q_OBJECT
+  Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget* parent = 0);
-    ~MainWindow();
+ public:
+  explicit MainWindow(QWidget* parent = 0);
+  ~MainWindow();
 
-    QFont font;
-    Ui::MainWindow* ui;
-    bool findTextChanged = false;
-    CodeEditor* plistTextEditor;
-    QComboBox* cboxFileType;
-    bool osx1012 = false;
-    bool pasteBW = false;
+  QFont font;
+  Ui::MainWindow* ui;
+  bool findTextChanged = false;
+  CodeEditor* plistTextEditor;
+  QComboBox* cboxFileType;
+  bool osx1012 = false;
+  bool pasteBW = false;
 
-    void addWatchFiles();
-    void removeWatchFiles();
+  void addWatchFiles();
+  void removeWatchFiles();
 
-    void AddACPI(QString fileStr);
-    void addKexts(QStringList FileName);
-    void init_enabled_data(QTableWidget* table, int row, int column, QString str);
-    void initKextTable(int row, QTableWidget* w);
-    void AddUEFIDrivers(QString fileStr);
-    void AddMiscTools(QString fileStr, QString fileStrBaseName);
-    void setItem(QModelIndex parentIndex, int row, QString key, QString type, QString value);
+  void AddACPI(QString fileStr);
+  void addKexts(QStringList FileName);
+  void init_enabled_data(QTableWidget* table, int row, int column, QString str);
+  void initKextTable(int row, QTableWidget* w);
+  void AddUEFIDrivers(QString fileStr);
+  void AddMiscTools(QString fileStr, QString fileStrBaseName);
+  void setItem(QModelIndex parentIndex, int row, QString key, QString type,
+               QString value);
 
-    void forEach(QAbstractItemModel* model, QModelIndex parent, QString str);
-    QModelIndex indexFind;
-    QVector<QModelIndex> indexFindList;
-    int indexCount = 0;
+  void forEach(QAbstractItemModel* model, QModelIndex parent, QString str);
+  QModelIndex indexFind;
+  QVector<QModelIndex> indexFindList;
+  int indexCount = 0;
 
-    void openPlist(QString filePath = "");
+  void openPlist(QString filePath = "");
 
-    int close_flag = -1;
+  int close_flag = -1;
 
-    QAction* actionUndo;
+  QAction* actionUndo;
 
-    QAction* actionRedo;
+  QAction* actionRedo;
 
-    void showMsg();
+  void showMsg();
 
-    void loadText(QString textFile);
+  void loadText(QString textFile);
 
-    void goPlistText();
+  void goPlistText();
 
-    void closeOpenedFile(QString file);
+  void closeOpenedFile(QString file);
 
-    QFont getFont();
-public slots:
-    void on_Find();
-    void on_actionMoveUp();
-    void on_actionMoveDown();
-    void actionAdd_activated();
-    void actionRemove_activated();
+  QFont getFont();
+ public slots:
+  void on_Find();
+  void on_actionMoveUp();
+  void on_actionMoveDown();
+  void actionAdd_activated();
+  void actionRemove_activated();
 
-    void on_NewWindow();
+  void on_NewWindow();
 
-private slots:
-    void recentOpen(QString filename);
-    void on_copyBW();
-    void on_pasteBW();
+ private slots:
+  void recentOpen(QString filename);
+  void on_copyBW();
+  void on_pasteBW();
 
-    void actionNew();
+  void actionNew();
 
-    void actionClose_activated();
-    void actionClose_all_activated();
+  void actionClose_activated();
+  void actionClose_all_activated();
 
-    void actionSave();
-    void actionSaveAs();
+  void actionSave();
+  void actionSaveAs();
 
-    void actionExpand_all_activated();
-    void actionAbout_activated();
+  void actionExpand_all_activated();
+  void actionAbout_activated();
 
-    void tabWidget_currentChanged(int index);
-    void menu_aboutToShow();
+  void tabWidget_currentChanged(int index);
+  void menu_aboutToShow();
 
-    void onCleanChanged(bool clean);
+  void onCleanChanged(bool clean);
 
-    void openRecentFile();
+  void openRecentFile();
 
-    void onTabCloseRequest(int i = -1);
+  void onTabCloseRequest(int i = -1);
 
-    void on_copyAction();
-    void on_cutAction();
-    void on_pasteAction();
+  void on_copyAction();
+  void on_cutAction();
+  void on_pasteAction();
 
-    void on_expandAction();
-    void on_collapseAction();
+  void on_expandAction();
+  void on_collapseAction();
 
-    void on_actionNewSibling();
+  void on_actionNewSibling();
 
-    void on_actionNewChild();
+  void on_actionNewChild();
 
-    void replyFinished(QNetworkReply* reply);
-    void CheckUpdate();
+  void replyFinished(QNetworkReply* reply);
+  void CheckUpdate();
 
-    void on_actionSort();
+  void on_actionSort();
 
-    void on_actionShowPlistText_triggered(bool checked);
+  void on_actionShowPlistText_triggered(bool checked);
 
-    void on_actionPaste_as_child_triggered();
+  void on_actionPaste_as_child_triggered();
 
-    void on_editFind_returnPressed();
+  void on_editFind_returnPressed();
 
-    void on_editFind_textChanged(const QString& arg1);
+  void on_editFind_textChanged(const QString& arg1);
 
-    void on_ShowFindReplace();
+  void on_ShowFindReplace();
 
-    void on_btnFind_clicked();
+  void on_btnFind_clicked();
 
-    void on_btnHideFind_clicked();
+  void on_btnHideFind_clicked();
 
-    void on_btnNext_clicked();
+  void on_btnNext_clicked();
 
-    void on_btnPrevious_clicked();
+  void on_btnPrevious_clicked();
 
-    void on_btnReplace_clicked();
+  void on_btnReplace_clicked();
 
-    void on_btnReplaceAll_clicked();
+  void on_btnReplaceAll_clicked();
 
-    void on_actionFind_triggered();
+  void on_actionFind_triggered();
 
-    void on_actionFindNext_triggered();
+  void on_actionFindNext_triggered();
 
-    void on_actionFindPrevious_triggered();
+  void on_actionFindPrevious_triggered();
 
-    void on_actionReplace_triggered();
+  void on_actionReplace_triggered();
 
-    void on_actionReplaceAll_triggered();
+  void on_actionReplaceAll_triggered();
 
-    void on_btnShowReplace_clicked();
+  void on_btnShowReplace_clicked();
 
-    void on_actionCut_triggered();
+  void on_actionCut_triggered();
 
-    void on_actionCopy_between_windows_triggered();
+  void on_actionCopy_between_windows_triggered();
 
-    void on_actionPaste_between_windows_triggered();
+  void on_actionPaste_between_windows_triggered();
 
-    void on_actionCheck_Update_triggered();
+  void on_actionCheck_Update_triggered();
 
-    void on_actionAbout_triggered();
+  void on_actionAbout_triggered();
 
-    void on_actionAdd_triggered();
+  void on_actionAdd_triggered();
 
-    void on_actionNew_Sibling_triggered();
+  void on_actionNew_Sibling_triggered();
 
-    void on_actionOpen_triggered();
+  void on_actionOpen_triggered();
 
-    void on_actionNew_triggered();
+  void on_actionNew_triggered();
 
-    void on_actionSave_triggered();
+  void on_actionSave_triggered();
 
-    void on_actionSave_as_triggered();
+  void on_actionSave_as_triggered();
 
-    void on_listFind_itemClicked(QListWidgetItem* item);
+  void on_listFind_itemClicked(QListWidgetItem* item);
 
-    void on_actionBug_Report_triggered();
+  void on_actionBug_Report_triggered();
 
-    void on_actionDiscussion_Forum_triggered();
+  void on_actionDiscussion_Forum_triggered();
 
-    void on_actionQuit_triggered();
+  void on_actionQuit_triggered();
 
-    void on_listFind_itemSelectionChanged();
+  void on_listFind_itemSelectionChanged();
 
-    void on_actionFont_triggered();
+  void on_actionFont_triggered();
 
-private:
-    bool useQtWriteXML = true;
-    RecentFiles* m_recentFiles;
-    QMenu* reFileMenu;
-    void initRecentFilesForToolBar();
-    void initMenuToolsBar();
-    void initFindReplace();
-    void initPlistTextShow();
+  void on_listFind_currentRowChanged(int currentRow);
 
-    QNetworkAccessManager* manager;
-    int parse_UpdateJSON(QString str);
-    bool mac = false;
-    bool win = false;
-    bool linuxOS = false;
-    QString CurVerison = "V1.0";
+ private:
+  bool useQtWriteXML = true;
+  RecentFiles* m_recentFiles;
+  QMenu* reFileMenu;
+  void initRecentFilesForToolBar();
+  void initMenuToolsBar();
+  void initFindReplace();
+  void initPlistTextShow();
 
-    void setExpandText(EditorTab* tab);
+  QNetworkAccessManager* manager;
+  int parse_UpdateJSON(QString str);
+  bool mac = false;
+  bool win = false;
+  bool linuxOS = false;
+  QString CurVerison = "V1.0";
 
-    void openFiles(QStringList list = QStringList());
+  void setExpandText(EditorTab* tab);
 
-    void savePlist(QString filePath);
+  void openFiles(QStringList list = QStringList());
 
-    enum { MaxRecentFiles = 10 };
+  void savePlist(QString filePath);
 
-    int findCount = 0;
-    QLabel* lblFindCount;
-    bool find = false;
+  enum { MaxRecentFiles = 10 };
 
-    void reg_win();
+  int findCount = 0;
+  QLabel* lblFindCount;
+  bool find = false;
 
-    QString ver;
+  void reg_win();
 
-    QStringList FindTextList;
+  QString ver;
 
-    void setBarMarkers(int line);
-    QString getPlistTextValue(QString str);
+  QStringList FindTextList;
 
-    MyHighLighter* myHL;
+  void setBarMarkers(int line);
+  QString getPlistTextValue(QString str);
 
-    bool oneReplace = false;
+  MyHighLighter* myHL;
 
-    QMenu* btnFindMenu;
-    QAction* actCaseSensitive = new QAction(tr("Case sensitive"), this);
-    QAction* actClearList = new QAction(tr("Clear List"), this);
-    QVector<QAction*> btnFindActionList;
+  bool oneReplace = false;
 
-    void init_iniData();
+  QMenu* btnFindMenu;
+  QAction* actCaseSensitive = new QAction(tr("Case sensitive"), this);
+  QAction* actClearList = new QAction(tr("Clear List"), this);
+  QVector<QAction*> btnFindActionList;
 
-protected:
-    void dragEnterEvent(QDragEnterEvent* event) override;
-    void dropEvent(QDropEvent* event) override;
-    void closeEvent(QCloseEvent* event) override;
-    void resizeEvent(QResizeEvent* event) override;
-    void paintEvent(QPaintEvent* event) override;
+  void init_iniData();
+
+ protected:
+  void dragEnterEvent(QDragEnterEvent* event) override;
+  void dropEvent(QDropEvent* event) override;
+  void closeEvent(QCloseEvent* event) override;
+  void resizeEvent(QResizeEvent* event) override;
+  void paintEvent(QPaintEvent* event) override;
 };
 
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

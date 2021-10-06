@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.65";
+  CurVerison = "1.0.66";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -515,6 +515,9 @@ void MainWindow::openFiles(QStringList list) {
 }
 
 void MainWindow::openPlist(QString filePath) {
+  ui->listFind->clear();  // 否则会导致App崩溃
+  removeWatchFiles();
+
   QFileInfo fi(filePath);
   map<string, boost::any> dict;
   string baseName;
@@ -533,14 +536,13 @@ void MainWindow::openPlist(QString filePath) {
 
         tabWidget->createTab(model, filePath);
       }
-      file.close();
     }
+
+    file.close();
   }
 
   if (fi.exists() && filePath != fn) {
     filePath = QDir::fromNativeSeparators(filePath);
-
-    removeWatchFiles();
 
     path = fi.path();
     QDir dir;
@@ -568,9 +570,8 @@ void MainWindow::openPlist(QString filePath) {
       if (file.open(QIODevice::ReadOnly)) {
         if (document.setContent(&file)) {
         }
-
-        file.close();
       }
+      file.close();
 
       QFile::remove(temp);
 
@@ -579,9 +580,8 @@ void MainWindow::openPlist(QString filePath) {
       if (file.open(QIODevice::ReadOnly)) {
         if (document.setContent(&file)) {
         }
-
-        file.close();
       }
+      file.close();
     }
 
     if (dir.exists(path)) {
@@ -615,9 +615,9 @@ void MainWindow::openPlist(QString filePath) {
                                        fi.fileName());
 
     loadText(filePath);
-
-    addWatchFiles();
   }
+
+  addWatchFiles();
 
   loading = false;
 }
@@ -2243,6 +2243,7 @@ void MainWindow::initPlistTextShow() {
 
 void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
   Q_UNUSED(item);
+  if (ui->listFind->count() <= 0) return;
 
   if (tabWidget->hasTabs()) {
     bool focus = false;
@@ -2779,4 +2780,8 @@ QFont MainWindow::getFont() {
   }
 
   return font;
+}
+
+void MainWindow::on_listFind_currentRowChanged(int currentRow) {
+  Q_UNUSED(currentRow)
 }
