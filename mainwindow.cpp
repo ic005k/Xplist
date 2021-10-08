@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.66";
+  CurVerison = "1.0.67";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -528,6 +528,7 @@ void MainWindow::openPlist(QString filePath) {
 
   if (filePath == fn) {
     QFile file(filePath);
+
     if (file.open(QIODevice::ReadOnly)) {
       QDomDocument document;
 
@@ -553,7 +554,16 @@ void MainWindow::openPlist(QString filePath) {
     QString str = fi.fileName();
     baseName = string(str.toLocal8Bit());
 
-    Plist::readPlist(baseName.c_str(), dict);
+    try {
+      Plist::readPlist(baseName.c_str(), dict);
+    } catch (...) {
+      QMessageBox box;
+      box.setText(
+          tr("There's something wrong with this file and it won't open!") +
+          "\n\n" + filePath);
+      box.exec();
+      return;
+    }
 
     if (binPlistFile) {
       if (dir.mkpath(strConfigDir)) {
@@ -1047,8 +1057,11 @@ void MainWindow::dropEvent(QDropEvent* event) {
     addKexts(kextList);
   }
 
-  EditorTab* tab = tabWidget->getCurentTab();
-  tab->treeView->resizeColumnToContents(0);
+  // 要有tab存在，否则打开有问题的文件会导致崩溃
+  if (tabWidget->hasTabs()) {
+    EditorTab* tab = tabWidget->getCurentTab();
+    tab->treeView->resizeColumnToContents(0);
+  }
 }
 
 void MainWindow::menu_aboutToShow()  //目前废除，去掉1就可正常使用
