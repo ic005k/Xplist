@@ -110,15 +110,9 @@ void FileSystemWatcher::fileUpdated(const QString& path) {
   // qDebug() << QString("The file %1 at path %2 is
   // updated").arg(strName).arg(strPath);
 
-  if (!Save) {
-    mw_one->strModiFile = path;
-    mw_one->ui->lblFileName->setText(tr("The file has been modified by another "
-                                        "program. Do you want to reload?") +
-                                     "\n\n" + QString("%1").arg(path));
-    mw_one->ui->frameTip->setHidden(false);
-  }
-
-  mw_one->removeWatchFiles();
-  mw_one->addWatchFiles();
-  Save = false;
+  mw_one->strModiFile = path;
+  mw_one->ui->lblFileName->setText(tr("The file has been modified by another "
+                                      "program. Do you want to reload?")
+                                   + "\n\n" + QString("%1").arg(path));
+  mw_one->ui->frameTip->setHidden(false);
 }
