@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.67";
+  CurVerison = "1.0.68";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -87,10 +87,16 @@ MainWindow::MainWindow(QWidget* parent)
   if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) {
   }
 
-  //获取背景色
+  // 获取背景色
   QPalette pal = this->palette();
   QBrush brush = pal.window();
   red = brush.color().red();
+
+  // 初始化文件被修改后的提示
+  ui->frameTip->setAutoFillBackground(true);
+  ui->frameTip->setPalette(QPalette(QColor(255, 204, 204)));
+  ui->btnYes->setDefault(true);
+  ui->frameTip->setHidden(true);
 
   initPlistTextShow();
 
@@ -2797,4 +2803,11 @@ QFont MainWindow::getFont() {
 
 void MainWindow::on_listFind_currentRowChanged(int currentRow) {
   Q_UNUSED(currentRow)
+}
+
+void MainWindow::on_btnNo_clicked() { ui->frameTip->setHidden(true); }
+
+void MainWindow::on_btnYes_clicked() {
+  ui->frameTip->setHidden(true);
+  openPlist(strModiFile);
 }

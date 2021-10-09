@@ -60,6 +60,7 @@ class MainWindow : public QMainWindow {
   QComboBox* cboxFileType;
   bool osx1012 = false;
   bool pasteBW = false;
+  QString strModiFile;
 
   void addWatchFiles();
   void removeWatchFiles();
@@ -214,6 +215,10 @@ class MainWindow : public QMainWindow {
   void on_actionFont_triggered();
 
   void on_listFind_currentRowChanged(int currentRow);
+
+  void on_btnNo_clicked();
+
+  void on_btnYes_clicked();
 
  private:
   bool useQtWriteXML = true;
