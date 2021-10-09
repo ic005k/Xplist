@@ -728,7 +728,8 @@ void MainWindow::savePlist(QString filePath) {
       QFile file(filePath);
       file.open(QIODevice::WriteOnly);
       QTextStream out(&file);
-      doc.save(out, 4);
+      out.setCodec("UTF-8");
+      doc.save(out, 4, QDomNode::EncodingFromDocument);
       file.close();
 
     } else {  // 始终生成一个空文件，供另存使用
@@ -768,7 +769,8 @@ void MainWindow::savePlist(QString filePath) {
           QFile file(filePath);
           file.open(QIODevice::WriteOnly);
           QTextStream out(&file);
-          doc.save(out, 4);
+          out.setCodec("UTF-8");
+          doc.save(out, 4, QDomNode::EncodingFromDocument);
           file.close();
 
         } else
