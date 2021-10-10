@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.69";
+  CurVerison = "1.0.70";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -117,6 +117,8 @@ MainWindow::MainWindow(QWidget* parent)
   manager = new QNetworkAccessManager(this);
   connect(manager, SIGNAL(finished(QNetworkReply*)), this,
           SLOT(replyFinished(QNetworkReply*)));
+  blAutoCheckUpdate = true;
+  CheckUpdate();
 
   loading = false;
 }
@@ -713,91 +715,90 @@ void MainWindow::onTabCloseRequest(int i) {
   }
 }
 
-void MainWindow::savePlist(QString filePath)
-{
-    removeWatchFiles();
-    if (tabWidget->hasTabs()) {
-        Save = true;
+void MainWindow::savePlist(QString filePath) {
+  removeWatchFiles();
+  if (tabWidget->hasTabs()) {
+    Save = true;
 
-        QString fileTemp = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+    QString fileTemp = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
 
-        EditorTab *tab = tabWidget->getCurentTab();
+    EditorTab* tab = tabWidget->getCurentTab();
 
-        // get parsed dom doc
-        QDomDocument doc = DomParser::toDom(tab->getModel());
+    // get parsed dom doc
+    QDomDocument doc = DomParser::toDom(tab->getModel());
 
-        if (filePath == fileTemp) {
-            QFile file(filePath);
-            file.open(QIODevice::WriteOnly);
-            QTextStream out(&file);
-            out.setCodec("UTF-8");
-            doc.save(out, 4, QDomNode::EncodingFromDocument);
-            file.close();
+    if (filePath == fileTemp) {
+      QFile file(filePath);
+      file.open(QIODevice::WriteOnly);
+      QTextStream out(&file);
+      out.setCodec("UTF-8");
+      doc.save(out, 4, QDomNode::EncodingFromDocument);
+      file.close();
 
-        } else { // 始终生成一个空文件，供另存使用
-            QFile file(filePath);
-            file.open(QIODevice::WriteOnly);
-            file.close();
-        }
-
-        QFileInfo fi(filePath);
-        if (fi.exists() && filePath != fileTemp) {
-            map<string, boost::any> dict;
-
-            QString path = fi.path();
-            QDir dir;
-            if (dir.exists(path))
-                dir.setCurrent(path);
-
-            string baseName;
-            QString str = fi.fileName();
-            baseName = string(str.toLocal8Bit());
-            // cout << baseName << endl;
-
-            QString strData = doc.toString();
-            std::string mystring = strData.toStdString();
-            std::istringstream is(mystring);
-
-            Plist::readPlist(is, dict);
-
-            tab->setPath(filePath);
-
-            int index = tabWidget->indexOf(tab);
-
-            QString name = tab->getFileName();
-
-            // XML
-            if (cboxFileType->currentIndex() == 0) {
-                if (useQtWriteXML) {
-                    QFile file(filePath);
-                    file.open(QIODevice::WriteOnly);
-                    QTextStream out(&file);
-                    out.setCodec("UTF-8");
-                    doc.save(out, 4, QDomNode::EncodingFromDocument);
-                    file.close();
-
-                } else
-                    Plist::writePlistXML(baseName.c_str(), dict);
-
-                tabWidget->setTabText(index, name);
-            }
-
-            // BIN
-            if (cboxFileType->currentIndex() == 1) {
-                Plist::writePlistBinary(baseName.c_str(), dict);
-                tabWidget->setTabText(index, "[BIN] " + name);
-            }
-
-            loadText(filePath);
-        }
-
-        undoGroup->activeStack()->clear();
-
-        tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(), fi.fileName());
-
-        goPlistText();
+    } else {  // 始终生成一个空文件，供另存使用
+      QFile file(filePath);
+      file.open(QIODevice::WriteOnly);
+      file.close();
     }
-    addWatchFiles();
+
+    QFileInfo fi(filePath);
+    if (fi.exists() && filePath != fileTemp) {
+      map<string, boost::any> dict;
+
+      QString path = fi.path();
+      QDir dir;
+      if (dir.exists(path)) dir.setCurrent(path);
+
+      string baseName;
+      QString str = fi.fileName();
+      baseName = string(str.toLocal8Bit());
+      // cout << baseName << endl;
+
+      QString strData = doc.toString();
+      std::string mystring = strData.toStdString();
+      std::istringstream is(mystring);
+
+      Plist::readPlist(is, dict);
+
+      tab->setPath(filePath);
+
+      int index = tabWidget->indexOf(tab);
+
+      QString name = tab->getFileName();
+
+      // XML
+      if (cboxFileType->currentIndex() == 0) {
+        if (useQtWriteXML) {
+          QFile file(filePath);
+          file.open(QIODevice::WriteOnly);
+          QTextStream out(&file);
+          out.setCodec("UTF-8");
+          doc.save(out, 4, QDomNode::EncodingFromDocument);
+          file.close();
+
+        } else
+          Plist::writePlistXML(baseName.c_str(), dict);
+
+        tabWidget->setTabText(index, name);
+      }
+
+      // BIN
+      if (cboxFileType->currentIndex() == 1) {
+        Plist::writePlistBinary(baseName.c_str(), dict);
+        tabWidget->setTabText(index, "[BIN] " + name);
+      }
+
+      loadText(filePath);
+    }
+
+    undoGroup->activeStack()->clear();
+
+    tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
+                                       fi.fileName());
+
+    goPlistText();
+  }
+  addWatchFiles();
 }
 
 void MainWindow::actionSave() {
@@ -1680,7 +1681,9 @@ int MainWindow::parse_UpdateJSON(QString str) {
   QJsonDocument root_Doc = QJsonDocument::fromJson(str.toUtf8(), &err_rpt);
 
   if (err_rpt.error != QJsonParseError::NoError) {
-    QMessageBox::critical(this, "", tr("Network error!"));
+    if (!blAutoCheckUpdate)
+      QMessageBox::critical(this, "", tr("Network error!"));
+    blAutoCheckUpdate = false;
     return -1;
   }
   if (root_Doc.isObject()) {
@@ -1730,10 +1733,14 @@ int MainWindow::parse_UpdateJSON(QString str) {
         Url = "https://github.com/ic005k/PlistEDPlus/releases/latest";
         QDesktopServices::openUrl(QUrl(Url));
       }
-    } else
-      QMessageBox::information(this, "",
-                               tr("It is currently the latest version!"));
+
+    } else {
+      if (!blAutoCheckUpdate)
+        QMessageBox::information(this, "",
+                                 tr("It is currently the latest version!"));
+    }
   }
+  blAutoCheckUpdate = false;
   return 0;
 }
 

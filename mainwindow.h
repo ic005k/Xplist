@@ -61,7 +61,7 @@ class MainWindow : public QMainWindow {
   bool osx1012 = false;
   bool pasteBW = false;
   QString strModiFile;
-
+  bool blAutoCheckUpdate = false;
   void addWatchFiles();
   void removeWatchFiles();
 
