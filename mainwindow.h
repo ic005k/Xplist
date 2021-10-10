@@ -98,6 +98,7 @@ class MainWindow : public QMainWindow {
   void closeOpenedFile(QString file);
 
   QFont getFont();
+  void checkReloadFilesByModi();
  public slots:
   void on_Find();
   void on_actionMoveUp();
