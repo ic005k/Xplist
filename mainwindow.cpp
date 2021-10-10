@@ -37,12 +37,11 @@ QUndoGroup* undoGroup;
 QString fileName;
 QVector<QString> openFileList;
 
-int red = 0;
-
 bool defaultIcon = false;
 bool binPlistFile = false;
 bool Save = false;
 
+int red = 0;
 int windowX = 0;
 int windowY = 0;
 
