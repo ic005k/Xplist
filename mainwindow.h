@@ -53,8 +53,10 @@ class MainWindow : public QMainWindow {
   explicit MainWindow(QWidget* parent = 0);
   ~MainWindow();
 
-  QFont font;
   Ui::MainWindow* ui;
+
+  QStringList reLoadByModiList;
+  QFont font;
   bool findTextChanged = false;
   CodeEditor* plistTextEditor;
   QComboBox* cboxFileType;

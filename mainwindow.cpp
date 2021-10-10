@@ -931,7 +931,8 @@ void MainWindow::tabWidget_currentChanged(int index) {
         cboxFileType->setCurrentIndex(0);
       }
 
-      this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
+      QString strCurrentFile = tabWidget->getCurentTab()->getPath();
+      this->setWindowTitle(ver + "[*] " + strCurrentFile);
 
       // get undo stack
       QUndoStack* stack = tab->getUndoStack();
@@ -944,6 +945,17 @@ void MainWindow::tabWidget_currentChanged(int index) {
       if (!loading) {
         loadText(tabWidget->getCurentTab()->getPath());
         goPlistText();
+
+        // 提示重装被其它软件修改的文件
+        for (int i = 0; i < reLoadByModiList.count(); i++) {
+          if (strCurrentFile == reLoadByModiList.at(i)) {
+            strModiFile = strCurrentFile;
+            ui->lblFileName->setText(tr("The file has been modified by another "
+                                        "program. Do you want to reload?") +
+                                     "\n\n" + QString("%1").arg(strModiFile));
+            ui->frameTip->setHidden(false);
+          }
+        }
       }
 
       ui->btnPrevious->setEnabled(false);
@@ -2816,9 +2828,13 @@ void MainWindow::on_listFind_currentRowChanged(int currentRow) {
   Q_UNUSED(currentRow)
 }
 
-void MainWindow::on_btnNo_clicked() { ui->frameTip->setHidden(true); }
+void MainWindow::on_btnNo_clicked() {
+  ui->frameTip->setHidden(true);
+  reLoadByModiList.removeOne(strModiFile);
+}
 
 void MainWindow::on_btnYes_clicked() {
   ui->frameTip->setHidden(true);
+  reLoadByModiList.removeOne(strModiFile);
   openPlist(strModiFile);
 }

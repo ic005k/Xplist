@@ -112,7 +112,12 @@ void FileSystemWatcher::fileUpdated(const QString& path) {
 
   mw_one->strModiFile = path;
   mw_one->ui->lblFileName->setText(tr("The file has been modified by another "
-                                      "program. Do you want to reload?")
-                                   + "\n\n" + QString("%1").arg(path));
+                                      "program. Do you want to reload?") +
+                                   "\n\n" + QString("%1").arg(path));
   mw_one->ui->frameTip->setHidden(false);
+  bool re = false;
+  for (int i = 0; i < mw_one->reLoadByModiList.count(); i++) {
+    if (mw_one->reLoadByModiList.at(i) == path) re = true;
+  }
+  if (!re) mw_one->reLoadByModiList.append(path);
 }
