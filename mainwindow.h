@@ -55,6 +55,9 @@ class MainWindow : public QMainWindow {
 
   Ui::MainWindow* ui;
 
+  QLabel* lblStaInfo0;
+  QLabel* lblStaInfo1;
+  QLabel* lblStaInfo2;
   QStringList reLoadByModiList;
   QFont font;
   bool findTextChanged = false;

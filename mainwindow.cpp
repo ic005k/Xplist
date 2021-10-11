@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.70";
+  CurVerison = "1.0.71";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -74,6 +74,18 @@ MainWindow::MainWindow(QWidget* parent)
 
   myToolBar = ui->mainToolBar;
   myStatusBar = ui->statusBar;
+  lblStaInfo0 = new QLabel(this);
+  lblStaInfo1 = new QLabel(this);
+  lblStaInfo0->setStyleSheet(
+      "QLabel { background-color : lightblue; color : black; }");
+  lblStaInfo1->setStyleSheet(
+      "QLabel { background-color : yellow; color : black; }");
+  lblStaInfo2 = new QLabel(this);
+  lblStaInfo2->setStyleSheet(
+      "QLabel { background-color : lightgreen; color : black; }");
+  myStatusBar->addPermanentWidget(lblStaInfo0);
+  myStatusBar->addPermanentWidget(lblStaInfo2);
+  myStatusBar->addPermanentWidget(lblStaInfo1);
 
   tabWidget = new EditorTabsWidget(this);
 
@@ -629,7 +641,7 @@ void MainWindow::openPlist(QString filePath) {
     if (ui->actionExpandAllOpenFile->isChecked()) actionExpand_all_activated();
 
     tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
-                                       fi.fileName());
+                                       fi.filePath());
 
     loadText(filePath);
   }
@@ -1419,18 +1431,34 @@ void MainWindow::showMsg() {
   DomModel* model = tab->getModel();
   DomItem* item = model->itemForIndex(index);
 
-  QString str1, str2, str3, str4, str5;
+  QString str1, str2, str3, str4, str5, str6, str7;
   str1 =
       QObject::tr("Currently selected: ") + index.data().toString().trimmed();
   str2 = "      " + QObject::tr("Row: ") + QString::number(index.row() + 1);
   str3 =
       "      " + QObject::tr("Column: ") + QString::number(index.column() + 1);
-  str4 = "      " + QObject::tr("Parent level：") +
-         index.parent().data().toString();
   str5 = "      " + QObject::tr("Children: ") +
          QString::number(item->childCount());
+  if (index.parent().isValid())
+    str4 = "      " + QObject::tr("Parent level：") +
+           index.parent().data().toString();
+  else
+    str4 = "";
+  if (index.parent().parent().isValid())
+    str6 = " -> " + index.parent().parent().data().toString();
+  else
+    str6 = "";
+  if (index.parent().parent().parent().isValid())
+    str7 = " -> " + index.parent().parent().parent().data().toString();
+  else
+    str7 = "";
 
-  myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4);
+  // myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4 + str6 + str7);
+  str1 = index.data().toString().trimmed();
+  if (str1.count() >= 100) str1 = str1.mid(0, 97) + "...";
+  lblStaInfo0->setText(str1);
+  lblStaInfo2->setText(str2 + str3 + str5);
+  lblStaInfo1->setText(str4 + str6 + str7);
 }
 
 QString MainWindow::getPlistTextValue(QString str) {
