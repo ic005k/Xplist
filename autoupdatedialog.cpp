@@ -103,6 +103,7 @@ void AutoUpdateDialog::startUpdate() {
 
   QDir dir;
   dir.setCurrent(tempDir);
+  QString fileName = tempDir + "upocat.sh";
 
   qApp->exit();
 
@@ -135,8 +136,6 @@ void AutoUpdateDialog::startUpdate() {
     strExec = "\"" + strExec + "\"";
     txtEdit->append("open " + strExec);
 
-    QString fileName = tempDir + "upocat.sh";
-    // fileName = QDir::homePath() + "/.config/QtOCC/upocat.sh";
     TextEditToFile(txtEdit, fileName);
 
     QProcess::startDetached("bash", QStringList() << fileName);
@@ -160,7 +159,6 @@ void AutoUpdateDialog::startUpdate() {
     strCommand2 = "xcopy " + stry + " " + strPath + " /s/y";
     txtEdit->append(strCommand1 + " && " + strCommand2 + " && " + strExec);
 
-    QString fileName = tempDir + "upocat.bat";
     TextEditToFile(txtEdit, fileName);
 
     QProcess::startDetached("cmd.exe", QStringList() << "/c" << fileName);
@@ -173,7 +171,6 @@ void AutoUpdateDialog::startUpdate() {
     txtEdit->append("cp -f " + strZip + " " + strLinuxTargetFile);
     txtEdit->append(strLinuxTargetFile);
 
-    QString fileName = tempDir + "upocat.sh";
     TextEditToFile(txtEdit, fileName);
 
     QProcess::execute("chmod", QStringList() << "+x" << fileName);
