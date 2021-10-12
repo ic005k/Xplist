@@ -36,6 +36,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
+#include "autoupdatedialog.h"
 #include "codeeditor.h"
 #include "domparser.h"
 #include "editortabswidget.h"
@@ -55,6 +56,10 @@ class MainWindow : public QMainWindow {
 
   Ui::MainWindow* ui;
 
+  bool mac = false;
+  bool win = false;
+  bool linuxOS = false;
+  AutoUpdateDialog* dlgAutoUpdate;
   QLabel* lblStaInfo0;
   QLabel* lblStaInfo1;
   QLabel* lblStaInfo2;
@@ -102,6 +107,9 @@ class MainWindow : public QMainWindow {
 
   QFont getFont();
   void checkReloadFilesByModi();
+  void ShowAutoUpdateDlg(bool Database);
+  int deleteDirfile(QString dirName);
+  QString getUrl(QVariantList list);
  public slots:
   void on_Find();
   void on_actionMoveUp();
@@ -226,6 +234,8 @@ class MainWindow : public QMainWindow {
 
   void on_btnYes_clicked();
 
+  void on_actionDownload_Upgrade_Packages_triggered();
+
  private:
   bool useQtWriteXML = true;
   RecentFiles* m_recentFiles;
@@ -237,9 +247,7 @@ class MainWindow : public QMainWindow {
 
   QNetworkAccessManager* manager;
   int parse_UpdateJSON(QString str);
-  bool mac = false;
-  bool win = false;
-  bool linuxOS = false;
+
   QString CurVerison = "V1.0";
 
   void setExpandText(EditorTab* tab);

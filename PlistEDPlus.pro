@@ -25,6 +25,7 @@ SOURCES += main.cpp\
     MyTabPopup.cpp \
     Plist.cpp \
     PlistDate.cpp \
+    autoupdatedialog.cpp \
     codeeditor.cpp \
     comboboxdelegatebool.cpp \
     filesystemwatcher.cpp \
@@ -49,6 +50,7 @@ HEADERS  += mainwindow.h \
     MyTabPopup.h \
     Plist.hpp \
     PlistDate.hpp \
+    autoupdatedialog.h \
     base64.hpp \
     codeeditor.h \
     comboboxdelegatebool.h \
@@ -70,6 +72,7 @@ HEADERS  += mainwindow.h \
     recentfiles.h
 
 FORMS    += mainwindow.ui \
+    autoupdatedialog.ui \
     editortab.ui
 
 RESOURCES += \
