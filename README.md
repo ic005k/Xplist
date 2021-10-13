@@ -38,4 +38,4 @@ This is a lightweight plist editor with rich features. The file format supports 
 [PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
 [pugixml](https://github.com/zeux/pugixml)&nbsp;
 
-### Note: This project started in October 2020
+#### Note: This project started in October 2020
