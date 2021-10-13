@@ -103,78 +103,78 @@ void AutoUpdateDialog::startUpdate() {
 
   QDir dir;
   dir.setCurrent(tempDir);
-  QString fileName = tempDir + "upocat.sh";
 
   qApp->exit();
 
   if (mw_one->mac || mw_one->osx1012) {
-    QTextEdit* txtEdit = new QTextEdit();
-    QString strTarget = appInfo.path().replace("Contents", "");
-    strTarget = strTarget + ".";
-    strTarget = "\"" + strTarget + "\"";
-    if (mw_one->mac) {
-      txtEdit->append("hdiutil mount -mountpoint /Volumes/plist " + strZip);
-      txtEdit->append(
-          "cp -R -p -f "
-          "/Volumes/plist/PlistEDPlus.app/. " +
-          strTarget);
+      QString fileName = tempDir + "up.sh";
+      QTextEdit *txtEdit = new QTextEdit();
+      QString strTarget = appInfo.path().replace("Contents", "");
+      strTarget = strTarget + ".";
+      strTarget = "\"" + strTarget + "\"";
+      if (mw_one->mac) {
+          txtEdit->append("hdiutil mount -mountpoint /Volumes/plist " + strZip);
+          txtEdit->append("cp -R -p -f "
+                          "/Volumes/plist/PlistEDPlus.app/. "
+                          + strTarget);
 
-      txtEdit->append("hdiutil eject /Volumes/plist");
-    }
-    if (mw_one->osx1012) {
-      txtEdit->append("hdiutil mount -mountpoint /Volumes/plist1012 " + strZip);
-      txtEdit->append(
-          "cp -R -p -f "
-          "/Volumes/plist1012/PlistEDPlus.app/. " +
-          strTarget);
+          txtEdit->append("hdiutil eject /Volumes/plist");
+      }
+      if (mw_one->osx1012) {
+          txtEdit->append("hdiutil mount -mountpoint /Volumes/plist1012 " + strZip);
+          txtEdit->append("cp -R -p -f "
+                          "/Volumes/plist1012/PlistEDPlus.app/. "
+                          + strTarget);
 
-      txtEdit->append("hdiutil eject /Volumes/plist1012");
-    }
+          txtEdit->append("hdiutil eject /Volumes/plist1012");
+      }
 
-    strPath = appInfo.path().replace("Contents", "");
-    strExec = strPath.mid(0, strPath.length() - 1);
-    strExec = "\"" + strExec + "\"";
-    txtEdit->append("open " + strExec);
+      strPath = appInfo.path().replace("Contents", "");
+      strExec = strPath.mid(0, strPath.length() - 1);
+      strExec = "\"" + strExec + "\"";
+      txtEdit->append("open " + strExec);
 
-    TextEditToFile(txtEdit, fileName);
+      TextEditToFile(txtEdit, fileName);
 
-    QProcess::startDetached("bash", QStringList() << fileName);
+      QProcess::startDetached("bash", QStringList() << fileName);
   }
 
   if (mw_one->win) {
-    strPath = appInfo.filePath();
+      QString fileName = tempDir + "up.bat";
+      strPath = appInfo.filePath();
 
-    QTextEdit* txtEdit = new QTextEdit();
-    strUnzip = strPath + "/unzip.exe";
-    strUnzip = "\"" + strUnzip + "\"";
-    strZip = "\"" + strZip + "\"";
-    strPath = "\"" + strPath + "\"";
-    strExec = qApp->applicationFilePath();
-    strExec = "\"" + strExec + "\"";
-    QString strCommand1, strCommand2;
-    QString strx = "\"" + tempDir + "\"";
-    strCommand1 = strUnzip + " -o " + strZip + " -d " + strx;
-    QString stry = tempDir + QFileInfo(filename).baseName();
-    stry = "\"" + stry + "\"";
-    strCommand2 = "xcopy " + stry + " " + strPath + " /s/y";
-    txtEdit->append(strCommand1 + " && " + strCommand2 + " && " + strExec);
+      QTextEdit *txtEdit = new QTextEdit();
+      strUnzip = strPath + "/unzip.exe";
+      strUnzip = "\"" + strUnzip + "\"";
+      strZip = "\"" + strZip + "\"";
+      strPath = "\"" + strPath + "\"";
+      strExec = qApp->applicationFilePath();
+      strExec = "\"" + strExec + "\"";
+      QString strCommand1, strCommand2;
+      QString strx = "\"" + tempDir + "\"";
+      strCommand1 = strUnzip + " -o " + strZip + " -d " + strx;
+      QString stry = tempDir + QFileInfo(filename).baseName();
+      stry = "\"" + stry + "\"";
+      strCommand2 = "xcopy " + stry + " " + strPath + " /s/y";
+      txtEdit->append(strCommand1 + " && " + strCommand2 + " && " + strExec);
 
-    TextEditToFile(txtEdit, fileName);
+      TextEditToFile(txtEdit, fileName);
 
-    QProcess::startDetached("cmd.exe", QStringList() << "/c" << fileName);
+      QProcess::startDetached("cmd.exe", QStringList() << "/c" << fileName);
   }
 
   if (mw_one->linuxOS) {
-    QTextEdit* txtEdit = new QTextEdit();
-    strZip = "\"" + strZip + "\"";
-    strLinuxTargetFile = "\"" + strLinuxTargetFile + "\"";
-    txtEdit->append("cp -f " + strZip + " " + strLinuxTargetFile);
-    txtEdit->append(strLinuxTargetFile);
+      QString fileName = tempDir + "up.sh";
+      QTextEdit *txtEdit = new QTextEdit();
+      strZip = "\"" + strZip + "\"";
+      strLinuxTargetFile = "\"" + strLinuxTargetFile + "\"";
+      txtEdit->append("cp -f " + strZip + " " + strLinuxTargetFile);
+      txtEdit->append(strLinuxTargetFile);
 
-    TextEditToFile(txtEdit, fileName);
+      TextEditToFile(txtEdit, fileName);
 
-    QProcess::execute("chmod", QStringList() << "+x" << fileName);
-    QProcess::startDetached("bash", QStringList() << fileName);
+      QProcess::execute("chmod", QStringList() << "+x" << fileName);
+      QProcess::startDetached("bash", QStringList() << fileName);
   }
 }
 
