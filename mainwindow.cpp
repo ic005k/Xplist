@@ -1728,7 +1728,8 @@ QString MainWindow::getUrl(QVariantList list) {
   if (win) Url = winUrl;
   if (linuxOS) Url = linuxUrl;
   if (osx1012) Url = osx1012Url;
-  if (Url == "") Url = "https://github.com/ic005k/PlistEDPlus/releases/latest";
+  // if (Url == "") Url =
+  // "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
   return Url;
 }
@@ -2882,6 +2883,7 @@ void MainWindow::on_actionDownload_Upgrade_Packages_triggered() {
 }
 
 void MainWindow::ShowAutoUpdateDlg(bool Database) {
+  if (dlgAutoUpdate->strUrl == "") return;
   if (dlgAutoUpdate->isVisible()) return;
 
   dlgAutoUpdate->setWindowFlags(dlgAutoUpdate->windowFlags() |
