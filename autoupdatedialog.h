@@ -51,7 +51,8 @@ class AutoUpdateDialog : public QDialog {
 
   void TextEditToFile(QTextEdit* txtEdit, QString fileName);
 
- protected:
+  QString GetFileSize(const qint64 &size, int precision);
+protected:
   void closeEvent(QCloseEvent* event);
   void keyPressEvent(QKeyEvent* event);
  private slots:
