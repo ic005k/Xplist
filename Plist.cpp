@@ -689,6 +689,8 @@ void readPlist(const char* byteArrayTemp, int64_t size, boost::any& message) {
 
   std::string magicHeader((const char*)byteArray, 8);
   if (magicHeader == "bplist00") {
+    // binPlistFile = true;
+
     PlistHelperData d;
     parseTrailer(d, getRange(byteArray, size - 32, 32));
 
@@ -700,7 +702,6 @@ void readPlist(const char* byteArrayTemp, int64_t size, boost::any& message) {
 
     message = parseBinary(d, 0);
 
-    binPlistFile = true;
   } else {
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_buffer(byteArray, (size_t)size);
@@ -712,7 +713,7 @@ void readPlist(const char* byteArrayTemp, int64_t size, boost::any& message) {
     pugi::xml_node rootNode = doc.child("plist").first_child();
     message = parse(rootNode);
 
-    binPlistFile = false;
+    // binPlistFile = false;
   }
 }
 

@@ -110,6 +110,8 @@ class MainWindow : public QMainWindow {
   void ShowAutoUpdateDlg(bool Database);
   int deleteDirfile(QString dirName);
   QString getUrl(QVariantList list);
+  bool getBinPlist(QString filePath);
+  QDomDocument readXMLPlist(QDomDocument document, QString filePath);
  public slots:
   void on_Find();
   void on_actionMoveUp();

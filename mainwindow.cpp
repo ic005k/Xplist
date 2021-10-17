@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.73";
+  CurVerison = "1.0.74";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -538,7 +538,6 @@ void MainWindow::openPlist(QString filePath) {
   ui->listFind->clear();  // 否则会导致App崩溃
   removeWatchFiles();
 
-  QFileInfo fi(filePath);
   map<string, boost::any> dict;
   string baseName;
   QString path;
@@ -550,8 +549,6 @@ void MainWindow::openPlist(QString filePath) {
     QFile file(filePath);
 
     if (file.open(QIODevice::ReadOnly)) {
-      QDomDocument document;
-
       if (document.setContent(&file)) {
         DomModel* model = DomParser::fromDom(document);
 
@@ -562,8 +559,10 @@ void MainWindow::openPlist(QString filePath) {
     file.close();
   }
 
+  QFileInfo fi(filePath);
   if (fi.exists() && filePath != fn) {
     filePath = QDir::fromNativeSeparators(filePath);
+    binPlistFile = getBinPlist(filePath);
 
     path = fi.path();
     QDir dir;
@@ -574,53 +573,72 @@ void MainWindow::openPlist(QString filePath) {
     QString str = fi.fileName();
     baseName = string(str.toLocal8Bit());
 
-    try {
-      Plist::readPlist(baseName.c_str(), dict);
-    } catch (...) {
-      QMessageBox box;
-      box.setText(
-          tr("There's something wrong with this file and it won't open!") +
-          "\n\n" + filePath);
-      box.exec();
-      return;
-    }
-
     if (binPlistFile) {
-      if (dir.mkpath(strConfigDir)) {
+      if (win || linuxOS) {
+        try {
+          Plist::readPlist(baseName.c_str(), dict);
+        } catch (...) {
+          QMessageBox box;
+          box.setText(
+              tr("There's something wrong with this file and it won't open!") +
+              "\n\n[BIN]  " + filePath);
+          box.exec();
+          return;
+        }
+
+        if (dir.mkpath(strConfigDir)) {
+        }
+        dir.setCurrent(strConfigDir);
+        Plist::writePlistXML("_temp.plist", dict);
       }
-      dir.setCurrent(strConfigDir);
-      Plist::writePlistXML("_temp.plist", dict);
+
+      if (mac || osx1012) {
+        QProcess::execute("plutil", QStringList()
+                                        << "-convert"
+                                        << "xml1" << filePath << "-o"
+                                        << strConfigDir + "/_temp.plist");
+      }
+
       cboxFileType->setCurrentIndex(1);
     } else
       cboxFileType->setCurrentIndex(0);
 
+    QString strLoad;
     if (binPlistFile) {
-      QString temp = strConfigDir + "/_temp.plist";
-      QFile file(temp);
-      if (file.open(QIODevice::ReadOnly)) {
-        if (document.setContent(&file)) {
-        }
-      }
-      file.close();
-
-      QFile::remove(temp);
-
+      strLoad = strConfigDir + "/_temp.plist";
     } else {
-      QFile file(filePath);
-      if (file.open(QIODevice::ReadOnly)) {
-        if (document.setContent(&file)) {
-        }
-      }
-      file.close();
+      strLoad = filePath;
     }
 
-    if (dir.exists(path)) {
-      dir.setCurrent(path);
+    QFileInfo fiCheck(strLoad);
+    QString pathCheck = fiCheck.path();
+    QDir dirCheck(pathCheck);
+    if (dirCheck.exists(pathCheck)) {
+      dirCheck.setCurrent(pathCheck);
     }
+    string baseNameCheck = string(fiCheck.fileName().toLocal8Bit());
+    try {
+      Plist::readPlist(baseNameCheck.c_str(), dict);
+    } catch (...) {
+      QMessageBox box;
+      box.setText(
+          tr("There's something wrong with this file and it won't open!") +
+          "\n\n[XML]  " + filePath);
+      box.exec();
+      return;
+    }
+
+    QFile file(strLoad);
+    if (file.open(QIODevice::ReadOnly)) {
+      document.setContent(&file);
+    }
+    file.close();
+    if (binPlistFile) QFile::remove(strLoad);
 
     closeOpenedFile(filePath);
 
-    DomModel* model = DomParser::fromDom(document);
+    DomModel* model;
+    model = DomParser::fromDom(document);
     tabWidget->createTab(model, filePath);
 
     if (filePath != fn) {
@@ -632,17 +650,14 @@ void MainWindow::openPlist(QString filePath) {
       initRecentFilesForToolBar();
     }
 
-    // 列宽自动适应最长的条目
     EditorTab* tab = tabWidget->getCurentTab();
-    tab->treeView->resizeColumnToContents(0);
-
     tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
+    tab->treeView->resizeColumnToContents(0);  // 列宽自动适应最长的条目
     tab->treeView->setFocus();
-
     if (ui->actionExpandAllOpenFile->isChecked()) actionExpand_all_activated();
-
-    tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
-                                       fi.filePath());
+    if (tabWidget->currentIndex() >= 0)
+      tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
+                                         fi.filePath());
 
     loadText(filePath);
   }
@@ -650,6 +665,36 @@ void MainWindow::openPlist(QString filePath) {
   addWatchFiles();
 
   loading = false;
+}
+
+QDomDocument MainWindow::readXMLPlist(QDomDocument document, QString filePath) {
+  QFile file(filePath);
+  if (file.open(QIODevice::ReadOnly)) {
+    if (document.setContent(&file)) {
+    }
+  }
+  file.close();
+
+  return document;
+}
+
+bool MainWindow::getBinPlist(QString filePath) {
+  QFile file(filePath);
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QMessageBox::warning(
+        this, tr("Application"),
+        tr("Cannot read file %1:\n%2.")
+            .arg(QDir::toNativeSeparators(fileName), file.errorString()));
+
+  } else {
+    QTextStream in(&file);
+    in.setCodec("UTF-8");
+    QString text = in.readAll().trimmed();
+    if (text.mid(0, 8) == "bplist00")
+      return true;
+    else
+      return false;
+  }
 }
 
 void MainWindow::closeOpenedFile(QString file) {
@@ -796,7 +841,17 @@ void MainWindow::savePlist(QString filePath) {
 
       // BIN
       if (cboxFileType->currentIndex() == 1) {
-        Plist::writePlistBinary(baseName.c_str(), dict);
+        if (win || linuxOS) Plist::writePlistBinary(baseName.c_str(), dict);
+        if (mac || osx1012) {
+          QFile file(filePath);
+          file.open(QIODevice::WriteOnly);
+          QTextStream out(&file);
+          out.setCodec("UTF-8");
+          doc.save(out, 4, QDomNode::EncodingFromDocument);
+          file.close();
+          QProcess::execute("plutil", QStringList() << "-convert"
+                                                    << "binary1" << filePath);
+        }
         tabWidget->setTabText(index, "[BIN] " + name);
       }
 
