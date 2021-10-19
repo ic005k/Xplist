@@ -112,6 +112,13 @@ class MainWindow : public QMainWindow {
   QString getUrl(QVariantList list);
   bool getBinPlist(QString filePath);
   QDomDocument readXMLPlist(QDomDocument document, QString filePath);
+  QString getMD5(QString targetFile);
+  QString strOrgMD5;
+  QString strByModiMD5;
+  QStringList listOrgMD5;
+
+  void setOrgMD5(QString fileName);
+  QString getOrgMD5(QString fileName);
  public slots:
   void on_Find();
   void on_actionMoveUp();

@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.74";
+  CurVerison = "1.0.75";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -662,6 +662,7 @@ void MainWindow::openPlist(QString filePath) {
     loadText(filePath);
   }
 
+  setOrgMD5(filePath);
   addWatchFiles();
 
   loading = false;
@@ -865,6 +866,8 @@ void MainWindow::savePlist(QString filePath) {
 
     goPlistText();
   }
+
+  setOrgMD5(filePath);
   addWatchFiles();
 }
 
@@ -2978,4 +2981,37 @@ int MainWindow::deleteDirfile(QString dirName) {
     error = true;
   }
   return !error;
+}
+
+QString MainWindow::getMD5(QString targetFile) {
+  QCryptographicHash hashTest(QCryptographicHash::Md5);
+  QFile f2(targetFile);
+  f2.open(QFile::ReadOnly);
+  hashTest.reset();  // 重置（很重要）
+  hashTest.addData(&f2);
+  QString targetHash = hashTest.result().toHex();
+  f2.close();
+  return targetHash;
+}
+
+void MainWindow::setOrgMD5(QString fileName) {
+  listOrgMD5.clear();
+  for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
+    fileName = tabWidget->getTab(i)->getPath();
+    listOrgMD5.append(fileName + "|" + getMD5(fileName));
+  }
+}
+
+QString MainWindow::getOrgMD5(QString fileName) {
+  for (int i = 0; i < listOrgMD5.count(); i++) {
+    QString strListAt = listOrgMD5.at(i);
+    QStringList strListSplit = strListAt.split("|");
+    if (strListSplit.count() == 2) {
+      if (strListSplit.at(0) == fileName) {
+        return getMD5(strListSplit.at(1));
+      }
+    }
+  }
+
+  return "";
 }
