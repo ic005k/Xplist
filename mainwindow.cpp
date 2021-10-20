@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.75";
+  CurVerison = "1.0.76";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -1552,6 +1552,8 @@ void MainWindow::goPlistText() {
     EditorTab* tab = tabWidget->getCurentTab();
     QModelIndex index;
     index = tab->currentIndex();
+    if (!index.isValid()) return;
+
     DomModel* model = tab->getModel();
     DomItem* item = model->itemForIndex(index);
 
