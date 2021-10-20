@@ -109,6 +109,7 @@ void FileSystemWatcher::directoryUpdated(const QString& path) {
 void FileSystemWatcher::fileUpdated(const QString& path) {
   mw_one->strOrgMD5 = mw_one->getOrgMD5(path);
   mw_one->strByModiMD5 = mw_one->getMD5(path);
+
   if (mw_one->strOrgMD5 == mw_one->strByModiMD5) return;
 
   mw_one->strModiFile = path;

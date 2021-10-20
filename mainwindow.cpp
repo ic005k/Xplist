@@ -707,6 +707,12 @@ void MainWindow::closeOpenedFile(QString file) {
   }
 }
 
+void MainWindow::removeWatchFiles() {
+  for (int i = 0; i < openFileList.count(); i++) {
+    FileSystemWatcher::removeWatchPath(openFileList.at(i));
+  }
+}
+
 void MainWindow::addWatchFiles() {
   openFileList.clear();
   for (int i = 0; i < tabWidget->tabBar()->count(); i++) {
@@ -759,9 +765,6 @@ void MainWindow::onTabCloseRequest(int i) {
   // remove stack from group
   undoGroup->removeStack(stack);
 
-  openFileList.removeOne(fn);
-  FileSystemWatcher::removeWatchPath(fn);
-
   // close tab
   tabWidget->closeTab();
 
@@ -771,6 +774,10 @@ void MainWindow::onTabCloseRequest(int i) {
   if (tabWidget->tabBar()->count() == 0) {
     plistTextEditor->clear();
   }
+
+  // 单独移除貌似无效？现改为整体移除并添加
+  removeWatchFiles();
+  addWatchFiles();
 }
 
 void MainWindow::savePlist(QString filePath) {
@@ -1892,12 +1899,6 @@ void MainWindow::on_NewWindow() {
   process->setEnvironment(process->environment());
 
   process->start(pathSource, arguments);
-}
-
-void MainWindow::removeWatchFiles() {
-  for (int i = 0; i < openFileList.count(); i++) {
-    FileSystemWatcher::removeWatchPath(openFileList.at(i));
-  }
 }
 
 void MainWindow::on_copyBW() {
