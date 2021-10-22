@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.76";
+  CurVerison = "1.0.77";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -72,6 +72,30 @@ MainWindow::MainWindow(QWidget* parent)
   linuxOS = true;
 #endif
 
+  ui->mainToolBar->setStyleSheet(
+
+      "QToolButton:hover{ "
+      "color:rgb(255, 255, 255); "
+      "border-style:solid; "
+      "border-top-left-radius:2px;  "
+      "border-top-right-radius:2px; "
+      "background:#bfbfbf; "
+      "border:1px;"
+      "border-radius:5px;padding:2px 4px; }"
+
+      "QToolButton:pressed{ "
+      "color:rgb(255, 255, 255); "
+      "border-style:solid; "
+      "border-top-left-radius:2px;  "
+      "border-top-right-radius:2px; "
+      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop:0 "
+      "rgb(226,236,241),"
+      "stop: 0.3 rgb(190,190,190),"
+      "stop: 1 rgb(160,160,160));"
+      "border:1px;"
+      "border-radius:5px;padding:2px 4px; }"
+
+  );
   myToolBar = ui->mainToolBar;
   myStatusBar = ui->statusBar;
   lblStaInfo0 = new QLabel(this);
@@ -472,8 +496,8 @@ void MainWindow::initMenuToolsBar() {
     on_editFind_returnPressed();
   });
 
-  ui->mainToolBar->addWidget(ui->btnPrevious);
-  ui->mainToolBar->addWidget(ui->btnNext);
+  // ui->mainToolBar->addWidget(ui->btnPrevious);
+  // ui->mainToolBar->addWidget(ui->btnNext);
   ui->mainToolBar->addWidget(ui->btnShowReplace);
   ui->btnMisc->setVisible(false);
 
@@ -2290,7 +2314,6 @@ void MainWindow::on_actionFindPrevious_triggered() { on_btnPrevious_clicked(); }
 void MainWindow::on_actionReplace_triggered() {
   if (ui->frame->isHidden()) {
     ui->frame->show();
-    // ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
   }
 
   on_btnReplace_clicked();

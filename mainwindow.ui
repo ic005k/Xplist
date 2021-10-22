@@ -23,7 +23,7 @@
    <string/>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="res.qrc">
     <normaloff>:/new/toolbar/res/my.png</normaloff>:/new/toolbar/res/my.png</iconset>
   </property>
   <property name="locale">
@@ -119,10 +119,6 @@
          <property name="text">
           <string>&lt;</string>
          </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>:/new/toolbar/res/pre.svg</normaloff>:/new/toolbar/res/pre.svg</iconset>
-         </property>
         </widget>
        </item>
        <item row="0" column="4">
@@ -132,10 +128,6 @@
          </property>
          <property name="text">
           <string>&gt;</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>:/new/toolbar/res/next.svg</normaloff>:/new/toolbar/res/next.svg</iconset>
          </property>
         </widget>
        </item>
@@ -172,7 +164,7 @@
           <string>&gt;&gt;</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="res.qrc">
            <normaloff>:/new/toolbar/res/replace.svg</normaloff>:/new/toolbar/res/replace.svg</iconset>
          </property>
         </widget>
@@ -348,7 +340,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/open.svg</normaloff>:/new/toolbar/res/open.svg</iconset>
    </property>
    <property name="text">
@@ -380,7 +372,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/save.svg</normaloff>:/new/toolbar/res/save.svg</iconset>
    </property>
    <property name="text">
@@ -398,7 +390,7 @@
   </action>
   <action name="actionSave_as">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/saveas.svg</normaloff>:/new/toolbar/res/saveas.svg</iconset>
    </property>
    <property name="text">
@@ -428,7 +420,7 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/new.svg</normaloff>:/new/toolbar/res/new.svg</iconset>
    </property>
    <property name="text">
@@ -496,7 +488,7 @@
   </action>
   <action name="actionCheck_Update">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/cu.svg</normaloff>:/new/toolbar/res/cu.svg</iconset>
    </property>
    <property name="text">
@@ -532,7 +524,7 @@
   </action>
   <action name="actionRemove_2">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/remove.svg</normaloff>:/new/toolbar/res/remove.svg</iconset>
    </property>
    <property name="text">
@@ -552,7 +544,7 @@
   </action>
   <action name="actionNew_Window">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/nw.svg</normaloff>:/new/toolbar/res/nw.svg</iconset>
    </property>
    <property name="text">
@@ -667,6 +659,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>
