@@ -23,15 +23,6 @@
 
 This is a lightweight plist editor with rich features. The file format supports XML and binary plist files under all platforms.
 
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p1.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p2.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p3.png)
-
-
-
 ### Thanks for the support of the following open source software!
 
 [PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
