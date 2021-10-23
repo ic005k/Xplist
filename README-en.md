@@ -25,16 +25,6 @@
 
 这是一个轻量级的plist编辑器，功能丰富。支持Windows、MacOS、Linux。文件格式在所有的平台下支持XML和二进制plist文件。
 
-
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p1.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p2.png)
-
-![Screenshot](https://github.com/ic005k/PlistEDPlus/blob/main/Screenshots/p3.png)
-
-
-
 ### 感谢
 
 [PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
