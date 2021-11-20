@@ -712,8 +712,6 @@ void readPlist(const char* byteArrayTemp, int64_t size, boost::any& message) {
 
     pugi::xml_node rootNode = doc.child("plist").first_child();
     message = parse(rootNode);
-
-    // binPlistFile = false;
   }
 }
 

@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.77";
+  CurVerison = "1.0.78";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -496,14 +496,8 @@ void MainWindow::initMenuToolsBar() {
     on_editFind_returnPressed();
   });
 
-  // ui->mainToolBar->addWidget(ui->btnPrevious);
-  // ui->mainToolBar->addWidget(ui->btnNext);
   ui->mainToolBar->addWidget(ui->btnShowReplace);
   ui->btnMisc->setVisible(false);
-
-  ui->mainToolBar->addSeparator();
-
-  ui->mainToolBar->addAction(ui->actionCheck_Update);
 }
 
 void MainWindow::recentOpen(QString filename) { openPlist(filename); }
@@ -640,16 +634,11 @@ void MainWindow::openPlist(QString filePath) {
     if (dirCheck.exists(pathCheck)) {
       dirCheck.setCurrent(pathCheck);
     }
-    string baseNameCheck = string(fiCheck.fileName().toLocal8Bit());
+
+    // string baseNameCheck = string(fiCheck.fileName().toLocal8Bit());
     try {
-      Plist::readPlist(baseNameCheck.c_str(), dict);
+      // Plist::readPlist(baseNameCheck.c_str(), dict);  // 目前仅做测试使用
     } catch (...) {
-      QMessageBox box;
-      box.setText(
-          tr("There's something wrong with this file and it won't open!") +
-          "\n\n[XML]  " + filePath);
-      box.exec();
-      return;
     }
 
     QFile file(strLoad);
@@ -663,6 +652,14 @@ void MainWindow::openPlist(QString filePath) {
 
     DomModel* model;
     model = DomParser::fromDom(document);
+    if (model == NULL) {
+      QMessageBox box;
+      box.setText(
+          tr("There's something wrong with this file and it won't open!") +
+          "\n\n[XML]  " + filePath);
+      box.exec();
+      return;
+    }
     tabWidget->createTab(model, filePath);
 
     if (filePath != fn) {
@@ -675,10 +672,16 @@ void MainWindow::openPlist(QString filePath) {
     }
 
     EditorTab* tab = tabWidget->getCurentTab();
-    tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
+    if (tab->getModel()->index(0, 0).isValid()) {
+      tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
+    } else {
+      return;
+    }
+
     tab->treeView->resizeColumnToContents(0);  // 列宽自动适应最长的条目
     tab->treeView->setFocus();
     if (ui->actionExpandAllOpenFile->isChecked()) actionExpand_all_activated();
+
     if (tabWidget->currentIndex() >= 0)
       tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
                                          fi.filePath());
