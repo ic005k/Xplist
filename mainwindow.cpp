@@ -690,6 +690,7 @@ void MainWindow::openPlist(QString filePath) {
     EditorTab* tab = tabWidget->getCurentTab();
     if (tab->getModel()->index(0, 0).isValid()) {
       tab->treeView->setCurrentIndex(tab->getModel()->index(0, 0));
+      showMsg();
     } else {
       return;
     }
@@ -1097,6 +1098,7 @@ void MainWindow::tabWidget_currentChanged(int index) {
       if (!loading) {
         loadText(tabWidget->getCurentTab()->getPath());
         goPlistText();
+        showMsg();
       }
 
       ui->btnPrevious->setEnabled(false);
