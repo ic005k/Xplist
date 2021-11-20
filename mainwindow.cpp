@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.78";
+  CurVerison = "1.0.79";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -850,7 +850,10 @@ void MainWindow::savePlist(QString filePath) {
       std::string mystring = strData.toStdString();
       std::istringstream is(mystring);
 
-      Plist::readPlist(is, dict);
+      try {
+        Plist::readPlist(is, dict);  // 兼容性较差
+      } catch (...) {
+      }
 
       tab->setPath(filePath);
 
