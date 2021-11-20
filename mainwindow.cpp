@@ -268,7 +268,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->actionAbout->setMenuRole(QAction::AboutRole);
-  ui->mainToolBar->setIconSize(QSize(28, 28));
+  ui->mainToolBar->setIconSize(QSize(26, 26));
   ui->mainToolBar->layout()->setMargin(1);
   ui->mainToolBar->layout()->setSpacing(1);
 
