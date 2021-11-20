@@ -119,6 +119,9 @@ class MainWindow : public QMainWindow {
 
   void setOrgMD5(QString fileName);
   QString getOrgMD5(QString fileName);
+
+  QString getTextEditLineText(QTextEdit* txtEdit, int i);
+  QString readText(QString textFile);
  public slots:
   void on_Find();
   void on_actionMoveUp();

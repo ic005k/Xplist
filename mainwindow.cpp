@@ -46,12 +46,13 @@ int windowX = 0;
 int windowY = 0;
 
 extern bool loading;
+extern QString strRootType;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.80";
+  CurVerison = "1.0.81";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -306,8 +307,7 @@ void MainWindow::initMenuToolsBar() {
   connect(ui->actionNew_Window, SIGNAL(triggered()), this,
           SLOT(on_NewWindow()));
   ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
-  if (mac || osx1012)
-      ui->actionNew_Window->setIconVisibleInMenu(false);
+  if (mac || osx1012) ui->actionNew_Window->setIconVisibleInMenu(false);
 
   // Quit
   ui->actionQuit->setMenuRole(QAction::QuitRole);
@@ -652,6 +652,20 @@ void MainWindow::openPlist(QString filePath) {
 
     closeOpenedFile(filePath);
 
+    // 确定dict或array
+    QTextEdit* txtEdit = new QTextEdit;
+    txtEdit->setPlainText(readText(strLoad));
+    for (int i = 0; i < txtEdit->document()->lineCount(); i++) {
+      if (getTextEditLineText(txtEdit, i) == "<dict>") {
+        strRootType = "dict";
+        break;
+      }
+      if (getTextEditLineText(txtEdit, i) == "<array>") {
+        strRootType = "array";
+        break;
+      }
+    }
+
     DomModel* model;
     model = DomParser::fromDom(document);
     if (model == NULL) {
@@ -695,6 +709,34 @@ void MainWindow::openPlist(QString filePath) {
   addWatchFiles();
 
   loading = false;
+}
+
+QString MainWindow::getTextEditLineText(QTextEdit* txtEdit, int i) {
+  QTextBlock block = txtEdit->document()->findBlockByNumber(i);
+  txtEdit->setTextCursor(QTextCursor(block));
+  QString lineText = txtEdit->document()->findBlockByNumber(i).text().trimmed();
+  return lineText;
+}
+
+QString MainWindow::readText(QString textFile) {
+  QFileInfo fi(textFile);
+  if (fi.exists()) {
+    QFile file(textFile);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+      QMessageBox::warning(
+          this, tr("Application"),
+          tr("Cannot read file %1:\n%2.")
+              .arg(QDir::toNativeSeparators(textFile), file.errorString()));
+
+    } else {
+      QTextStream in(&file);
+      in.setCodec("UTF-8");
+      QString text = in.readAll();
+      return text;
+    }
+  }
+
+  return "";
 }
 
 QDomDocument MainWindow::readXMLPlist(QDomDocument document, QString filePath) {
