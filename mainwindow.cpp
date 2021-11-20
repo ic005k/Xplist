@@ -306,6 +306,8 @@ void MainWindow::initMenuToolsBar() {
   connect(ui->actionNew_Window, SIGNAL(triggered()), this,
           SLOT(on_NewWindow()));
   ui->actionNew_Window->setShortcut(tr("ctrl+alt+n"));
+  if (mac || osx1012)
+      ui->actionNew_Window->setIconVisibleInMenu(false);
 
   // Quit
   ui->actionQuit->setMenuRole(QAction::QuitRole);
