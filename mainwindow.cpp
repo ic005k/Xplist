@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.79";
+  CurVerison = "1.0.80";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -268,7 +268,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->actionAbout->setMenuRole(QAction::AboutRole);
-  ui->mainToolBar->setIconSize(QSize(25, 25));
+  ui->mainToolBar->setIconSize(QSize(28, 28));
   ui->mainToolBar->layout()->setMargin(1);
   ui->mainToolBar->layout()->setSpacing(1);
 
@@ -2872,7 +2872,7 @@ void MainWindow::initRecentFilesForToolBar() {
   reFileMenu->clear();
   for (int i = 0; i < rfList.count(); i++) {
     QFileInfo fi(rfList.at(i));
-    QAction* act = new QAction(QString::number(i + 1) + " . " + fi.baseName());
+    QAction* act = new QAction(QString::number(i + 1) + " . " + fi.filePath());
     reFileMenu->addAction(act);
     connect(act, &QAction::triggered,
             [=]() { openPlist(m_recentFiles->getRecentFiles().at(i)); });
