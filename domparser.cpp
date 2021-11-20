@@ -55,6 +55,8 @@ QDomDocument DomParser::toDom(DomModel* m) {
 
   doc_root.setAttributeNode(version);
 
+  DomItem* item = m->itemForIndex(m->index(0, 0));
+  strRootType = item->getType();
   QDomElement doc_dict = doc.createElement(strRootType);
 
   doc_root.appendChild(doc_dict);
