@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.82";
+  CurVerison = "1.0.83";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -648,7 +648,6 @@ void MainWindow::openPlist(QString filePath) {
       document.setContent(&file);
     }
     file.close();
-    if (binPlistFile) QFile::remove(strLoad);
 
     closeOpenedFile(filePath);
 
@@ -704,6 +703,7 @@ void MainWindow::openPlist(QString filePath) {
                                          fi.filePath());
 
     loadText(filePath);
+    if (binPlistFile) QFile::remove(strLoad);
   }
 
   setOrgMD5(filePath);
