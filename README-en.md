@@ -32,3 +32,4 @@
 [pugixml](https://github.com/zeux/pugixml)&nbsp;
 
 ### 备注：此项目开始于2020年10月
+API: https://api.github.com/repos/ic005k/PlistEDPlus/releases/latest
