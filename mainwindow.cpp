@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.81";
+  CurVerison = "1.0.82";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -944,7 +944,7 @@ void MainWindow::savePlist(QString filePath) {
     undoGroup->activeStack()->clear();
 
     tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
-                                       fi.fileName());
+                                       fi.filePath());
 
     goPlistText();
   }
