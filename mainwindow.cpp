@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.83";
+  CurVerison = "1.0.84";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -594,7 +594,7 @@ void MainWindow::openPlist(QString filePath) {
     baseName = string(str.toLocal8Bit());
 
     if (binPlistFile) {
-      if (win || linuxOS) {
+      if (linuxOS) {
         try {
           Plist::readPlist(baseName.c_str(), dict);
         } catch (...) {
@@ -610,6 +610,20 @@ void MainWindow::openPlist(QString filePath) {
         }
         dir.setCurrent(strConfigDir);
         Plist::writePlistXML("_temp.plist", dict);
+      }
+
+      if (win) {
+        QFileInfo appInfo(qApp->applicationDirPath());
+        QString strPath = appInfo.filePath();
+        QString strSource = strConfigDir + "/_util.plist";
+        QFile::remove(strSource);
+        QFile::copy(filePath, strSource);
+        QString strExec = strPath + "/plistutil.exe";
+        QString strTarget = strConfigDir + "/_temp.plist";
+        QProcess::execute("cmd.exe",
+                          QStringList()
+                              << "/c" << strExec << "-i" << strSource << "-o" << strTarget);
+        QFile::remove(strSource);
       }
 
       if (mac || osx1012) {
@@ -924,18 +938,58 @@ void MainWindow::savePlist(QString filePath) {
 
       // BIN
       if (cboxFileType->currentIndex() == 1) {
-        if (win || linuxOS) Plist::writePlistBinary(baseName.c_str(), dict);
-        if (mac || osx1012) {
-          QFile file(filePath);
-          file.open(QIODevice::WriteOnly);
-          QTextStream out(&file);
-          out.setCodec("UTF-8");
-          doc.save(out, 4, QDomNode::EncodingFromDocument);
-          file.close();
-          QProcess::execute("plutil", QStringList() << "-convert"
-                                                    << "binary1" << filePath);
-        }
-        tabWidget->setTabText(index, "[BIN] " + name);
+          if (linuxOS)
+              Plist::writePlistBinary(baseName.c_str(), dict);
+
+          if (win) {
+              QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
+              QString strSource = strConfigDir + "/_util.plist";
+
+              QFile file(strSource);
+              file.open(QIODevice::WriteOnly);
+              QTextStream out(&file);
+              out.setCodec("UTF-8");
+              doc.save(out, 4, QDomNode::EncodingFromDocument);
+              file.close();
+
+              QFileInfo appInfo(qApp->applicationDirPath());
+              QString strPath = appInfo.filePath();
+
+              QString strExec = strPath + "/plistutil.exe";
+              QString strTarget = strConfigDir + "/_temp.plist";
+
+              QProcess::execute("cmd.exe",
+                                QStringList()
+                                    << "/c" << strExec << "-i" << strSource << "-o" << strTarget);
+
+              QElapsedTimer t;
+              t.start();
+              while (!QFile::exists(strTarget)) {
+                  QCoreApplication::processEvents();
+              }
+
+              if (QFile::exists(strTarget)) {
+                  QFile::remove(filePath);
+
+                  if (QFile::copy(strTarget, filePath)) {
+                      QFile::remove(strSource);
+                      QFile::remove(strTarget);
+                  }
+              }
+          }
+
+          if (mac || osx1012) {
+              QFile file(filePath);
+              file.open(QIODevice::WriteOnly);
+              QTextStream out(&file);
+              out.setCodec("UTF-8");
+              doc.save(out, 4, QDomNode::EncodingFromDocument);
+              file.close();
+              QProcess::execute("plutil",
+                                QStringList() << "-convert"
+                                              << "binary1" << filePath);
+          }
+          tabWidget->setTabText(index, "[BIN] " + name);
       }
 
       loadText(filePath);

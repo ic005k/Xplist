@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QDesktopServices>
 #include <QDropEvent>
+#include <QElapsedTimer>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFontDialog>
