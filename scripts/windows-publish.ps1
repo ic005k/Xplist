@@ -35,6 +35,9 @@ function Main() {
     # libcrypto-1_1-x64.dll
     # libssl-1_1-x64.dll
     # msvcr100.dll  win7 64位使用
+    
+    mkdir $archiveName\util\
+    Copy-Item ExtBin\util\*.* $archiveName\util\
           
     # 拷贝依赖
     windeployqt --qmldir . --plugindir $archiveName\plugins --no-translations --compiler-runtime $archiveName\$targetName
