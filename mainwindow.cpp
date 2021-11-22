@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.85";
+  CurVerison = "1.0.86";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -618,7 +618,7 @@ void MainWindow::openPlist(QString filePath) {
         QString strSource = strConfigDir + "/_util.plist";
         QFile::remove(strSource);
         QFile::copy(filePath, strSource);
-        QString strExec = strPath + "/plistutil.exe";
+        QString strExec = strPath + "/util/plistutil.exe";
         QString strTarget = strConfigDir + "/_temp.plist";
         QProcess::execute("cmd.exe", QStringList()
                                          << "/c" << strExec << "-i" << strSource
@@ -954,7 +954,7 @@ void MainWindow::savePlist(QString filePath) {
           QFileInfo appInfo(qApp->applicationDirPath());
           QString strPath = appInfo.filePath();
 
-          QString strExec = strPath + "/plistutil.exe";
+          QString strExec = strPath + "/util/plistutil.exe";
           QString strTarget = strConfigDir + "/_temp.plist";
 
           QProcess::execute("cmd.exe", QStringList()
