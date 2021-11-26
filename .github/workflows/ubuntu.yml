@@ -59,6 +59,8 @@ jobs:
         run: |
          cp icon.png bin/release/icon.png
          cp default.desktop bin/release/default.desktop
+         cp plistutil-x86_64.AppImage bin/release/plistutil-x86_64.AppImage
+         chmod +x bin/release/plistutil-x86_64.AppImage
          export VERSION # linuxdeployqt uses this for naming the file
          ./linuxdeployqt-continuous-x86_64.AppImage bin/release/${targetName} -unsupported-allow-new-glibc -appimage
           
