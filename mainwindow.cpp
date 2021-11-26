@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.86";
+  CurVerison = "1.0.87";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -595,7 +595,7 @@ void MainWindow::openPlist(QString filePath) {
 
     if (binPlistFile) {
       if (linuxOS) {
-        try {
+        /*try {
           Plist::readPlist(baseName.c_str(), dict);
         } catch (...) {
           QMessageBox box;
@@ -609,7 +609,18 @@ void MainWindow::openPlist(QString filePath) {
         if (dir.mkpath(strConfigDir)) {
         }
         dir.setCurrent(strConfigDir);
-        Plist::writePlistXML("_temp.plist", dict);
+        Plist::writePlistXML("_temp.plist", dict);*/
+
+        QFileInfo appInfo(qApp->applicationDirPath());
+        QString strPath = appInfo.filePath();
+        QString strSource = strConfigDir + "/_util.plist";
+        QFile::remove(strSource);
+        QFile::copy(filePath, strSource);
+        QString strExec = strPath + "/plistutil-x86_64.AppImage";
+        QString strTarget = strConfigDir + "/_temp.plist";
+        QProcess::execute(
+            strExec, QStringList() << "-i" << strSource << "-o" << strTarget);
+        QFile::remove(strSource);
       }
 
       if (win) {
@@ -782,6 +793,8 @@ bool MainWindow::getBinPlist(QString filePath) {
     else
       return false;
   }
+
+  return false;
 }
 
 void MainWindow::closeOpenedFile(QString file) {
@@ -938,7 +951,42 @@ void MainWindow::savePlist(QString filePath) {
 
       // BIN
       if (cboxFileType->currentIndex() == 1) {
-        if (linuxOS) Plist::writePlistBinary(baseName.c_str(), dict);
+        if (linuxOS) {
+          // Plist::writePlistBinary(baseName.c_str(), dict);
+          QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
+          QString strSource = strConfigDir + "/_util.plist";
+
+          QFile file(strSource);
+          file.open(QIODevice::WriteOnly);
+          QTextStream out(&file);
+          out.setCodec("UTF-8");
+          doc.save(out, 4, QDomNode::EncodingFromDocument);
+          file.close();
+
+          QFileInfo appInfo(qApp->applicationDirPath());
+          QString strPath = appInfo.filePath();
+
+          QString strExec = strPath + "/plistutil-x86_64.AppImage";
+          QString strTarget = strConfigDir + "/_temp.plist";
+
+          QProcess::execute(
+              strExec, QStringList() << "-i" << strSource << "-o" << strTarget);
+
+          QElapsedTimer t;
+          t.start();
+          while (!QFile::exists(strTarget)) {
+            QCoreApplication::processEvents();
+          }
+
+          if (QFile::exists(strTarget)) {
+            QFile::remove(filePath);
+
+            if (QFile::copy(strTarget, filePath)) {
+              QFile::remove(strSource);
+              QFile::remove(strTarget);
+            }
+          }
+        }
 
         if (win) {
           QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
