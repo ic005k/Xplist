@@ -433,9 +433,9 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
 
   mw_one->goPlistText();
 
-  QString str;
   if (item->getType() == "data") {
-    str = item->getValue().remove(QRegExp("\\s"));  // 16进制去除所有空格
+    QString str =
+        item->getValue().remove(QRegExp("\\s"));  // 16进制去除所有空格
     mw_one->ui->lblBytes->setText(QString::number(str.count() / 2) + " " +
                                   tr("bytes") + " : " + str);
     mw_one->ui->editASCII->setText(HexStrToByte(str));
