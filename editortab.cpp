@@ -433,19 +433,9 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
 
   mw_one->goPlistText();
 
-  QString str0, str;
+  QString str;
   if (item->getType() == "data") {
     str = item->getValue().remove(QRegExp("\\s"));  // 16进制去除所有空格
-    if (str == "") {
-      lblTips->setHidden(true);
-    }
-
-    str0 = QString::fromLocal8Bit(HexStrToByte(str));
-
-    // lblTips->setText(QString::number(str.count() / 2) + " " + tr("bytes") +
-    //                 " : " + str + "\nASCII: " + HexStrToByte(str) +
-    //                 "\nBase64: " + HexStrToByte(str).toBase64());
-
     mw_one->ui->lblBytes->setText(QString::number(str.count() / 2) + " " +
                                   tr("bytes") + " : " + str);
     mw_one->ui->editASCII->setText(HexStrToByte(str));
