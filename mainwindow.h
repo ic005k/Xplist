@@ -250,6 +250,10 @@ class MainWindow : public QMainWindow {
 
   void on_actionDownload_Upgrade_Packages_triggered();
 
+  void on_btnUpdateASCII_clicked();
+
+  void on_btnUpdateBase64_clicked();
+
  private:
   bool useQtWriteXML = true;
   RecentFiles* m_recentFiles;

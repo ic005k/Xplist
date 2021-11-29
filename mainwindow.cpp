@@ -135,6 +135,11 @@ MainWindow::MainWindow(QWidget* parent)
   ui->btnYes->setDefault(true);
   ui->frameTip->setHidden(true);
 
+  ui->frameData->setAutoFillBackground(true);
+  ui->frameData->setPalette(QPalette(QColor(250, 250, 224)));
+  ui->frameData->setHidden(true);
+  ui->centralWidget->layout()->addWidget(ui->frameData);
+
   initPlistTextShow();
 
   initFindReplace();
@@ -3204,4 +3209,36 @@ void MainWindow::TextEditToFile(QTextEdit* txtEdit, QString fileName) {
     file->close();
     delete file;
   }
+}
+
+void MainWindow::on_btnUpdateASCII_clicked() {
+  if (!ui->editASCII->isModified()) return;
+
+  QString str = ui->editASCII->text();
+  QString strHex = str.toUtf8().toHex().toUpper();
+
+  EditorTab* tab = tabWidget->getCurentTab();
+  QModelIndex index = tab->currentIndex();
+
+  tab->editorDataAboutToBeSet(index, strHex);
+  tab->treeView->doItemsLayout();
+
+  tab->treeView_clicked(index);
+}
+
+void MainWindow::on_btnUpdateBase64_clicked() {
+  if (!ui->editBase64->isModified()) return;
+
+  QString str = ui->editBase64->text();
+  QString strHex;
+  QByteArray bytes = QByteArray::fromBase64(str.toUtf8());
+  strHex = bytes.toHex().toUpper();
+
+  EditorTab* tab = tabWidget->getCurentTab();
+  QModelIndex index = tab->currentIndex();
+
+  tab->editorDataAboutToBeSet(index, strHex);
+  tab->treeView->doItemsLayout();
+
+  tab->treeView_clicked(index);
 }
