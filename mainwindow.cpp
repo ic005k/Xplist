@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.87";
+  CurVerison = "1.0.88";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -167,104 +167,101 @@ MainWindow::~MainWindow() {
 
 void MainWindow::init_iniData() {
   QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QFileInfo fi(qfile);
-  if (fi.exists()) {
-    QSettings Reg(qfile, QSettings::IniFormat);
-    defaultIcon = Reg.value("DefaultIcon").toBool();
-    ui->actionDefaultNodeIcon->setChecked(defaultIcon);
 
-    ui->actionExpandAllOpenFile->setChecked(Reg.value("ExpAll").toBool());
+  QSettings Reg(qfile, QSettings::IniFormat);
+  defaultIcon = Reg.value("DefaultIcon").toBool();
+  ui->actionDefaultNodeIcon->setChecked(defaultIcon);
 
-    bool restore = Reg.value("restore").toBool();
-    ui->actionRestoreScene->setChecked(restore);
-    if (restore) {
-      int count = Reg.value("count").toInt();
+  ui->actionExpandAllOpenFile->setChecked(Reg.value("ExpAll").toBool());
 
-      for (int i = 0; i < count; i++) {
-        QString file = Reg.value(QString::number(i) + "/file").toString();
-
-        QFileInfo fi(file);
-        if (fi.exists()) {
-          openPlist(file);
-        }
-      }
-
-      int index = Reg.value("index").toInt();
-      if (index >= 0 && index < tabWidget->tabBar()->count())
-        tabWidget->setCurrentIndex(index);
-      if (index >= tabWidget->tabBar()->count())
-        tabWidget->setCurrentIndex(tabWidget->tabBar()->count() - 1);
-    }
-
-    bool drag = Reg.value("drag").toBool();
-    if (drag) {
-      int x, y, w, h;
-      x = Reg.value("x").toInt();
-      y = Reg.value("y").toInt();
-      windowX = x;
-      windowY = y;
-      QScreen* screen = QGuiApplication::primaryScreen();
-      w = screen->size().width();
-      h = screen->size().height();
-      if (x > w - 300) x = w - 300;
-      if (y > h - 300) y = h - 300;
-
-      this->setGeometry(x, y, this->width(), this->height());
-    }
-
-    int count = Reg.value("FindTextListTotal").toInt();
-
-    btnFindMenu->addSeparator();
-    btnFindMenu->addAction(actClearList);
-    QAction* actTotal =
-        new QAction(tr("Total") + " : " + QString::number(count), this);
-    btnFindMenu->addAction(actTotal);
-    btnFindMenu->addSeparator();
+  bool restore = Reg.value("restore", 1).toBool();
+  ui->actionRestoreScene->setChecked(restore);
+  if (restore) {
+    int count = Reg.value("count").toInt();
 
     for (int i = 0; i < count; i++) {
-      QString strList =
-          Reg.value("FindTextList" + QString::number(i)).toString();
-      FindTextList.append(strList);
+      QString file = Reg.value(QString::number(i) + "/file").toString();
 
-      btnFindActionList.append(new QAction(strList, this));
-      btnFindMenu->addAction(btnFindActionList.at(i));
-
-      connect(btnFindActionList.at(i), &QAction::triggered, [=]() {
-        ui->editFind->setText(btnFindActionList.at(i)->text());
-        on_btnFind_clicked();
-      });
+      QFileInfo fi(file);
+      if (fi.exists()) {
+        openPlist(file);
+      }
     }
 
-    QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
-    editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
-    editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
-    ui->editFind->setCompleter(editFindCompleter);
-
-    //是否显示plist文本
-    ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 1).toBool());
-    if (ui->actionShowPlistText->isChecked())
-      ui->dockWidget->setHidden(false);
-    else
-      ui->dockWidget->setHidden(true);
-
-    // 主窗口位置和大小
-    int x, y, width, height;
-    x = Reg.value("x", 0).toInt();
-    y = Reg.value("y", 0).toInt();
-    width = Reg.value("width", 1200).toInt();
-    height = Reg.value("height", 600).toInt();
-    if (x < 0) {
-      width = width + x;
-      x = 0;
-    }
-    if (y < 0) {
-      height = height + y;
-      y = 0;
-    }
-    QRect rect(x, y, width, height);
-    move(rect.topLeft());
-    resize(rect.size());
+    int index = Reg.value("index").toInt();
+    if (index >= 0 && index < tabWidget->tabBar()->count())
+      tabWidget->setCurrentIndex(index);
+    if (index >= tabWidget->tabBar()->count())
+      tabWidget->setCurrentIndex(tabWidget->tabBar()->count() - 1);
   }
+
+  bool drag = Reg.value("drag").toBool();
+  if (drag) {
+    int x, y, w, h;
+    x = Reg.value("x").toInt();
+    y = Reg.value("y").toInt();
+    windowX = x;
+    windowY = y;
+    QScreen* screen = QGuiApplication::primaryScreen();
+    w = screen->size().width();
+    h = screen->size().height();
+    if (x > w - 300) x = w - 300;
+    if (y > h - 300) y = h - 300;
+
+    this->setGeometry(x, y, this->width(), this->height());
+  }
+
+  int count = Reg.value("FindTextListTotal").toInt();
+
+  btnFindMenu->addSeparator();
+  btnFindMenu->addAction(actClearList);
+  QAction* actTotal =
+      new QAction(tr("Total") + " : " + QString::number(count), this);
+  btnFindMenu->addAction(actTotal);
+  btnFindMenu->addSeparator();
+
+  for (int i = 0; i < count; i++) {
+    QString strList = Reg.value("FindTextList" + QString::number(i)).toString();
+    FindTextList.append(strList);
+
+    btnFindActionList.append(new QAction(strList, this));
+    btnFindMenu->addAction(btnFindActionList.at(i));
+
+    connect(btnFindActionList.at(i), &QAction::triggered, [=]() {
+      ui->editFind->setText(btnFindActionList.at(i)->text());
+      on_btnFind_clicked();
+    });
+  }
+
+  QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
+  editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
+  editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
+  ui->editFind->setCompleter(editFindCompleter);
+
+  //是否显示plist文本
+  ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 0).toBool());
+  if (ui->actionShowPlistText->isChecked())
+    ui->dockWidget->setHidden(false);
+  else
+    ui->dockWidget->setHidden(true);
+
+  // 主窗口位置和大小
+  int x, y, width, height;
+  x = Reg.value("x", 0).toInt();
+  y = Reg.value("y", 0).toInt();
+  width = Reg.value("width", 1200).toInt();
+  height = Reg.value("height", 600).toInt();
+  if (x < 0) {
+    width = width + x;
+    x = 0;
+  }
+  if (y < 0) {
+    height = height + y;
+    y = 0;
+  }
+  QRect rect(x, y, width, height);
+  move(rect.topLeft());
+  resize(rect.size());
 }
 
 void MainWindow::initMenuToolsBar() {
@@ -702,7 +699,8 @@ void MainWindow::openPlist(QString filePath) {
     }
     tabWidget->createTab(model, filePath);
 
-    if (filePath != fn) {
+    QString tempText = QDir::homePath() + "/.config/PlistEDPlus/tempText.plist";
+    if (filePath != fn && filePath != tempText) {
       QSettings settings;
       QFileInfo fInfo(filePath);
       settings.setValue("currentDirectory", fInfo.absolutePath());
@@ -3192,4 +3190,18 @@ QString MainWindow::getOrgMD5(QString fileName) {
   }
 
   return "";
+}
+
+void MainWindow::TextEditToFile(QTextEdit* txtEdit, QString fileName) {
+  QFile* file;
+  file = new QFile;
+  file->setFileName(fileName);
+  bool ok = file->open(QIODevice::WriteOnly);
+  if (ok) {
+    QTextStream out(file);
+    out.setCodec("UTF-8");
+    out << txtEdit->toPlainText();
+    file->close();
+    delete file;
+  }
 }

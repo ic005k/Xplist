@@ -123,6 +123,7 @@ class MainWindow : public QMainWindow {
 
   QString getTextEditLineText(QTextEdit* txtEdit, int i);
   QString readText(QString textFile);
+  void TextEditToFile(QTextEdit* txtEdit, QString fileName);
  public slots:
   void on_Find();
   void on_actionMoveUp();
