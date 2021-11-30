@@ -437,7 +437,8 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
     QString str =
         item->getValue().remove(QRegExp("\\s"));  // 16进制去除所有空格
     mw_one->ui->lblBytes->setText(QString::number(str.count() / 2) + " " +
-                                  tr("bytes") + " : " + str);
+                                  tr("bytes"));
+    mw_one->ui->editHex->setText(str);
     mw_one->ui->editASCII->setText(HexStrToByte(str));
     mw_one->ui->editBase64->setText(HexStrToByte(str).toBase64());
     setTipsFixedHeight();

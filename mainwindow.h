@@ -254,6 +254,8 @@ class MainWindow : public QMainWindow {
 
   void on_btnUpdateBase64_clicked();
 
+  void on_btnUpdateHex_clicked();
+
  private:
   bool useQtWriteXML = true;
   RecentFiles* m_recentFiles;

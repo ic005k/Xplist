@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.88";
+  CurVerison = "1.0.89";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -3233,6 +3233,21 @@ void MainWindow::on_btnUpdateBase64_clicked() {
   QString strHex;
   QByteArray bytes = QByteArray::fromBase64(str.toUtf8());
   strHex = bytes.toHex().toUpper();
+
+  EditorTab* tab = tabWidget->getCurentTab();
+  QModelIndex index = tab->currentIndex();
+
+  tab->editorDataAboutToBeSet(index, strHex);
+  tab->treeView->doItemsLayout();
+
+  tab->treeView_clicked(index);
+}
+
+void MainWindow::on_btnUpdateHex_clicked() {
+  if (!ui->editHex->isModified()) return;
+
+  QString str = ui->editHex->text();
+  QString strHex = str.remove(QRegExp("\\s")).toUpper();
 
   EditorTab* tab = tabWidget->getCurentTab();
   QModelIndex index = tab->currentIndex();
