@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.91";
+  CurVerison = "1.0.92";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -1210,6 +1210,7 @@ void MainWindow::tabWidget_currentChanged(int index) {
       ui->btnNext->setEnabled(false);
       ui->btnReplace->setEnabled(false);
       ui->listFind->clear();
+      ui->frameData->setHidden(true);
     }
   }
 }
