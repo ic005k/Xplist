@@ -52,7 +52,7 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.90";
+  CurVerison = "1.0.91";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -1202,6 +1202,8 @@ void MainWindow::tabWidget_currentChanged(int index) {
         loadText(tabWidget->getCurentTab()->getPath());
         goPlistText();
         showMsg();
+
+        writeINITab();
       }
 
       ui->btnPrevious->setEnabled(false);
@@ -1505,20 +1507,10 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   // 处理TAB
-  int count = tabWidget->count();
-  Reg.setValue("count", count);
   if (tabWidget->hasTabs()) {
-    Reg.setValue("index", tabWidget->tabBar()->currentIndex());
-
-    for (int i = 0; i < count; i++) {
-      tabWidget->setCurrentIndex(i);
-      QString fn = tabWidget->getCurentTab()->getPath();
-      Reg.setValue(QString::number(i) + "/" + "file", fn);
-    }
-
+    int count = tabWidget->count();
     for (int i = 0; i < count; i++) {
       tabWidget->setCurrentIndex(0);
-
       emit tabWidget->tabCloseRequested(0);
       if (close_flag == 0)  // 0取消、1保存、2放弃标志，为后面新增功能预留
       {
@@ -3260,4 +3252,18 @@ void MainWindow::on_btnUpdateHex_clicked() {
   tab->treeView->doItemsLayout();
 
   tab->treeView_clicked(index);
+}
+
+void MainWindow::writeINITab() {
+  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+  QSettings Reg(qfile, QSettings::IniFormat);
+  int count = tabWidget->count();
+  Reg.setValue("count", count);
+  if (tabWidget->hasTabs()) {
+    Reg.setValue("index", tabWidget->tabBar()->currentIndex());
+    for (int i = 0; i < count; i++) {
+      QString fn = tabWidget->getTab(i)->getPath();
+      Reg.setValue(QString::number(i) + "/" + "file", fn);
+    }
+  }
 }
