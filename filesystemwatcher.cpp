@@ -112,20 +112,16 @@ void FileSystemWatcher::fileUpdated(const QString& path) {
 
   if (mw_one->strOrgMD5 == mw_one->strByModiMD5) return;
 
-  QString str = path;
-  QString newStr = str;
   QString elideNote;
-
-  QFontMetrics fontWidth(mw_one->ui->lblFileName->font());  //得到每个字符的宽度
-  elideNote =
-      fontWidth.elidedText(newStr, Qt::ElideRight, mw_one->width() - 150);
+  QFontMetrics fontWidth(mw_one->ui->lblTip->font());
+  elideNote = fontWidth.elidedText(path, Qt::ElideRight, mw_one->width() - 200);
 
   mw_one->strModiFile = path;
-  mw_one->ui->lblFileName->setText(tr("The file has been modified by another "
-                                      "program. Do you want to reload?") +
-                                   "\n" + QString("%1").arg(elideNote) +
-                                   "\nMD5: " + mw_one->strOrgMD5 +
-                                   "  -->  MD5: " + mw_one->strByModiMD5);
+  mw_one->ui->lblTip->setText(tr("The file has been modified by another "
+                                 "program. Do you want to reload?") +
+                              "\n" + QString("%1").arg(elideNote) +
+                              "\nMD5: " + mw_one->strOrgMD5 +
+                              "  -->  MD5: " + mw_one->strByModiMD5);
   mw_one->ui->frameTip->setHidden(false);
   bool re = false;
   for (int i = 0; i < mw_one->reLoadByModiList.count(); i++) {

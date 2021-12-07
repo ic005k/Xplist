@@ -3110,9 +3110,13 @@ void MainWindow::on_btnYes_clicked() {
 void MainWindow::checkReloadFilesByModi() {
   if (reLoadByModiList.count() > 0) {
     strModiFile = reLoadByModiList.at(0);
-    ui->lblFileName->setText(tr("The file has been modified by another "
-                                "program. Do you want to reload?") +
-                             "\n\n" + QString("%1").arg(strModiFile));
+    QString elideNote;
+    QFontMetrics fontWidth(ui->lblTip->font());
+    elideNote =
+        fontWidth.elidedText(strModiFile, Qt::ElideRight, width() - 200);
+    ui->lblTip->setText(tr("The file has been modified by another "
+                           "program. Do you want to reload?") +
+                        "\n\n" + QString("%1").arg(elideNote));
     ui->frameTip->setHidden(false);
   }
 }
