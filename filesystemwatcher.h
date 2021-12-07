@@ -2,6 +2,8 @@
 #define FILE_SYSTEM_WATCHER_H
 
 #include <QFileSystemWatcher>
+#include <QFontMetrics>
+#include <QLabel>
 #include <QMap>
 #include <QMessageBox>
 #include <QObject>
