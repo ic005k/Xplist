@@ -198,13 +198,13 @@ void AutoUpdateDialog::startDownload(bool Database) {
   QString str0, str1;
   str0 = "https://download.fastgit.org/";            // 日本东京
   str1 = "https://ghproxy.com/https://github.com/";  // 韩国首尔
-  QLocale locale;
-  if (locale.language() == QLocale::Chinese) {
-    strUrl.replace("https://github.com/", str0);
-  }
+
+  str0 = mw_one->getProxy().trimmed();
+  str1 = strUrl;
+  str1.replace("https://github.com/", str0);
 
   QNetworkRequest request;
-  request.setUrl(QUrl(strUrl));
+  request.setUrl(QUrl(str1));
 
   reply = manager->get(request);  //发送请求
   connect(reply, &QNetworkReply::readyRead, this,

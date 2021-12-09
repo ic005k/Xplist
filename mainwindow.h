@@ -125,6 +125,8 @@ class MainWindow : public QMainWindow {
   QString readText(QString textFile);
   void TextEditToFile(QTextEdit* txtEdit, QString fileName);
   void writeINITab();
+  void writeINIProxy();
+  QString getProxy();
  public slots:
   void on_Find();
   void on_actionMoveUp();
@@ -257,6 +259,16 @@ class MainWindow : public QMainWindow {
 
   void on_btnUpdateHex_clicked();
 
+  void on_actProxy1_triggered();
+
+  void on_actProxy2_triggered();
+
+  void on_actProxy3_triggered();
+
+  void on_actProxy4_triggered();
+
+  void on_actProxy5_triggered();
+
  private:
   bool useQtWriteXML = true;
   RecentFiles* m_recentFiles;
@@ -302,6 +314,8 @@ class MainWindow : public QMainWindow {
   QVector<QAction*> btnFindActionList;
 
   void init_iniData();
+
+  void readINIProxy();
 
  protected:
   void dragEnterEvent(QDragEnterEvent* event) override;

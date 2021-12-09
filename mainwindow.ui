@@ -290,7 +290,18 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <widget class="QMenu" name="menuUpgrade_Download_Proxy">
+     <property name="title">
+      <string>Proxy selection for download</string>
+     </property>
+     <addaction name="actProxy1"/>
+     <addaction name="actProxy2"/>
+     <addaction name="actProxy3"/>
+     <addaction name="actProxy4"/>
+     <addaction name="actProxy5"/>
+    </widget>
     <addaction name="actionCheck_Update"/>
+    <addaction name="menuUpgrade_Download_Proxy"/>
     <addaction name="actionDownload_Upgrade_Packages"/>
     <addaction name="separator"/>
     <addaction name="actionBug_Report"/>
@@ -712,6 +723,46 @@
   <action name="actionDownload_Upgrade_Packages">
    <property name="text">
     <string>Download Upgrade Packages</string>
+   </property>
+  </action>
+  <action name="actProxy1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>https://github.com/</string>
+   </property>
+  </action>
+  <action name="actProxy2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>https://ghproxy.com/https://github.com/</string>
+   </property>
+  </action>
+  <action name="actProxy3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>https://download.fastgit.org/</string>
+   </property>
+  </action>
+  <action name="actProxy4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>https://gh.api.99988866.xyz/https://github.com/</string>
+   </property>
+  </action>
+  <action name="actProxy5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>https://github.rc1844.workers.dev/</string>
    </property>
   </action>
  </widget>
