@@ -16,6 +16,8 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
+QString CurVerison = "1.0.94";
+
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
 
@@ -52,7 +54,6 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  CurVerison = "1.0.93";
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   setWindowTitle(ver);
 
@@ -304,7 +305,7 @@ void MainWindow::initMenuToolsBar() {
           SLOT(actionClose_all_activated()));
 
   connect(tabWidget, SIGNAL(tabCloseRequested(int)), this,
-          SLOT(onTabCloseRequest(int)));
+          SLOT(on_TabCloseRequest(int)));
 
   connect(ui->actionNew_Window, SIGNAL(triggered()), this,
           SLOT(on_NewWindow()));
@@ -536,7 +537,7 @@ void MainWindow::actionNew() {
 
 void MainWindow::actionClose_activated() {
   if (tabWidget->hasTabs()) {
-    onTabCloseRequest();
+    on_TabCloseRequest();
   }
 }
 
@@ -824,7 +825,7 @@ void MainWindow::addWatchFiles() {
   }
 }
 
-void MainWindow::onTabCloseRequest(int i) {
+void MainWindow::on_TabCloseRequest(int i) {
   if (i != -1) tabWidget->setCurrentIndex(i);
 
   QString fn = tabWidget->getCurentTab()->getFileName();
@@ -877,9 +878,11 @@ void MainWindow::onTabCloseRequest(int i) {
     plistTextEditor->clear();
   }
 
-  // 单独移除貌似无效？现改为整体移除并添加
-  removeWatchFiles();
-  addWatchFiles();
+  // 整体移除并添加
+  if (!blExit) {
+    removeWatchFiles();
+    addWatchFiles();
+  }
 }
 
 void MainWindow::savePlist(QString filePath) {
@@ -1173,7 +1176,7 @@ void MainWindow::actionAbout_activated() {
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
 
-void MainWindow::tabWidget_currentChanged(int index) {
+void MainWindow::on_tabWidget_currentChanged(int index) {
   if (index >= 0) {
     if (tabWidget->hasTabs()) {
       EditorTab* tab = tabWidget->getCurentTab();
@@ -1464,6 +1467,8 @@ void MainWindow::on_pasteAction() {
 void MainWindow::closeEvent(QCloseEvent* event) {
   loading = true;
 
+  writeINITab();
+
   //记录当前文件
   QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
   QSettings Reg(qfile, QSettings::IniFormat);
@@ -1509,6 +1514,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   // 处理TAB
   if (tabWidget->hasTabs()) {
+    blExit = true;
     int count = tabWidget->count();
     for (int i = 0; i < count; i++) {
       tabWidget->setCurrentIndex(0);
@@ -1517,9 +1523,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
       {
         event->ignore();
         close_flag = -1;
-
         loading = false;
-
         break;  //如果第一个标签页选择取消，则直接终止关闭
       }
       if (close_flag == 1) {
@@ -1536,6 +1540,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   loading = false;
+  blExit = false;
 }
 
 void MainWindow::reg_win() {

@@ -8,8 +8,8 @@ IDI_ICON1 ICON DISCARDABLE "my.ico"
 #include <winver.h>
 #endif
 
-    VS_VERSION_INFO VERSIONINFO FILEVERSION 1,
-    0, 93 PRODUCTVERSION 1, 0, 0,
+    VS_VERSION_INFO VERSIONINFO FILEVERSION 0,
+    0, 0 PRODUCTVERSION 1, 0, 0,
     10 FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
     FILEFLAGS VS_FF_DEBUG
@@ -19,7 +19,8 @@ IDI_ICON1 ICON DISCARDABLE "my.ico"
         FILEOS VOS__WINDOWS32 FILETYPE VFT_DLL FILESUBTYPE 0x0L BEGIN BLOCK
     "StringFileInfo" BEGIN BLOCK "080404b0" BEGIN VALUE "CompanyName",
     "" VALUE "FileDescription", "" VALUE "FileVersion",
-    "1.0.93\0" VALUE "ProductVersion", "1.0.93\0" VALUE "LegalCopyright",
+    "PlistEDPlus - V2022\0" VALUE "ProductVersion",
+    "PlistEDPlus - V2022\0" VALUE "LegalCopyright",
     "\0" VALUE "LegalTrademarks", "" VALUE "OriginalFilename",
     "PlistEDPlus\0" VALUE "ProductName", "PlistEDPlus" VALUE "InternalName",
     "PlistEDPlus\0" END END

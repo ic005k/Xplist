@@ -152,14 +152,14 @@ class MainWindow : public QMainWindow {
   void actionExpand_all_activated();
   void actionAbout_activated();
 
-  void tabWidget_currentChanged(int index);
+  void on_tabWidget_currentChanged(int index);
   void menu_aboutToShow();
 
   void onCleanChanged(bool clean);
 
   void openRecentFile();
 
-  void onTabCloseRequest(int i = -1);
+  void on_TabCloseRequest(int i = -1);
 
   void on_copyAction();
   void on_cutAction();
@@ -280,9 +280,7 @@ class MainWindow : public QMainWindow {
 
   QNetworkAccessManager* manager;
   int parse_UpdateJSON(QString str);
-
-  QString CurVerison = "V1.0";
-
+  bool blExit = false;
   void setExpandText(EditorTab* tab);
 
   void openFiles(QStringList list = QStringList());
