@@ -152,7 +152,7 @@ class MainWindow : public QMainWindow {
   void actionExpand_all_activated();
   void actionAbout_activated();
 
-  void on_tabWidget_currentChanged(int index);
+  void on_TabWidget_currentChanged(int index);
   void menu_aboutToShow();
 
   void onCleanChanged(bool clean);

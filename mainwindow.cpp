@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget* parent)
   ui->setupUi(this);
 
   ver = "PlistEDPlus  V" + CurVerison + "        ";
+  ver = "";
   setWindowTitle(ver);
 
   loading = true;
@@ -292,7 +293,7 @@ void MainWindow::initMenuToolsBar() {
   ui->menuEdit->addAction(actionRedo);
 
   connect(tabWidget, SIGNAL(currentChanged(int)), this,
-          SLOT(tabWidget_currentChanged(int)));
+          SLOT(on_TabWidget_currentChanged(int)));
 
   connect(undoGroup, SIGNAL(cleanChanged(bool)), this,
           SLOT(onCleanChanged(bool)));
@@ -1176,7 +1177,7 @@ void MainWindow::actionAbout_activated() {
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
 
-void MainWindow::on_tabWidget_currentChanged(int index) {
+void MainWindow::on_TabWidget_currentChanged(int index) {
   if (index >= 0) {
     if (tabWidget->hasTabs()) {
       EditorTab* tab = tabWidget->getCurentTab();
