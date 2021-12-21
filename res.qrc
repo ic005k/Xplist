@@ -28,6 +28,12 @@
         <file>res/next.svg</file>
         <file>res/pre.svg</file>
         <file>res/replace.svg</file>
+        <file>res/child.png</file>
+        <file>res/new.png</file>
+        <file>res/save.png</file>
+        <file>res/sibling.png</file>
+        <file>res/del.png</file>
+        <file>res/find.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

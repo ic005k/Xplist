@@ -269,6 +269,24 @@ class MainWindow : public QMainWindow {
 
   void on_actProxy5_triggered();
 
+  void on_actionMove_Up_triggered();
+
+  void on_actionMove_Down_triggered();
+
+  void on_actionSort_triggered();
+
+  void on_actionExpand_All_triggered();
+
+  void on_actionCollapse_All_triggered();
+
+  void on_btnFind_Tool_clicked();
+
+  void on_btnReplaceFind_clicked();
+
+  void on_btnNew_clicked();
+
+  void on_btnSave_clicked();
+
  private:
   bool useQtWriteXML = true;
   RecentFiles* m_recentFiles;

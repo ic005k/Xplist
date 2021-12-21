@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.0.94";
+QString CurVerison = "1.0.95";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -272,6 +272,22 @@ void MainWindow::init_iniData() {
 }
 
 void MainWindow::initMenuToolsBar() {
+  ui->mainToolBar->setHidden(true);
+  ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
+  ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
+  ui->btnNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
+  ui->btnSave->setIcon(QIcon(":/new/toolbar/res/save.png"));
+  ui->btnBrother->setIcon(QIcon(":/new/toolbar/res/sibling.png"));
+  ui->btnChild->setIcon(QIcon(":/new/toolbar/res/child.png"));
+  ui->btnDel->setIcon(QIcon(":/new/toolbar/res/del.png"));
+  ui->btnSort->setIcon(QIcon(":/new/toolbar/res/sort.png"));
+  ui->actionCollapse_All->setVisible(false);
+  ui->btnBrother->setHidden(true);
+  ui->btnChild->setHidden(true);
+  ui->btnExpand->setHidden(true);
+  ui->btnDel->setHidden(true);
+  ui->btnSort->setHidden(true);
+
   ui->actionAbout->setMenuRole(QAction::AboutRole);
   ui->mainToolBar->setIconSize(QSize(26, 26));
   ui->mainToolBar->layout()->setMargin(1);
@@ -346,11 +362,9 @@ void MainWindow::initMenuToolsBar() {
           &MainWindow::on_collapseAction);
 
   // 初始化工具棒
-  ui->mainToolBar->addAction(ui->actionNew_Window);
-
-  ui->mainToolBar->addSeparator();
-
-  ui->mainToolBar->addAction(ui->actionOpen);
+  // ui->mainToolBar->addAction(ui->actionNew_Window);
+  // ui->mainToolBar->addSeparator();
+  // ui->mainToolBar->addAction(ui->actionOpen);
 
   //最近打开的文件快捷通道
   QToolButton* btn0 = new QToolButton(this);
@@ -360,6 +374,10 @@ void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->addWidget(btn0);
   reFileMenu = new QMenu(this);
   btn0->setMenu(reFileMenu);
+  QAction* actRecentlyOpen = new QAction;
+  actRecentlyOpen->setText(tr("Recently Open"));
+  ui->menuFile->insertAction(ui->actionSave, actRecentlyOpen);
+  actRecentlyOpen->setMenu(reFileMenu);
 
   //最近打开的文件
   QCoreApplication::setOrganizationName("ic005k");
@@ -378,7 +396,7 @@ void MainWindow::initMenuToolsBar() {
 
   ui->mainToolBar->addAction(ui->actionSave);
 
-  ui->mainToolBar->addAction(ui->actionSave_as);
+  // ui->mainToolBar->addAction(ui->actionSave_as);
 
   ui->mainToolBar->addSeparator();
 
@@ -411,6 +429,7 @@ void MainWindow::initMenuToolsBar() {
 
   ui->mainToolBar->addSeparator();
 
+  // 全部展开与折叠
   ui->mainToolBar->addAction(ui->actionExpand_all);
   ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.svg"));
 
@@ -454,9 +473,9 @@ void MainWindow::initMenuToolsBar() {
   // 文件存储格式xml或bin
   ui->mainToolBar->addSeparator();
   cboxFileType = new QComboBox(this);
-  cboxFileType->setToolTip(tr("Select the file storage format"));
-  cboxFileType->addItem("XML");
-  cboxFileType->addItem("BIN");
+  ui->cboxFileType->setToolTip(tr("Select the file storage format"));
+  ui->cboxFileType->addItem("XML");
+  ui->cboxFileType->addItem("BIN");
   ui->mainToolBar->addWidget(cboxFileType);
 
   ui->mainToolBar->addSeparator();
@@ -480,10 +499,10 @@ void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setContextMenuPolicy(
       Qt::CustomContextMenu);  //屏蔽默认的右键菜单
   ui->editFind->setMinimumWidth(150);
-  ui->mainToolBar->addWidget(ui->editFind);
+  // ui->mainToolBar->addWidget(ui->editFind);
 
-  ui->mainToolBar->addWidget(ui->btnFind);
-  ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.svg"));
+  // ui->mainToolBar->addWidget(ui->btnFind);
+  // ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.svg"));
   //设置下拉菜单
   actCaseSensitive->setCheckable(true);
   btnFindMenu = new QMenu(this);
@@ -509,7 +528,7 @@ void MainWindow::initMenuToolsBar() {
 void MainWindow::recentOpen(QString filename) { openPlist(filename); }
 
 void MainWindow::actionNew() {
-  cboxFileType->setCurrentIndex(0);
+  ui->cboxFileType->setCurrentIndex(0);
   binPlistFile = false;
 
   // create new model
@@ -648,9 +667,9 @@ void MainWindow::openPlist(QString filePath) {
                                         << strConfigDir + "/_temp.plist");
       }
 
-      cboxFileType->setCurrentIndex(1);
+      ui->cboxFileType->setCurrentIndex(1);
     } else
-      cboxFileType->setCurrentIndex(0);
+      ui->cboxFileType->setCurrentIndex(0);
 
     QString strLoad;
     if (binPlistFile) {
@@ -941,7 +960,7 @@ void MainWindow::savePlist(QString filePath) {
       QString name = tab->getFileName();
 
       // XML
-      if (cboxFileType->currentIndex() == 0) {
+      if (ui->cboxFileType->currentIndex() == 0) {
         if (useQtWriteXML) {
           QFile file(filePath);
           file.open(QIODevice::WriteOnly);
@@ -957,7 +976,7 @@ void MainWindow::savePlist(QString filePath) {
       }
 
       // BIN
-      if (cboxFileType->currentIndex() == 1) {
+      if (ui->cboxFileType->currentIndex() == 1) {
         if (linuxOS) {
           // Plist::writePlistBinary(baseName.c_str(), dict);
           QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
@@ -1185,10 +1204,10 @@ void MainWindow::on_TabWidget_currentChanged(int index) {
 
       QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
       if (strBin.contains("[BIN]")) {
-        cboxFileType->setCurrentIndex(1);
+        ui->cboxFileType->setCurrentIndex(1);
 
       } else {
-        cboxFileType->setCurrentIndex(0);
+        ui->cboxFileType->setCurrentIndex(0);
       }
 
       QString strCurrentFile = tabWidget->getCurentTab()->getPath();
@@ -1604,6 +1623,8 @@ void MainWindow::on_actionMoveUp() {
 
     if (index.row() == 0) return;
 
+    tab->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
     on_cutAction();
     tab->treeView->setCurrentIndex(
         model->index(index_bak.row() - 1, 0, index.parent()));
@@ -1614,6 +1635,7 @@ void MainWindow::on_actionMoveUp() {
 
     tab->treeView_clicked(tab->treeView->currentIndex());
 
+    tab->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     loading = false;
   }
 }
@@ -1635,6 +1657,8 @@ void MainWindow::on_actionMoveDown() {
     if (items == NULL) return;
 
     if (index.row() == items->childCount() - 1) return;
+
+    tab->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     //倒数第三行及以前
     if (index.row() <= items->childCount() - 3) {
@@ -1664,6 +1688,7 @@ void MainWindow::on_actionMoveDown() {
 
     tab->treeView_clicked(tab->treeView->currentIndex());
 
+    tab->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     loading = false;
   }
 }
@@ -1921,14 +1946,18 @@ void MainWindow::on_collapseAction() {
 void MainWindow::on_actionNewSibling() {
   if (tabWidget->hasTabs()) {
     EditorTab* tab = tabWidget->getCurentTab();
+    tab->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
     tab->on_actionNewSibling();
+    tab->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
   }
 }
 
 void MainWindow::on_actionNewChild() {
   if (tabWidget->hasTabs()) {
     EditorTab* tab = tabWidget->getCurentTab();
+    tab->treeView->setSelectionMode(QAbstractItemView::SingleSelection);
     tab->on_actionNewChild();
+    tab->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
   }
 }
 
@@ -2202,6 +2231,7 @@ void MainWindow::on_actionPaste_as_child_triggered() {
 }
 
 void MainWindow::on_editFind_returnPressed() {
+  ui->editFind->selectAll();
   if (!findTextChanged) {
     on_btnNext_clicked();
     return;
@@ -2276,10 +2306,7 @@ void MainWindow::on_ShowFindReplace() { on_Find(); }
 
 void MainWindow::on_btnFind_clicked() { on_Find(); }
 
-void MainWindow::on_btnHideFind_clicked() {
-  ui->frame->close();
-  // ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
-}
+void MainWindow::on_btnHideFind_clicked() { ui->frame->close(); }
 
 void MainWindow::on_btnPrevious_clicked() {
   if (ui->listFind->count() == 0) return;
@@ -2459,7 +2486,10 @@ void MainWindow::on_btnReplaceAll_clicked() {
   loading = false;
 }
 
-void MainWindow::on_actionFind_triggered() { on_ShowFindReplace(); }
+void MainWindow::on_actionFind_triggered() {
+  ui->btnFind_Tool->click();
+  on_ShowFindReplace();
+}
 
 void MainWindow::on_actionFindNext_triggered() { on_btnNext_clicked(); }
 
@@ -2468,6 +2498,7 @@ void MainWindow::on_actionFindPrevious_triggered() { on_btnPrevious_clicked(); }
 void MainWindow::on_actionReplace_triggered() {
   if (ui->frame->isHidden()) {
     ui->frame->show();
+    ui->editFind->setFocus();
   }
 
   on_btnReplace_clicked();
@@ -3366,3 +3397,31 @@ QString MainWindow::getProxy() {
 
   return "";
 }
+
+void MainWindow::on_actionMove_Up_triggered() { on_actionMoveUp(); }
+
+void MainWindow::on_actionMove_Down_triggered() { on_actionMoveDown(); }
+
+void MainWindow::on_actionSort_triggered() { on_actionSort(); }
+
+void MainWindow::on_actionExpand_All_triggered() {
+  actionExpand_all_activated();
+}
+
+void MainWindow::on_actionCollapse_All_triggered() {}
+
+void MainWindow::on_btnFind_Tool_clicked() {
+  ui->frame->show();
+  ui->editFind->setFocus();
+}
+
+void MainWindow::on_btnReplaceFind_clicked() {
+  if (!ui->btnReplace->isEnabled()) return;
+  if (ui->editReplace->text().trimmed() == "") return;
+  ui->btnReplace->clicked();
+  ui->btnNext->clicked();
+}
+
+void MainWindow::on_btnNew_clicked() { actionNew(); }
+
+void MainWindow::on_btnSave_clicked() { actionSave(); }

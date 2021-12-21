@@ -34,11 +34,11 @@
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>PlistEDPlus - V2022</string>
+        <string>1.0.95</string>
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>PlistEDPlus - V2022</string>
+        <string>1.0.95</string>
         <key>LSMinimumSystemVersion</key>
         <string>10.13</string>
         <key>NOTE</key>

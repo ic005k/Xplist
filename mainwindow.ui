@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>889</width>
-    <height>584</height>
+    <height>703</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -30,7 +30,7 @@
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout_8">
     <item row="0" column="0">
      <widget class="QFrame" name="frameTip">
       <property name="frameShape">
@@ -85,10 +85,48 @@
        <enum>QFrame::Raised</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="5">
+        <widget class="QLineEdit" name="editReplace"/>
+       </item>
+       <item row="0" column="10">
+        <widget class="QToolButton" name="btnShowReplace">
+         <property name="toolTip">
+          <string>Replace</string>
+         </property>
+         <property name="text">
+          <string>&gt;&gt;</string>
+         </property>
+         <property name="icon">
+          <iconset resource="res.qrc">
+           <normaloff>:/new/toolbar/res/replace.svg</normaloff>:/new/toolbar/res/replace.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="6">
+        <widget class="QToolButton" name="btnReplace">
+         <property name="text">
+          <string>Replace</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="9">
+        <widget class="QToolButton" name="btnHideFind">
+         <property name="text">
+          <string>Hide</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QToolButton" name="btnMisc">
          <property name="text">
           <string>...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="8">
+        <widget class="QToolButton" name="btnReplaceAll">
+         <property name="text">
+          <string>All</string>
          </property>
         </widget>
        </item>
@@ -125,41 +163,10 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
-        <widget class="QLineEdit" name="editReplace"/>
-       </item>
-       <item row="0" column="6">
-        <widget class="QToolButton" name="btnReplace">
-         <property name="text">
-          <string>Replace</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="7">
-        <widget class="QToolButton" name="btnReplaceAll">
+        <widget class="QToolButton" name="btnReplaceFind">
          <property name="text">
-          <string>All</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="8">
-        <widget class="QToolButton" name="btnHideFind">
-         <property name="text">
-          <string>Hide</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="9">
-        <widget class="QToolButton" name="btnShowReplace">
-         <property name="toolTip">
-          <string>Replace</string>
-         </property>
-         <property name="text">
-          <string>&gt;&gt;</string>
-         </property>
-         <property name="icon">
-          <iconset resource="res.qrc">
-           <normaloff>:/new/toolbar/res/replace.svg</normaloff>:/new/toolbar/res/replace.svg</iconset>
+          <string>Replace &amp;&amp; Find</string>
          </property>
         </widget>
        </item>
@@ -232,6 +239,131 @@
       </layout>
      </widget>
     </item>
+    <item row="4" column="0">
+     <widget class="QWidget" name="wTools" native="true">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QComboBox" name="cboxFileType"/>
+       </item>
+       <item row="0" column="2">
+        <widget class="QToolButton" name="btnNew">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>N</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="8">
+        <widget class="QToolButton" name="btnSort">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Sort</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QToolButton" name="btnChild">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>C</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QToolButton" name="btnSave">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>S</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="6">
+        <widget class="QToolButton" name="btnDel">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>D</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="4">
+        <widget class="QToolButton" name="btnBrother">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>B</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="7">
+        <widget class="QToolButton" name="btnExpand">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>E</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QToolButton" name="btnFind_Tool">
+         <property name="maximumSize">
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>F</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -284,6 +416,14 @@
     <addaction name="separator"/>
     <addaction name="actionReplace"/>
     <addaction name="actionReplaceAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionMove_Up"/>
+    <addaction name="actionMove_Down"/>
+    <addaction name="separator"/>
+    <addaction name="actionSort"/>
+    <addaction name="separator"/>
+    <addaction name="actionExpand_All"/>
+    <addaction name="actionCollapse_All"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -571,7 +711,7 @@
   </action>
   <action name="actionNew_Sibling">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/sibling.png</normaloff>:/new/toolbar/res/sibling.png</iconset>
    </property>
    <property name="text">
@@ -583,7 +723,7 @@
   </action>
   <action name="actionNew_Child">
    <property name="icon">
-    <iconset>
+    <iconset resource="res.qrc">
      <normaloff>:/new/toolbar/res/child.png</normaloff>:/new/toolbar/res/child.png</iconset>
    </property>
    <property name="text">
@@ -766,6 +906,43 @@
    </property>
    <property name="text">
     <string>https://github.rc1844.workers.dev/</string>
+   </property>
+  </action>
+  <action name="actionMove_Up">
+   <property name="text">
+    <string>Move Up</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Up</string>
+   </property>
+  </action>
+  <action name="actionMove_Down">
+   <property name="text">
+    <string>Move Down</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Down</string>
+   </property>
+  </action>
+  <action name="actionSort">
+   <property name="text">
+    <string>Sort</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+T</string>
+   </property>
+  </action>
+  <action name="actionExpand_All">
+   <property name="text">
+    <string>Expand / Collapse All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actionCollapse_All">
+   <property name="text">
+    <string>Collapse All</string>
    </property>
   </action>
  </widget>
