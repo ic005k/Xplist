@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   ver = "";
-  setWindowTitle(ver);
+  setWindowTitle("PlistEDPlus");
 
   loading = true;
 
@@ -113,6 +113,9 @@ MainWindow::MainWindow(QWidget* parent)
   myStatusBar->addPermanentWidget(lblStaInfo0);
   myStatusBar->addPermanentWidget(lblStaInfo2);
   myStatusBar->addPermanentWidget(lblStaInfo1);
+  lblStaInfo0->setHidden(true);
+  lblStaInfo1->setHidden(true);
+  lblStaInfo2->setHidden(true);
 
   tabWidget = new EditorTabsWidget(this);
   dlgAutoUpdate = new AutoUpdateDialog(this);
@@ -905,7 +908,13 @@ void MainWindow::on_TabCloseRequest(int i) {
     removeWatchFiles();
     addWatchFiles();
   }
-  if (tabWidget->tabBar()->count() == 0) tabWidget->setHidden(true);
+  if (tabWidget->tabBar()->count() == 0) {
+    tabWidget->setHidden(true);
+    lblStaInfo0->setHidden(true);
+    lblStaInfo1->setHidden(true);
+    lblStaInfo2->setHidden(true);
+    setWindowTitle("PlistEDPlus");
+  }
 }
 
 void MainWindow::savePlist(QString filePath) {
@@ -1731,6 +1740,10 @@ void MainWindow::showMsg() {
   lblStaInfo0->setText(str1);
   lblStaInfo2->setText(str2 + str3 + str5);
   lblStaInfo1->setText(str4 + str6 + str7);
+
+  lblStaInfo0->setHidden(false);
+  lblStaInfo1->setHidden(false);
+  lblStaInfo2->setHidden(false);
 }
 
 QString MainWindow::getPlistTextValue(QString str) {

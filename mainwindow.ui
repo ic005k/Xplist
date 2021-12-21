@@ -263,7 +263,7 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="6">
+       <item row="0" column="7">
         <widget class="QToolButton" name="btnChild">
          <property name="maximumSize">
           <size>
@@ -276,7 +276,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="5">
+       <item row="0" column="6">
         <widget class="QToolButton" name="btnBrother">
          <property name="maximumSize">
           <size>
@@ -289,20 +289,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QToolButton" name="btnFind_Tool">
-         <property name="maximumSize">
-          <size>
-           <width>22</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>F</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="9">
+       <item row="0" column="10">
         <widget class="QToolButton" name="btnSort">
          <property name="maximumSize">
           <size>
@@ -315,7 +302,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="8">
+       <item row="0" column="9">
         <widget class="QToolButton" name="btnExpand">
          <property name="maximumSize">
           <size>
@@ -341,7 +328,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="7">
+       <item row="0" column="8">
         <widget class="QToolButton" name="btnDel">
          <property name="maximumSize">
           <size>
@@ -351,19 +338,6 @@
          </property>
          <property name="text">
           <string>D</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <widget class="QToolButton" name="btnSave">
-         <property name="maximumSize">
-          <size>
-           <width>22</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>S</string>
          </property>
         </widget>
        </item>
@@ -380,6 +354,32 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="0" column="4">
+        <widget class="QToolButton" name="btnSave">
+         <property name="maximumSize">
+          <size>
+           <width>22</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>S</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="5">
+        <widget class="QToolButton" name="btnFind_Tool">
+         <property name="maximumSize">
+          <size>
+           <width>22</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>F</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
