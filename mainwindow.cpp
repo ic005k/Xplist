@@ -2578,9 +2578,6 @@ void MainWindow::initPlistTextShow() {
   ui->dockWidget->setTitleBarWidget(lEmptyWidget);
   delete lTitleBar;
 
-  ui->centralWidget->layout()->setMargin(1);
-  // ui->gridLayout->setMargin(1);
-
   ui->dockWidgetContents->layout()->setMargin(1);
 
   plistTextEditor = new CodeEditor(this);

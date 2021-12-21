@@ -31,8 +31,7 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
 
   this->setDocumentMode(true);
   this->setTabBarAutoHide(false);
-  // this->tabBar()->setFixedHeight(35);
-  // this->tabShape().setFixedHeight(32);
+
   MainWindow* mainWindow = qobject_cast<MainWindow*>(parent);
   mainWindow->ui->wTools->layout()->setSpacing(3);
   this->setCornerWidget(mainWindow->ui->wTools);
