@@ -30,14 +30,14 @@
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_8">
+   <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <widget class="QFrame" name="frameTip">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
       </property>
       <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
@@ -79,10 +79,13 @@
     <item row="1" column="0">
      <widget class="QFrame" name="frame">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="5">
@@ -174,15 +177,15 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <layout class="QGridLayout" name="gridLayout"/>
-    </item>
-    <item row="3" column="0">
      <widget class="QFrame" name="frameData">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
@@ -239,9 +242,15 @@
       </layout>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QWidget" name="wTools" native="true">
-      <layout class="QGridLayout" name="gridLayout_2">
+    <item row="3" column="0">
+     <widget class="QFrame" name="wTools">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -254,40 +263,11 @@
        <property name="bottomMargin">
         <number>0</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QComboBox" name="cboxFileType"/>
-       </item>
-       <item row="0" column="2">
-        <widget class="QToolButton" name="btnNew">
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>N</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="8">
-        <widget class="QToolButton" name="btnSort">
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Sort</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="5">
+       <item row="0" column="6">
         <widget class="QToolButton" name="btnChild">
          <property name="maximumSize">
           <size>
-           <width>20</width>
+           <width>22</width>
            <height>16777215</height>
           </size>
          </property>
@@ -296,24 +276,76 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
-        <widget class="QToolButton" name="btnSave">
+       <item row="0" column="5">
+        <widget class="QToolButton" name="btnBrother">
          <property name="maximumSize">
           <size>
-           <width>20</width>
+           <width>22</width>
            <height>16777215</height>
           </size>
          </property>
          <property name="text">
-          <string>S</string>
+          <string>B</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="6">
+       <item row="0" column="2">
+        <widget class="QToolButton" name="btnFind_Tool">
+         <property name="maximumSize">
+          <size>
+           <width>22</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>F</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="9">
+        <widget class="QToolButton" name="btnSort">
+         <property name="maximumSize">
+          <size>
+           <width>22</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Sort</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="8">
+        <widget class="QToolButton" name="btnExpand">
+         <property name="maximumSize">
+          <size>
+           <width>22</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>E</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QToolButton" name="btnNew">
+         <property name="maximumSize">
+          <size>
+           <width>22</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>N</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="7">
         <widget class="QToolButton" name="btnDel">
          <property name="maximumSize">
           <size>
-           <width>20</width>
+           <width>22</width>
            <height>16777215</height>
           </size>
          </property>
@@ -323,43 +355,31 @@
         </widget>
        </item>
        <item row="0" column="4">
-        <widget class="QToolButton" name="btnBrother">
+        <widget class="QToolButton" name="btnSave">
          <property name="maximumSize">
           <size>
-           <width>20</width>
+           <width>22</width>
            <height>16777215</height>
           </size>
          </property>
          <property name="text">
-          <string>B</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="7">
-        <widget class="QToolButton" name="btnExpand">
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>E</string>
+          <string>S</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QToolButton" name="btnFind_Tool">
-         <property name="maximumSize">
-          <size>
-           <width>20</width>
-           <height>16777215</height>
-          </size>
+        <layout class="QGridLayout" name="gridLayout_cbox">
+         <property name="topMargin">
+          <number>6</number>
          </property>
-         <property name="text">
-          <string>F</string>
-         </property>
-        </widget>
+         <item row="0" column="0">
+          <widget class="QComboBox" name="cboxFileType">
+           <property name="frame">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

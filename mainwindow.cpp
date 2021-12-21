@@ -118,6 +118,7 @@ MainWindow::MainWindow(QWidget* parent)
   dlgAutoUpdate = new AutoUpdateDialog(this);
 
   ui->centralWidget->layout()->addWidget(tabWidget);
+  tabWidget->setHidden(true);
 
   QApplication::setApplicationName("PlistEDPlus");
   QApplication::setOrganizationName("PlistED");
@@ -551,7 +552,7 @@ void MainWindow::actionNew() {
   tab->treeView->setFocus();
 
   plistTextEditor->clear();
-
+  tabWidget->setHidden(false);
   loading = false;
 }
 
@@ -578,6 +579,7 @@ void MainWindow::openFiles(QStringList list) {
 }
 
 void MainWindow::openPlist(QString filePath) {
+  tabWidget->setHidden(false);
   ui->listFind->clear();  // 否则会导致App崩溃
   removeWatchFiles();
 
@@ -903,6 +905,7 @@ void MainWindow::on_TabCloseRequest(int i) {
     removeWatchFiles();
     addWatchFiles();
   }
+  if (tabWidget->tabBar()->count() == 0) tabWidget->setHidden(true);
 }
 
 void MainWindow::savePlist(QString filePath) {
@@ -2563,7 +2566,7 @@ void MainWindow::initPlistTextShow() {
   delete lTitleBar;
 
   ui->centralWidget->layout()->setMargin(1);
-  ui->gridLayout->setMargin(1);
+  // ui->gridLayout->setMargin(1);
 
   ui->dockWidgetContents->layout()->setMargin(1);
 

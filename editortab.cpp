@@ -52,8 +52,8 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
   lblTips->setFixedHeight(0);
   lblTips->setHidden(true);
 
-  ui->gridLayout->addWidget(treeView);
-  ui->gridLayout->addWidget(lblTips);
+  ui->gridLayout_2->addWidget(treeView);
+  ui->gridLayout_2->addWidget(lblTips);
 
   treeView->setEditTriggers(QAbstractItemView::DoubleClicked |
                             QAbstractItemView::EditKeyPressed);
