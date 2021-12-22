@@ -458,7 +458,7 @@
     </property>
     <widget class="QMenu" name="menuUpgrade_Download_Proxy">
      <property name="title">
-      <string>Proxy selection for download</string>
+      <string>Select the mirror server for upgrade download</string>
      </property>
      <addaction name="actProxy1"/>
      <addaction name="actProxy2"/>
@@ -510,11 +510,11 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="dockPlistText">
    <property name="minimumSize">
     <size>
      <width>133</width>
-     <height>175</height>
+     <height>100</height>
     </size>
    </property>
    <property name="features">
@@ -729,7 +729,7 @@
      <normaloff>:/new/toolbar/res/cu.svg</normaloff>:/new/toolbar/res/cu.svg</iconset>
    </property>
    <property name="text">
-    <string>Check Update</string>
+    <string>Update Check</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>

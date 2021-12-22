@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.0.95";
+QString CurVerison = "1.0.96";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -178,8 +178,8 @@ MainWindow::~MainWindow() {
 
 void MainWindow::init_iniData() {
   QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-
   QSettings Reg(qfile, QSettings::IniFormat);
+
   defaultIcon = Reg.value("DefaultIcon").toBool();
   ui->actionDefaultNodeIcon->setChecked(defaultIcon);
 
@@ -252,9 +252,9 @@ void MainWindow::init_iniData() {
   //是否显示plist文本
   ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 0).toBool());
   if (ui->actionShowPlistText->isChecked())
-    ui->dockWidget->setHidden(false);
+    ui->dockPlistText->setHidden(false);
   else
-    ui->dockWidget->setHidden(true);
+    ui->dockPlistText->setHidden(true);
 
   // 主窗口位置和大小
   int x, y, width, height;
@@ -1507,6 +1507,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   //记录是否显示Plist文本
   Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
+  if (ui->dockPlistText->isVisible())
+    Reg.setValue("PlistTextDockHeight", ui->dockPlistText->height());
   Reg.setValue("restore", ui->actionRestoreScene->isChecked());
   Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
   Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
@@ -1734,16 +1736,24 @@ void MainWindow::showMsg() {
   else
     str7 = "";
 
-  // myStatusBar->showMessage(str1 + str2 + str3 + str5 + str4 + str6 + str7);
   str1 = index.data().toString().trimmed();
   if (str1.count() >= 100) str1 = str1.mid(0, 97) + "...";
   lblStaInfo0->setText(str1);
   lblStaInfo2->setText(str2 + str3 + str5);
   lblStaInfo1->setText(str4 + str6 + str7);
 
-  lblStaInfo0->setHidden(false);
-  lblStaInfo1->setHidden(false);
-  lblStaInfo2->setHidden(false);
+  if (lblStaInfo0->text().trimmed().length() > 0)
+    lblStaInfo0->setHidden(false);
+  else
+    lblStaInfo0->setHidden(true);
+  if (lblStaInfo1->text().trimmed().length() > 0)
+    lblStaInfo1->setHidden(false);
+  else
+    lblStaInfo1->setHidden(true);
+  if (lblStaInfo2->text().trimmed().length() > 0)
+    lblStaInfo2->setHidden(false);
+  else
+    lblStaInfo2->setHidden(true);
 }
 
 QString MainWindow::getPlistTextValue(QString str) {
@@ -2062,8 +2072,8 @@ int MainWindow::parse_UpdateJSON(QString str) {
 
     } else {
       if (!blAutoCheckUpdate)
-        QMessageBox::information(this, "",
-                                 tr("It is currently the latest version!"));
+        QMessageBox::information(
+            this, "", tr("You are currently using the latest version!"));
     }
   }
   blAutoCheckUpdate = false;
@@ -2237,9 +2247,9 @@ void MainWindow::loadText(QString textFile) {
 
 void MainWindow::on_actionShowPlistText_triggered(bool checked) {
   if (checked)
-    ui->dockWidget->setVisible(true);
+    ui->dockPlistText->setVisible(true);
   else
-    ui->dockWidget->setVisible(false);
+    ui->dockPlistText->setVisible(false);
 }
 
 void MainWindow::on_actionPaste_as_child_triggered() {
@@ -2573,9 +2583,9 @@ void MainWindow::initFindReplace() {
 
 void MainWindow::initPlistTextShow() {
   //初始化plist文本Dock并删除Title棒（暂时）
-  QWidget* lTitleBar = ui->dockWidget->titleBarWidget();
+  QWidget* lTitleBar = ui->dockPlistText->titleBarWidget();
   QWidget* lEmptyWidget = new QWidget();
-  ui->dockWidget->setTitleBarWidget(lEmptyWidget);
+  ui->dockPlistText->setTitleBarWidget(lEmptyWidget);
   delete lTitleBar;
 
   ui->dockWidgetContents->layout()->setMargin(1);
@@ -2585,7 +2595,10 @@ void MainWindow::initPlistTextShow() {
   plistTextEditor->setReadOnly(true);
   ui->dockWidgetContents->layout()->addWidget(plistTextEditor);
 
-  resizeDocks({ui->dockWidget}, {150}, Qt::Vertical);
+  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+  QSettings Reg(qfile, QSettings::IniFormat);
+  int h = Reg.value("PlistTextDockHeight", 150).toInt();
+  resizeDocks({ui->dockPlistText}, {h}, Qt::Vertical);
   myHL = new MyHighLighter(plistTextEditor->document());
   myHL->rehighlight();
 }
