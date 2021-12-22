@@ -21,7 +21,7 @@ extern bool binPlistFile;
 
 EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   Q_UNUSED(parent);
-
+  MainWindow* mainWindow = qobject_cast<MainWindow*>(parent);
   this->setMovable(true);
   this->setTabsClosable(true);
 
@@ -32,11 +32,12 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   this->setDocumentMode(true);
   this->setTabBarAutoHide(false);
 
-  QString tabBarStyle2 = "QTabBar::tab{min-height:44px;}";
+  QString tabBarStyle2 = "QTabBar::tab{min-height:35px;}";
   this->setStyleSheet(tabBarStyle2);
+  mainWindow->ui->wTools->layout()->setContentsMargins(1, 5, 1, 5);
 
   this->setUsesScrollButtons(true);
-  MainWindow* mainWindow = qobject_cast<MainWindow*>(parent);
+
   mainWindow->ui->wTools->layout()->setSpacing(3);
   this->setCornerWidget(mainWindow->ui->wTools);
 }

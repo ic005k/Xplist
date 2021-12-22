@@ -279,7 +279,7 @@
         <widget class="QToolButton" name="btnChild">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -292,7 +292,7 @@
         <widget class="QToolButton" name="btnBrother">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -305,7 +305,7 @@
         <widget class="QToolButton" name="btnSort">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -318,7 +318,7 @@
         <widget class="QToolButton" name="btnExpand">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -331,7 +331,7 @@
         <widget class="QToolButton" name="btnNew">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -344,7 +344,7 @@
         <widget class="QToolButton" name="btnDel">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -357,7 +357,7 @@
         <widget class="QToolButton" name="btnFind_Tool">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -370,7 +370,7 @@
         <widget class="QToolButton" name="btnSave">
          <property name="maximumSize">
           <size>
-           <width>22</width>
+           <width>45</width>
            <height>16777215</height>
           </size>
          </property>
@@ -401,7 +401,7 @@
      <x>0</x>
      <y>0</y>
      <width>946</width>
-     <height>30</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
