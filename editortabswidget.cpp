@@ -32,6 +32,19 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   this->setDocumentMode(true);
   this->setTabBarAutoHide(false);
 
+  QString tabBarStyle =
+      "QTabBar::tab {min-width:100px;color: white;border: 2px solid;border-top-left-radius: 10px;border-top-right-radius: 10px;padding:5px;}\
+  QTabBar::tab:!selected {margin-top: 5px;} \
+  QTabBar::tab:selected {color: blue;}";
+
+  QString tabBarStyle1 =
+      "QTabWidget::pane{border:none;}QTabWidget::tab-bar{alignment:left;}"
+      "QTabBar::tab{background:transparent;color:black;min-width:20ex;min-"
+      "height:5ex;}QTabBar::tab:hover{background:rgb(255, 255, 255, "
+      "50);}QTabBar::tab:selected{border-color: "
+      "gray;background:rgb(205,205,205);color:blue;}";
+  this->setStyleSheet(tabBarStyle1);
+  this->setUsesScrollButtons(true);
   MainWindow* mainWindow = qobject_cast<MainWindow*>(parent);
   mainWindow->ui->wTools->layout()->setSpacing(3);
   this->setCornerWidget(mainWindow->ui->wTools);
