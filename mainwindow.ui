@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
+    <width>946</width>
     <height>703</height>
    </rect>
   </property>
@@ -30,12 +30,12 @@
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QGridLayout" name="gridLayout_8">
+   <layout class="QGridLayout" name="gridLayout_main">
     <property name="leftMargin">
      <number>1</number>
     </property>
     <property name="topMargin">
-     <number>12</number>
+     <number>1</number>
     </property>
     <property name="rightMargin">
      <number>1</number>
@@ -267,13 +267,13 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>12</number>
        </property>
        <item row="0" column="6">
         <widget class="QToolButton" name="btnChild">
@@ -400,8 +400,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>889</width>
-     <height>24</height>
+     <width>946</width>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

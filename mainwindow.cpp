@@ -120,6 +120,8 @@ MainWindow::MainWindow(QWidget* parent)
   tabWidget = new EditorTabsWidget(this);
   dlgAutoUpdate = new AutoUpdateDialog(this);
 
+  if (osx1012)
+      ui->centralWidget->layout()->setContentsMargins(1, 12, 1, 1);
   ui->centralWidget->layout()->addWidget(tabWidget);
   tabWidget->setHidden(true);
 
