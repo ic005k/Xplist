@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.0.97";
+QString CurVerison = "1.0.98";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -120,8 +120,7 @@ MainWindow::MainWindow(QWidget* parent)
   tabWidget = new EditorTabsWidget(this);
   dlgAutoUpdate = new AutoUpdateDialog(this);
 
-  if (osx1012)
-      ui->centralWidget->layout()->setContentsMargins(1, 12, 1, 1);
+  if (osx1012) ui->centralWidget->layout()->setContentsMargins(1, 12, 1, 1);
   ui->centralWidget->layout()->addWidget(tabWidget);
   tabWidget->setHidden(true);
 
@@ -3187,8 +3186,9 @@ void MainWindow::ShowAutoUpdateDlg(bool Database) {
   if (dlgAutoUpdate->strUrl == "") return;
   if (dlgAutoUpdate->isVisible()) return;
 
-  dlgAutoUpdate->setWindowFlags(dlgAutoUpdate->windowFlags() |
-                                Qt::WindowStaysOnTopHint);
+  // dlgAutoUpdate->setWindowFlags(dlgAutoUpdate->windowFlags() |
+  //                              Qt::WindowStaysOnTopHint);
+  dlgAutoUpdate->setModal(true);
   dlgAutoUpdate->show();
   dlgAutoUpdate->startDownload(Database);
 }
