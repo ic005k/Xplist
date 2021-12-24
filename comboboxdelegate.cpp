@@ -11,7 +11,8 @@ extern QString strRootType;
 
 QString oldValue;
 QString NewValue;
-QComboBox* comboBox;
+
+tcNoArrowComboBox* comboBox;
 
 DomItem* item;
 
@@ -22,7 +23,7 @@ QWidget* ComboBoxDelegate::createEditor(QWidget* parent,
                                         const QModelIndex& index) const {
   Q_UNUSED(index);
 
-  QComboBox* editor = new QComboBox(parent);
+  tcNoArrowComboBox* editor = new tcNoArrowComboBox(parent);
 
   QStringList list;
   list << "array"
@@ -40,12 +41,12 @@ QWidget* ComboBoxDelegate::createEditor(QWidget* parent,
 
 void ComboBoxDelegate::setEditorData(QWidget* editor,
                                      const QModelIndex& index) const {
-  comboBox = static_cast<QComboBox*>(editor);
+  comboBox = static_cast<tcNoArrowComboBox*>(editor);
 
   connect(comboBox, SIGNAL(currentIndexChanged(int)), this,
           SLOT(OnComboBoxChanged(int)));
 
-  if (red < 55)  // mac = 50
+  /*if (red < 55)  // mac = 50
   {
     comboBox->setStyleSheet(
         "QComboBox {border:1px solid "
@@ -55,8 +56,9 @@ void ComboBoxDelegate::setEditorData(QWidget* editor,
     comboBox->setStyleSheet(
         "QComboBox {border:1px solid "
         "gray;background:rgba(255,255,255,255);color:rgba(0,0,0,255);selection-"
-        "color: #FFFFFF;selection-background-color:#277BFF;}");
-  }
+        "color: "
+        "#FFFFFF;selection-background-color:#277BFF;drop-down:: border:none;}");
+  }*/
 
   QString value = index.data().toString();
   int n;
@@ -72,7 +74,7 @@ void ComboBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
   Q_UNUSED(model);
   Q_UNUSED(editor);
 
-  comboBox = static_cast<QComboBox*>(editor);
+  comboBox = static_cast<tcNoArrowComboBox*>(editor);
   QString val;
   val = comboBox->currentText();
 
@@ -248,4 +250,17 @@ QByteArray ComboBoxDelegate::HexStrToByte(QString value) const {
   }
 
   return ba;
+}
+
+void tcNoArrowComboBox::paintEvent(QPaintEvent* ev) {
+  Q_UNUSED(ev);
+  QPainter p;
+  p.begin(this);
+  QStyleOptionComboBox opt;
+  opt.initFrom(this);
+  style()->drawPrimitive(QStyle::PE_PanelButtonBevel, &opt, &p, this);
+  style()->drawPrimitive(QStyle::PE_PanelButtonCommand, &opt, &p, this);
+  style()->drawItemText(&p, rect(), Qt::AlignCenter, palette(), isEnabled(),
+                        currentText());
+  p.end();
 }

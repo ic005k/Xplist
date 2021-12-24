@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.0.99";
+QString CurVerison = "1.1.0";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
