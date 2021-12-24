@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.0";
+QString CurVerison = "1.1.1";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -142,8 +142,8 @@ MainWindow::MainWindow(QWidget* parent)
   ui->btnYes->setDefault(true);
   ui->frameTip->setHidden(true);
 
-  ui->frameData->setAutoFillBackground(true);
-  ui->frameData->setPalette(QPalette(QColor(250, 250, 224)));
+  // ui->frameData->setAutoFillBackground(true);
+  // ui->frameData->setPalette(QPalette(QColor(250, 250, 224)));
   ui->frameData->setHidden(true);
   ui->centralWidget->layout()->addWidget(ui->frameData);
 
