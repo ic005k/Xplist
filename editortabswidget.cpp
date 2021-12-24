@@ -152,8 +152,8 @@ void EditorTabsWidget::initTabBar() {
   connect(bar, &MyTabBar::beginDragOut, this, [this, bar](int index) {
     if (!indexValid(index)) return;
     QWidget* drag_tab = this->widget(index);
-    //固定tab就不让拖出
-    if (!drag_tab || fixedPage.contains(drag_tab)) return;
+    //固定tab或者只有一个tab页，不让拖出
+    if (!drag_tab || fixedPage.contains(drag_tab) || bar->count() == 1) return;
     //把当前页作为快照拖拽
     //尺寸加了标题栏和边框
     QPixmap pixmap(drag_tab->size() + QSize(2, 31));
