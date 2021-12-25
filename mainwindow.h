@@ -68,7 +68,6 @@ class MainWindow : public QMainWindow {
   QFont font;
   bool findTextChanged = false;
   CodeEditor* plistTextEditor;
-  QComboBox* cboxFileType;
   bool osx1012 = false;
   bool pasteBW = false;
   QString strModiFile;
@@ -152,7 +151,7 @@ class MainWindow : public QMainWindow {
   void actionExpand_all_activated();
   void actionAbout_activated();
 
-  void on_TabWidget_currentChanged(int index);
+  void onTabWidget_currentChanged(int index);
   void menu_aboutToShow();
 
   void onCleanChanged(bool clean);

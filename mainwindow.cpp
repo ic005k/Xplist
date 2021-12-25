@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.4";
+QString CurVerison = "1.1.5";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -155,10 +155,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 #ifdef Q_OS_WIN32
   reg_win();
-
   win = true;
-  ui->actionRemove_2->setShortcut(tr("ctrl+-"));
-  ui->actionNew_Child->setShortcut(tr("alt++"));
 #endif
 
   init_iniData();
@@ -298,6 +295,10 @@ void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->layout()->setMargin(1);
   ui->mainToolBar->layout()->setSpacing(1);
 
+  ui->cboxFileType->setToolTip(tr("Select the file storage format"));
+  ui->cboxFileType->addItem("XML");
+  ui->cboxFileType->addItem("BIN");
+
   // create undo and redo actions
   undoGroup = new QUndoGroup(this);
   actionUndo = undoGroup->createUndoAction(this, tr("Undo"));
@@ -313,14 +314,12 @@ void MainWindow::initMenuToolsBar() {
   ui->menuEdit->addAction(actionUndo);
   ui->menuEdit->addAction(actionRedo);
 
-  connect(tabWidget, SIGNAL(currentChanged(int)), this,
-          SLOT(on_TabWidget_currentChanged(int)));
+  connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onTabWidget_currentChanged(int)));
 
   connect(undoGroup, SIGNAL(cleanChanged(bool)), this,
           SLOT(onCleanChanged(bool)));
 
   // File
-
   connect(ui->actionClose, SIGNAL(triggered()), this,
           SLOT(actionClose_activated()));
   connect(ui->actionClose_all, SIGNAL(triggered()), this,
@@ -350,7 +349,6 @@ void MainWindow::initMenuToolsBar() {
   connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(on_cutAction()));
 
   ui->actionCopy_between_windows->setShortcut(tr("ctrl+b"));
-
   ui->actionPaste_between_windows->setShortcut(tr("ctrl+alt+b"));
 
   // 编辑菜单 展开/折叠
@@ -392,20 +390,13 @@ void MainWindow::initMenuToolsBar() {
   // 最近打开的文件快捷通道
   initRecentFilesForToolBar();
 
-  ui->mainToolBar->addAction(ui->actionNew);
-
-  ui->mainToolBar->addAction(ui->actionSave);
-
-  ui->mainToolBar->addSeparator();
-
   // 增加同级项
   actionNewSibling = new QAction(tr("New Sibling"), this);
   ui->mainToolBar->addAction(actionNewSibling);
   actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.svg"));
   connect(actionNewSibling, SIGNAL(triggered()), this,
           SLOT(on_actionNewSibling()));
-
-  ui->actionNew_Sibling->setShortcut(tr("ctrl++"));
+  ui->actionNew_Sibling->setShortcut(tr("+"));
 
   // 增加子项
   actionNewChild = new QAction(tr("New Child"), this);
@@ -413,19 +404,15 @@ void MainWindow::initMenuToolsBar() {
   actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.svg"));
   connect(actionNewChild, &QAction::triggered, this,
           &MainWindow::on_actionNewChild);
-
   connect(ui->actionNew_Child, &QAction::triggered, this,
           &MainWindow::on_actionNewChild);
-  ui->actionNew_Child->setShortcut(tr("+"));
+  ui->actionNew_Child->setShortcut(tr("ctrl++"));
 
   // 删除
-  ui->mainToolBar->addAction(ui->actionRemove_2);
   ui->actionRemove_2->setShortcut(Qt::Key_Delete);
   ui->actionRemove_2->setShortcut(tr("-"));
   connect(ui->actionRemove_2, &QAction::triggered, this,
           &MainWindow::actionRemove_activated);
-
-  ui->mainToolBar->addSeparator();
 
   // 全部展开与折叠
   ui->mainToolBar->addAction(ui->actionExpand_all);
@@ -438,7 +425,6 @@ void MainWindow::initMenuToolsBar() {
   //条目上移
   QAction* actionMoveUp = new QAction(tr("Move up"));
   actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.svg"));
-  actionMoveUp->setShortcut(tr("ctrl+u"));
   ui->mainToolBar->addAction(actionMoveUp);
   connect(actionMoveUp, &QAction::triggered, this,
           &MainWindow::on_actionMoveUp);
@@ -446,12 +432,7 @@ void MainWindow::initMenuToolsBar() {
   // 条目下移
   QAction* actionMoveDown = new QAction(tr("Move down"));
   actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.svg"));
-  actionMoveDown->setShortcut(tr("ctrl+d"));
-  ui->mainToolBar->addAction(actionMoveDown);
-  connect(actionMoveDown, &QAction::triggered, this,
-          &MainWindow::on_actionMoveDown);
-
-  ui->mainToolBar->addSeparator();
+  connect(actionMoveDown, &QAction::triggered, this, &MainWindow::on_actionMoveDown);
 
   // 排序
   actionSort = new QAction(tr("A->Z Sort"));
@@ -459,24 +440,9 @@ void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->addAction(actionSort);
   connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
 
-  ui->mainToolBar->addSeparator();
-
   // Undo、Redo
   actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.svg"));
-  ui->mainToolBar->addAction(actionUndo);
-
   actionRedo->setIcon(QIcon(":/new/toolbar/res/redo.svg"));
-  ui->mainToolBar->addAction(actionRedo);
-
-  // 文件存储格式xml或bin
-  ui->mainToolBar->addSeparator();
-  cboxFileType = new QComboBox(this);
-  ui->cboxFileType->setToolTip(tr("Select the file storage format"));
-  ui->cboxFileType->addItem("XML");
-  ui->cboxFileType->addItem("BIN");
-  ui->mainToolBar->addWidget(cboxFileType);
-
-  ui->mainToolBar->addSeparator();
 
   QAction* findAction =
       new QAction(QIcon(":/new/toolbar/res/find.svg"), tr(""), this);
@@ -1196,46 +1162,48 @@ void MainWindow::actionAbout_activated() {
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
 
-void MainWindow::on_TabWidget_currentChanged(int index) {
-  if (index >= 0) {
-    if (tabWidget->hasTabs()) {
-      EditorTab* tab = tabWidget->getCurentTab();
-      setExpandText(tab);
+void MainWindow::onTabWidget_currentChanged(int index)
+{
+    if (index >= 0) {
+        if (tabWidget->hasTabs()) {
+            EditorTab *tab = tabWidget->getCurentTab();
+            setExpandText(tab);
 
-      QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
-      if (strBin.contains("[BIN]")) {
-        ui->cboxFileType->setCurrentIndex(1);
+            QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
+            if (strBin.contains("[BIN]")) {
+                ui->cboxFileType->setCurrentIndex(1);
 
-      } else {
-        ui->cboxFileType->setCurrentIndex(0);
-      }
+            } else {
+                ui->cboxFileType->setCurrentIndex(0);
+            }
 
-      QString strCurrentFile = tabWidget->getCurentTab()->getPath();
-      this->setWindowTitle(ver + "[*] " + strCurrentFile);
+            QString strCurrentFile = tabWidget->getCurentTab()->getPath();
+            this->setWindowTitle(ver + "[*] " + strCurrentFile);
 
-      // get undo stack
-      QUndoStack* stack = tab->getUndoStack();
+            // get undo stack
+            QUndoStack *stack = tab->getUndoStack();
 
-      // set active stack
-      if (!undoGroup->stacks().contains(stack)) undoGroup->addStack(stack);
+            // set active stack
+            if (!undoGroup->stacks().contains(stack))
+                undoGroup->addStack(stack);
 
-      undoGroup->setActiveStack(stack);
+            undoGroup->setActiveStack(stack);
 
-      if (!loading) {
-        loadText(tabWidget->getCurentTab()->getPath());
-        goPlistText();
-        showMsg();
+            if (!loading) {
+                loadText(tabWidget->getCurentTab()->getPath());
+                goPlistText();
+                showMsg();
 
-        writeINITab();
-      }
+                writeINITab();
+            }
 
-      ui->btnPrevious->setEnabled(false);
-      ui->btnNext->setEnabled(false);
-      ui->btnReplace->setEnabled(false);
-      ui->listFind->clear();
-      ui->frameData->setHidden(true);
+            ui->btnPrevious->setEnabled(false);
+            ui->btnNext->setEnabled(false);
+            ui->btnReplace->setEnabled(false);
+            ui->listFind->clear();
+            ui->frameData->setHidden(true);
+        }
     }
-  }
 }
 
 void MainWindow::onCleanChanged(bool clean) { this->setWindowModified(!clean); }
@@ -2620,8 +2588,8 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
     tab->treeView->resizeColumnToContents(0);
 
     if (ui->listFind->count() == 1) {
-        QModelIndex index0 = tab->getModel()->index(0, 0);
-        tab->treeView->setCurrentIndex(index0);
+      QModelIndex index0 = tab->getModel()->index(0, 0);
+      tab->treeView->setCurrentIndex(index0);
     }
 
     tab->treeView->selectionModel()->setCurrentIndex(
