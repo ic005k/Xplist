@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.3";
+QString CurVerison = "1.1.4";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -2619,8 +2619,10 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
     loading = false;
     tab->treeView->resizeColumnToContents(0);
 
-    QModelIndex index0 = tab->getModel()->index(0, 0);
-    tab->treeView->setCurrentIndex(index0);
+    if (ui->listFind->count() == 1) {
+        QModelIndex index0 = tab->getModel()->index(0, 0);
+        tab->treeView->setCurrentIndex(index0);
+    }
 
     tab->treeView->selectionModel()->setCurrentIndex(
         index, QItemSelectionModel::SelectCurrent);
