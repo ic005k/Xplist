@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.2";
+QString CurVerison = "1.1.3";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -2245,6 +2245,7 @@ void MainWindow::on_actionPaste_as_child_triggered() {
 }
 
 void MainWindow::on_editFind_returnPressed() {
+  ui->editFind->selectAll();
   if (!findTextChanged) {
     on_btnNext_clicked();
     return;
@@ -2253,15 +2254,13 @@ void MainWindow::on_editFind_returnPressed() {
   on_Find();
 
   QString str = ui->editFind->text().trimmed();
-  bool re = false;
   for (int i = 0; i < FindTextList.count(); i++) {
     if (FindTextList.at(i) == str) {
-      re = true;
+      FindTextList.removeAt(i);
       break;
     }
   }
-
-  if (!re && str != "") FindTextList.insert(0, str);
+  if (str != "") FindTextList.insert(0, str);
 
   QCompleter* editFindCompleter = new QCompleter(FindTextList, this);
   editFindCompleter->setCaseSensitivity(Qt::CaseSensitive);
@@ -2612,15 +2611,16 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
                               QString::number(findCount));
 
     EditorTab* tab = tabWidget->getCurentTab();
-
     QModelIndex index = indexFindList.at(indexCount);
-
     tab->treeView->clearSelection();
 
     loading = true;
     tab->treeView->expandAll();
     loading = false;
     tab->treeView->resizeColumnToContents(0);
+
+    QModelIndex index0 = tab->getModel()->index(0, 0);
+    tab->treeView->setCurrentIndex(index0);
 
     tab->treeView->selectionModel()->setCurrentIndex(
         index, QItemSelectionModel::SelectCurrent);
