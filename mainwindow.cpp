@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.1";
+QString CurVerison = "1.1.2";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -366,11 +366,6 @@ void MainWindow::initMenuToolsBar() {
   connect(collapseAction, &QAction::triggered, this,
           &MainWindow::on_collapseAction);
 
-  // 初始化工具棒
-  // ui->mainToolBar->addAction(ui->actionNew_Window);
-  // ui->mainToolBar->addSeparator();
-  // ui->mainToolBar->addAction(ui->actionOpen);
-
   //最近打开的文件快捷通道
   QToolButton* btn0 = new QToolButton(this);
   btn0->setToolTip(tr("Open Recent..."));
@@ -400,8 +395,6 @@ void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->addAction(ui->actionNew);
 
   ui->mainToolBar->addAction(ui->actionSave);
-
-  // ui->mainToolBar->addAction(ui->actionSave_as);
 
   ui->mainToolBar->addSeparator();
 
@@ -492,9 +485,6 @@ void MainWindow::initMenuToolsBar() {
   connect(findAction, &QAction::triggered, this,
           &MainWindow::on_ShowFindReplace);
 
-  lblFindCount = new QLabel("0");  //查找结果计数器
-  ui->mainToolBar->addWidget(lblFindCount);
-
   // 搜索框
   ui->editFind->setClearButtonEnabled(true);
   ui->editFind->setPlaceholderText(tr("Find"));
@@ -504,10 +494,7 @@ void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setContextMenuPolicy(
       Qt::CustomContextMenu);  //屏蔽默认的右键菜单
   ui->editFind->setMinimumWidth(150);
-  // ui->mainToolBar->addWidget(ui->editFind);
 
-  // ui->mainToolBar->addWidget(ui->btnFind);
-  // ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.svg"));
   //设置下拉菜单
   actCaseSensitive->setCheckable(true);
   btnFindMenu = new QMenu(this);
@@ -1401,7 +1388,7 @@ void MainWindow::on_Find() {
     tab->treeView->setCurrentIndex(index);  //设置当前索引
 
     findCount = 0;
-    lblFindCount->setText("  " + QString::number(findCount) + "  ");
+    ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
     find = false;
 
     if (index.isValid()) {
@@ -1445,7 +1432,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       // treeView->selectionModel()->setCurrentIndex(index2,
       // QItemSelectionModel::SelectCurrent);
       findCount++;
-      lblFindCount->setText("  " + QString::number(findCount) + "  ");
+      ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       find = true;
 
       actionSort->setEnabled(false);
@@ -1462,7 +1449,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       // treeView->selectionModel()->setCurrentIndex(index,
       // QItemSelectionModel::SelectCurrent);
       findCount++;
-      lblFindCount->setText("  " + QString::number(findCount) + "  ");
+      ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       find = true;
 
       actionSort->setEnabled(false);
@@ -2258,7 +2245,6 @@ void MainWindow::on_actionPaste_as_child_triggered() {
 }
 
 void MainWindow::on_editFind_returnPressed() {
-  ui->editFind->selectAll();
   if (!findTextChanged) {
     on_btnNext_clicked();
     return;
@@ -2317,7 +2303,7 @@ void MainWindow::on_editFind_textChanged(const QString& arg1) {
 
     if (arg1 == "" || !find) {
       findCount = 0;
-      lblFindCount->setText("  " + QString::number(findCount) + "  ");
+      ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       ui->listFind->clear();
 
       EditorTab* tab = tabWidget->getCurentTab();
@@ -2333,7 +2319,10 @@ void MainWindow::on_ShowFindReplace() { on_Find(); }
 
 void MainWindow::on_btnFind_clicked() { on_Find(); }
 
-void MainWindow::on_btnHideFind_clicked() { ui->frame->close(); }
+void MainWindow::on_btnHideFind_clicked() {
+  ui->frameFind->close();
+  ui->dockShowSearchResults->setHidden(true);
+}
 
 void MainWindow::on_btnPrevious_clicked() {
   if (ui->listFind->count() == 0) return;
@@ -2504,7 +2493,7 @@ void MainWindow::on_btnReplaceAll_clicked() {
 
   indexFindList.clear();
   findCount = 0;
-  lblFindCount->setText("  " + QString::number(findCount) + "  ");
+  ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
 
   ui->btnPrevious->setEnabled(false);
   ui->btnNext->setEnabled(false);
@@ -2523,8 +2512,8 @@ void MainWindow::on_actionFindNext_triggered() { on_btnNext_clicked(); }
 void MainWindow::on_actionFindPrevious_triggered() { on_btnPrevious_clicked(); }
 
 void MainWindow::on_actionReplace_triggered() {
-  if (ui->frame->isHidden()) {
-    ui->frame->show();
+  if (ui->frameFind->isHidden()) {
+    ui->frameFind->show();
     ui->editFind->setFocus();
   }
 
@@ -2534,12 +2523,12 @@ void MainWindow::on_actionReplace_triggered() {
 void MainWindow::on_actionReplaceAll_triggered() { on_btnReplaceAll_clicked(); }
 
 void MainWindow::on_btnShowReplace_clicked() {
-  if (ui->frame->isHidden()) {
-    ui->frame->show();
+  if (ui->frameFind->isHidden()) {
+    ui->frameFind->show();
     ui->editReplace->setFocus();
     // ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
   } else {
-    ui->frame->close();
+    ui->frameFind->close();
 
     // ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
   }
@@ -2569,9 +2558,8 @@ void MainWindow::on_actionSave_as_triggered() { actionSaveAs(); }
 
 void MainWindow::initFindReplace() {
   //初始化查找与替换界面
-  ui->frame->layout()->setMargin(1);
-
-  ui->frame->close();
+  ui->frameFind->layout()->setMargin(1);
+  ui->frameFind->close();
   ui->btnPrevious->setEnabled(false);
   ui->btnNext->setEnabled(false);
   ui->btnReplace->setEnabled(false);
@@ -2620,8 +2608,8 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
       indexCount = indexFindList.count() - 1;
     }
 
-    lblFindCount->setText(QString::number(indexCount + 1) + " >> " +
-                          QString::number(findCount));
+    ui->lblFindCount->setText(QString::number(indexCount + 1) + " >> " +
+                              QString::number(findCount));
 
     EditorTab* tab = tabWidget->getCurentTab();
 
@@ -3439,7 +3427,7 @@ void MainWindow::on_actionExpand_All_triggered() {
 void MainWindow::on_actionCollapse_All_triggered() {}
 
 void MainWindow::on_btnFind_Tool_clicked() {
-  ui->frame->show();
+  ui->frameFind->show();
   ui->editFind->setFocus();
 }
 

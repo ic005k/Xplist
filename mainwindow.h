@@ -308,7 +308,7 @@ class MainWindow : public QMainWindow {
   enum { MaxRecentFiles = 10 };
 
   int findCount = 0;
-  QLabel* lblFindCount;
+
   bool find = false;
 
   void reg_win();
