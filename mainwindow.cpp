@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.8";
+QString CurVerison = "1.1.9";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -185,6 +185,7 @@ void MainWindow::init_iniData() {
 
   bool restore = Reg.value("restore", 1).toBool();
   ui->actionRestoreScene->setChecked(restore);
+  restore = true;
   if (restore) {
     int count = Reg.value("count").toInt();
 
@@ -275,6 +276,8 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
+  ui->actionDiscussion_Forum->setVisible(false);
+  ui->actionRestoreScene->setVisible(false);
   ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
   ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
   ui->btnNew->setIcon(QIcon(":/new/toolbar/res/new.png"));
