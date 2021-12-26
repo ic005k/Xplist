@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.7";
+QString CurVerison = "1.1.8";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -1158,7 +1158,7 @@ void MainWindow::actionAbout_activated() {
   QString str1 =
       "<a style='color:blue;' href = "
       "https://github.com/ic005k/PlistEDPlus>PlistEDPlus</a><br><br>";
-  QString str2 = "V" + CurVerison;
+  QString str2 = "V " + CurVerison;
   QString str3 = "<br><br>";
 
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
