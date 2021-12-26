@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.00";
+QString CurVerison = "1.2.01";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -1472,6 +1472,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
   Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
   Reg.setValue("drag", false);
+  Reg.setValue("dockFindWidth", ui->dockShowSearchResults->width());
 
   // 存储窗口大小和位置
   Reg.setValue("x", this->x());
@@ -2557,6 +2558,9 @@ void MainWindow::initPlistTextShow() {
   resizeDocks({ui->dockPlistText}, {h}, Qt::Vertical);
   myHL = new MyHighLighter(plistTextEditor->document());
   myHL->rehighlight();
+
+  int w = Reg.value("dockFindWidth", 200).toInt();
+  resizeDocks({ui->dockShowSearchResults}, {w}, Qt::Horizontal);
 }
 
 void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
