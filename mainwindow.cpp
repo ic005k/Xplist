@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.9";
+QString CurVerison = "1.2.00";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -2496,11 +2496,8 @@ void MainWindow::on_btnShowReplace_clicked() {
   if (ui->frameFind->isHidden()) {
     ui->frameFind->show();
     ui->editReplace->setFocus();
-    // ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/4.png"));
   } else {
     ui->frameFind->close();
-
-    // ui->btnShowReplace->setIcon(QIcon(":/new/toolbar/res/3.png"));
   }
 }
 
@@ -3402,6 +3399,7 @@ void MainWindow::on_actionCollapse_All_triggered() {}
 void MainWindow::on_btnFind_Tool_clicked() {
   ui->frameFind->show();
   ui->editFind->setFocus();
+  if (ui->editFind->text().length() > 0) ui->editFind->selectAll();
 }
 
 void MainWindow::on_btnReplaceFind_clicked() {
