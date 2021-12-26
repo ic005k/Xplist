@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.1.5";
+QString CurVerison = "1.1.6";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -314,7 +314,8 @@ void MainWindow::initMenuToolsBar() {
   ui->menuEdit->addAction(actionUndo);
   ui->menuEdit->addAction(actionRedo);
 
-  connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(onTabWidget_currentChanged(int)));
+  connect(tabWidget, SIGNAL(currentChanged(int)), this,
+          SLOT(onTabWidget_currentChanged(int)));
 
   connect(undoGroup, SIGNAL(cleanChanged(bool)), this,
           SLOT(onCleanChanged(bool)));
@@ -432,7 +433,8 @@ void MainWindow::initMenuToolsBar() {
   // 条目下移
   QAction* actionMoveDown = new QAction(tr("Move down"));
   actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.svg"));
-  connect(actionMoveDown, &QAction::triggered, this, &MainWindow::on_actionMoveDown);
+  connect(actionMoveDown, &QAction::triggered, this,
+          &MainWindow::on_actionMoveDown);
 
   // 排序
   actionSort = new QAction(tr("A->Z Sort"));
@@ -1162,48 +1164,46 @@ void MainWindow::actionAbout_activated() {
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
 
-void MainWindow::onTabWidget_currentChanged(int index)
-{
-    if (index >= 0) {
-        if (tabWidget->hasTabs()) {
-            EditorTab *tab = tabWidget->getCurentTab();
-            setExpandText(tab);
+void MainWindow::onTabWidget_currentChanged(int index) {
+  if (index >= 0) {
+    if (tabWidget->hasTabs()) {
+      EditorTab* tab = tabWidget->getCurentTab();
+      setExpandText(tab);
 
-            QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
-            if (strBin.contains("[BIN]")) {
-                ui->cboxFileType->setCurrentIndex(1);
+      QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
+      if (strBin.contains("[BIN]")) {
+        ui->cboxFileType->setCurrentIndex(1);
 
-            } else {
-                ui->cboxFileType->setCurrentIndex(0);
-            }
+      } else {
+        ui->cboxFileType->setCurrentIndex(0);
+      }
 
-            QString strCurrentFile = tabWidget->getCurentTab()->getPath();
-            this->setWindowTitle(ver + "[*] " + strCurrentFile);
+      QString strCurrentFile = tabWidget->getCurentTab()->getPath();
+      this->setWindowTitle(ver + "[*] " + strCurrentFile);
 
-            // get undo stack
-            QUndoStack *stack = tab->getUndoStack();
+      // get undo stack
+      QUndoStack* stack = tab->getUndoStack();
 
-            // set active stack
-            if (!undoGroup->stacks().contains(stack))
-                undoGroup->addStack(stack);
+      // set active stack
+      if (!undoGroup->stacks().contains(stack)) undoGroup->addStack(stack);
 
-            undoGroup->setActiveStack(stack);
+      undoGroup->setActiveStack(stack);
 
-            if (!loading) {
-                loadText(tabWidget->getCurentTab()->getPath());
-                goPlistText();
-                showMsg();
+      if (!loading) {
+        loadText(tabWidget->getCurentTab()->getPath());
+        goPlistText();
+        showMsg();
 
-                writeINITab();
-            }
+        writeINITab();
+      }
 
-            ui->btnPrevious->setEnabled(false);
-            ui->btnNext->setEnabled(false);
-            ui->btnReplace->setEnabled(false);
-            ui->listFind->clear();
-            ui->frameData->setHidden(true);
-        }
+      ui->btnPrevious->setEnabled(false);
+      ui->btnNext->setEnabled(false);
+      ui->btnReplace->setEnabled(false);
+      ui->listFind->clear();
+      ui->frameData->setHidden(true);
     }
+  }
 }
 
 void MainWindow::onCleanChanged(bool clean) { this->setWindowModified(!clean); }

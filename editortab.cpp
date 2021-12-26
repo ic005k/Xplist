@@ -43,7 +43,7 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
 
   treeView = new MyTreeView(this);
   treeView->setFont(mw_one->getFont());
-  treeView->header()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignCenter);
+  treeView->header()->setDefaultAlignment(Qt::AlignBottom | Qt::AlignLeft);
 
   lblTips = new QTextBrowser(this);
   lblTips->setLineWrapMode(QTextEdit::NoWrap);
