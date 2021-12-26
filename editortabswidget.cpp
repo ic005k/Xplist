@@ -57,10 +57,11 @@ EditorTab* EditorTabsWidget::createTab(DomModel* model, QString filePath) {
   }
 
   // add tab
+  QFileInfo fi(filePath);
   if (!binPlistFile)
-    this->addTab(editorTab, filePath);
+    this->addTab(editorTab, fi.baseName());
   else
-    this->addTab(editorTab, "[BIN] " + filePath);
+    this->addTab(editorTab, "[BIN] " + fi.baseName());
 
   // set as active
   this->setCurrentWidget(editorTab);

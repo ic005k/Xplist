@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.01";
+QString CurVerison = "1.2.02";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -709,6 +709,7 @@ void MainWindow::openPlist(QString filePath) {
 
     tab->treeView->resizeColumnToContents(0);  // 列宽自动适应最长的条目
     tab->treeView->setFocus();
+
     if (ui->actionExpandAllOpenFile->isChecked()) actionExpand_all_activated();
 
     if (tabWidget->currentIndex() >= 0)
