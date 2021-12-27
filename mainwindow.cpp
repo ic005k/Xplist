@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.03";
+QString CurVerison = "1.2.04";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -40,7 +40,7 @@ int windowX = 0;
 int windowY = 0;
 
 extern bool loading;
-extern QString strRootType;
+extern QString strRootType, tabStyleLight;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -1871,6 +1871,13 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     myHL = new MyHighLighter(plistTextEditor->document());
     myHL->rehighlight();
     plistTextEditor->repaint();
+
+    if (red > 55)
+      tabWidget->setStyleSheet(tabStyleLight);
+    else
+      tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+
+    qDebug() << red;
   }
 }
 

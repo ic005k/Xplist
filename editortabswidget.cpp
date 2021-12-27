@@ -12,12 +12,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-QString dragFileName;
+QString dragFileName, tabStyleLight;
 
 extern MainWindow* mw_one;
 extern EditorTabsWidget* tabWidget;
 extern QVector<QString> openFileList;
 extern bool binPlistFile;
+extern int red;
 
 EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   Q_UNUSED(parent);
@@ -29,11 +30,123 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
 
   initTabBar();
 
-  this->setDocumentMode(true);
+  this->setDocumentMode(false);
   this->setTabBarAutoHide(false);
 
   QString tabBarStyle2 = "QTabBar::tab{min-height:35px;}";
   this->setStyleSheet(tabBarStyle2);
+
+  tabStyleLight =
+
+      "QTabWidget::pane {\
+              border: 1px solid gray;\
+              background: rgb(236, 236, 236);\
+          }\
+        QTabBar::close-button:hover {\
+        image: url(:/new/toolbar/res/c0.png);\
+        subcontrol-origin: padding;\
+        subcontrol-position: bottom right;\
+        }\
+          QTabBar::close-button {\
+          image: url(:/new/toolbar/res/c.png);\
+          subcontrol-origin: padding;\
+          subcontrol-position: bottom right;\
+          } \
+          QTabWidget::tab-bar:top {\
+              top: 1px;\
+          }\
+          \
+          QTabWidget::tab-bar:bottom {\
+              bottom: 1px;\
+          }\
+          \
+          QTabWidget::tab-bar:left {\
+              right: 1px;\
+          }\
+          \
+          QTabWidget::tab-bar:right {\
+              left: 1px;\
+          }\
+          \
+          QTabBar::tab {\
+              border: 1px solid gray;\
+          }\
+          \
+          QTabBar::tab:selected {\
+              background: rgb(236, 236, 236);\
+          }\
+          \
+          QTabBar::tab:!selected {\
+              background: lightgray; \
+          }\
+          \
+          QTabBar::tab:!selected:hover {\
+              background: silver;\
+          }\
+          \
+          QTabBar::tab:top:!selected {\
+              margin-top: 3px;\
+          }\
+          \
+          QTabBar::tab:bottom:!selected {\
+              margin-bottom: 3px;\
+          }\
+          \
+          QTabBar::tab:top, QTabBar::tab:bottom {\
+              min-width: 8ex;\
+              margin-right: -1px;\
+              padding: 8px 20px 8px 20px;\
+          }\
+          \
+          QTabBar::tab:top:selected {\
+              border-bottom-color: none;\
+          }\
+          \
+          QTabBar::tab:bottom:selected {\
+              border-top-color: none;\
+          }\
+          \
+          QTabBar::tab:top:last, QTabBar::tab:bottom:last,\
+          QTabBar::tab:top:only-one, QTabBar::tab:bottom:only-one {\
+              margin-right: 0;\
+          }\
+          \
+          QTabBar::tab:left:!selected {\
+              margin-right: 3px;\
+          }\
+          \
+          QTabBar::tab:right:!selected {\
+              margin-left: 3px;\
+          }\
+          \
+          QTabBar::tab:left, QTabBar::tab:right {\
+              min-height: 8ex;\
+              margin-bottom: -1px;\
+              padding: 10px 5px 10px 5px;\
+          }\
+          \
+          QTabBar::tab:left:selected {\
+              border-left-color: none;\
+          }\
+          \
+          QTabBar::tab:right:selected {\
+              border-right-color: none;\
+          }\
+          \
+          QTabBar::tab:left:last, QTabBar::tab:right:last,\
+          QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {\
+              margin-bottom: 0;\
+          }";
+
+  QPalette pal = this->palette();
+  QBrush brush = pal.window();
+  red = brush.color().red();
+  if (red > 55)
+    this->setStyleSheet(tabStyleLight);
+  else
+    setStyleSheet(mainWindow->ui->tabWidget->styleSheet());
+
+  mainWindow->ui->tabWidget->setHidden(true);
 
   mainWindow->ui->wTools->layout()->setContentsMargins(1, 5, 1, 5);
 

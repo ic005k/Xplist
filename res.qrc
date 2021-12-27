@@ -34,6 +34,8 @@
         <file>res/sibling.png</file>
         <file>res/del.png</file>
         <file>res/find.png</file>
+        <file>res/c.png</file>
+        <file>res/c0.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
