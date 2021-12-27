@@ -971,7 +971,7 @@
     <string>Sort</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Shift+T</string>
+    <string>Meta+T</string>
    </property>
   </action>
   <action name="actionExpand_All">
