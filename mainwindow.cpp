@@ -284,6 +284,7 @@ void MainWindow::initMenuToolsBar() {
   ui->btnExpand->setHidden(true);
   ui->btnDel->setHidden(true);
   ui->btnSort->setHidden(true);
+  if (mac || osx1012) ui->gridLayout_main->setContentsMargins(1, 8, 1, 1);
 
   ui->actionAbout->setMenuRole(QAction::AboutRole);
   ui->mainToolBar->setIconSize(QSize(26, 26));
