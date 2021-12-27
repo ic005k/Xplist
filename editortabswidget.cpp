@@ -34,6 +34,7 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
 
   QString tabBarStyle2 = "QTabBar::tab{min-height:35px;}";
   this->setStyleSheet(tabBarStyle2);
+
   mainWindow->ui->wTools->layout()->setContentsMargins(1, 5, 1, 5);
 
   this->setUsesScrollButtons(true);
@@ -60,8 +61,9 @@ EditorTab* EditorTabsWidget::createTab(DomModel* model, QString filePath) {
   QFileInfo fi(filePath);
   if (!binPlistFile)
     this->addTab(editorTab, fi.baseName());
-  else
+  else {
     this->addTab(editorTab, "[BIN] " + fi.baseName());
+  }
 
   // set as active
   this->setCurrentWidget(editorTab);

@@ -11,14 +11,6 @@ extern EditorTabsWidget* tabWidget;
 
 QVector<DomItem*> copy_item;
 
-extern QAction* copyAction;
-extern QAction* cutAction;
-extern QAction* pasteAction;
-extern QAction* pasteAsChildAction;
-extern QAction* actionNewSibling;
-extern QAction* actionNewChild;
-extern QAction* actionSort;
-
 extern QUndoGroup* undoGroup;
 extern MainWindow* mw_one;
 
@@ -92,9 +84,9 @@ EditorTab::EditorTab(DomModel* m, QWidget* parent)
   treeView->setItemDelegateForColumn(0, delegate1);
   treeView->setItemDelegateForColumn(1, delegate2);
   treeView->setItemDelegateForColumn(2, delegate1);
-
+  //不选中一行，分单元格选择
   // treeView->setSelectionBehavior(QAbstractItemView::SelectItems);
-  // //不选中一行，分单元格选择
+
   treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);  //选择多行
 
   connect(model, SIGNAL(itemAdded(const QModelIndex&)), this,
@@ -135,39 +127,27 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event) {
 
   menu.addSeparator();
 
-  copyAction = new QAction(tr("Copy"), this);
-  menu.addAction(copyAction);
+  menu.addAction(mw_one->ui->actionCopy);
 
-  cutAction = new QAction(tr("Cut"), this);
-
-  menu.addAction(cutAction);
+  menu.addAction(mw_one->ui->actionCut);
 
   menu.addSeparator();
 
-  pasteAction = new QAction(tr("Paste"), this);
-  menu.addAction(pasteAction);
+  menu.addAction(mw_one->ui->actionPaste);
 
-  pasteAsChildAction = new QAction(tr("Paste as child"), this);
-  menu.addAction(pasteAsChildAction);
+  menu.addAction(mw_one->ui->actionPaste_as_child);
 
   menu.addSeparator();
 
-  actionNewSibling = new QAction(tr("New Sibling"), this);
-  menu.addAction(actionNewSibling);
+  menu.addAction(mw_one->ui->actionNew_Sibling);
+  menu.addAction(mw_one->ui->actionNew_Child);
 
-  actionNewChild = new QAction(tr("New Child"), this);
-  menu.addAction(actionNewChild);
+  menu.addSeparator();
 
-  connect(copyAction, SIGNAL(triggered()), this, SLOT(on_copyAction()));
-  connect(cutAction, SIGNAL(triggered()), this, SLOT(on_cutAction()));
-  connect(pasteAction, SIGNAL(triggered()), this, SLOT(on_pasteAction()));
-  connect(pasteAsChildAction, SIGNAL(triggered()),
-          SLOT(on_pasteAsChildAction()));
+  menu.addAction(mw_one->ui->actionSort);
+
   connect(expandAction, SIGNAL(triggered()), this, SLOT(on_expandAction()));
   connect(collapseAction, SIGNAL(triggered()), this, SLOT(on_collapseAction()));
-  connect(actionNewSibling, SIGNAL(triggered()), this,
-          SLOT(on_actionNewSibling()));
-  connect(actionNewChild, SIGNAL(triggered()), this, SLOT(on_actionNewChild()));
 
   menu.exec(event->globalPos());
 }
@@ -425,7 +405,7 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
     mw_one->ui->frameData->setHidden(true);
   }
 
-  actionSort->setEnabled(true);
+  mw_one->ui->actionSort->setEnabled(true);
 
   initBoolWidget(index);
 
@@ -569,11 +549,7 @@ void EditorTab::on_copyAction() {
 }
 
 void EditorTab::on_cutAction() {
-  DomModel* model;
-  EditorTab* tab = tabWidget->getCurentTab();
-  model = tab->getModel();
-
-  QItemSelectionModel* selections = tab->treeView->selectionModel();
+  QItemSelectionModel* selections = this->treeView->selectionModel();
   QModelIndexList selectedsList = selections->selectedRows();
 
   copy_item.clear();

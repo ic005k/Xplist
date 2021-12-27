@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.02";
+QString CurVerison = "1.2.03";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -25,14 +25,6 @@ EditorTabsWidget* tabWidget;
 ItemState* copy_state;
 
 ItemState* AddMoveTemp;
-
-QAction* copyAction;
-QAction* cutAction;
-QAction* pasteAction;
-QAction* pasteAsChildAction;
-QAction* actionNewSibling;
-QAction* actionNewChild;
-QAction* actionSort;
 
 QUndoGroup* undoGroup;
 
@@ -350,7 +342,6 @@ void MainWindow::initMenuToolsBar() {
   ui->actionPaste_as_child->setShortcut(tr("shift+ctrl+v"));
 
   ui->actionCut->setShortcuts(QKeySequence::Cut);
-  connect(ui->actionCut, SIGNAL(triggered()), this, SLOT(on_cutAction()));
 
   ui->actionCopy_between_windows->setShortcut(tr("ctrl+b"));
   ui->actionPaste_between_windows->setShortcut(tr("ctrl+alt+b"));
@@ -395,19 +386,9 @@ void MainWindow::initMenuToolsBar() {
   initRecentFilesForToolBar();
 
   // 增加同级项
-  actionNewSibling = new QAction(tr("New Sibling"), this);
-  ui->mainToolBar->addAction(actionNewSibling);
-  actionNewSibling->setIcon(QIcon(":/new/toolbar/res/sibling.svg"));
-  connect(actionNewSibling, SIGNAL(triggered()), this,
-          SLOT(on_actionNewSibling()));
   ui->actionNew_Sibling->setShortcut(tr("+"));
 
   // 增加子项
-  actionNewChild = new QAction(tr("New Child"), this);
-  ui->mainToolBar->addAction(actionNewChild);
-  actionNewChild->setIcon(QIcon(":/new/toolbar/res/child.svg"));
-  connect(actionNewChild, &QAction::triggered, this,
-          &MainWindow::on_actionNewChild);
   connect(ui->actionNew_Child, &QAction::triggered, this,
           &MainWindow::on_actionNewChild);
   ui->actionNew_Child->setShortcut(tr("ctrl++"));
@@ -438,12 +419,6 @@ void MainWindow::initMenuToolsBar() {
   actionMoveDown->setIcon(QIcon(":/new/toolbar/res/down.svg"));
   connect(actionMoveDown, &QAction::triggered, this,
           &MainWindow::on_actionMoveDown);
-
-  // 排序
-  actionSort = new QAction(tr("A->Z Sort"));
-  actionSort->setIcon(QIcon(":/new/toolbar/res/sort.svg"));
-  ui->mainToolBar->addAction(actionSort);
-  connect(actionSort, &QAction::triggered, this, &MainWindow::on_actionSort);
 
   // Undo、Redo
   actionUndo->setIcon(QIcon(":/new/toolbar/res/undo.svg"));
@@ -1407,7 +1382,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       find = true;
 
-      actionSort->setEnabled(false);
+      ui->actionSort->setEnabled(false);
 
       indexFindList.append(index2);
       ui->listFind->addItem(originalValue);
@@ -1424,7 +1399,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       find = true;
 
-      actionSort->setEnabled(false);
+      ui->actionSort->setEnabled(false);
 
       indexFindList.append(index);
       ui->listFind->addItem(originalName);
