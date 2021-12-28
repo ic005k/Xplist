@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.05";
+QString CurVerison = "1.2.06";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -51,6 +51,11 @@ MainWindow::MainWindow(QWidget* parent)
   setWindowTitle("PlistEDPlus");
 
   loading = true;
+
+  // 获取背景色
+  QPalette pal = this->palette();
+  QBrush brush = pal.window();
+  red = brush.color().red();
 
   this->resize(QSize(1200, 650));
 
@@ -108,6 +113,11 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo0->setHidden(true);
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
+  if (red > 55) {
+    ui->statusBar->setStyleSheet(sbarStyleLight);
+  } else {
+    ui->statusBar->setStyleSheet(sbarStyleDark);
+  }
 
   tabWidget = new EditorTabsWidget(this);
   dlgAutoUpdate = new AutoUpdateDialog(this);
@@ -122,11 +132,6 @@ MainWindow::MainWindow(QWidget* parent)
   QDir dir;
   if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) {
   }
-
-  // 获取背景色
-  QPalette pal = this->palette();
-  QBrush brush = pal.window();
-  red = brush.color().red();
 
   // 初始化文件被修改后的提示
   ui->frameTip->setAutoFillBackground(true);
@@ -1873,12 +1878,13 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     myHL->rehighlight();
     plistTextEditor->repaint();
 
-    if (red > 55)
+    if (red > 55) {
       tabWidget->setStyleSheet(tabStyleLight);
-    else
+      ui->statusBar->setStyleSheet(sbarStyleLight);
+    } else {
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
-
-    qDebug() << red;
+      ui->statusBar->setStyleSheet(sbarStyleDark);
+    }
   }
 }
 

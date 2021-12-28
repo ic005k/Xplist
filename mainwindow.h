@@ -126,6 +126,18 @@ class MainWindow : public QMainWindow {
   void writeINITab();
   void writeINIProxy();
   QString getProxy();
+
+  QString sbarStyleLight =
+      "QStatusBar { background: rgb(236, 236, 236);}\
+          QStatusBar::item {\
+                   border: 1px solid blue;\
+                   border-radius: 3px;}";
+  QString sbarStyleDark =
+      "QStatusBar { background: rgb(64, 65, 66);}\
+          QStatusBar::item {\
+                   border: 1px solid red;\
+                   border-radius: 3px;}";
+
  public slots:
   void on_Find();
   void on_actionMoveUp();

@@ -618,6 +618,9 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
 }*/
 </string>
       </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
       <property name="currentIndex">
        <number>1</number>
       </property>
@@ -738,7 +741,19 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
    <addaction name="menuPreferences"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="styleSheet">
+    <string notr="true">QStatusBar { background: rgb(236, 236, 236);}
+QStatusBar::item {
+         border: 1px solid blue;
+         border-radius: 3px;}
+
+QStatusBar { background: rgb(64, 65, 66);}
+QStatusBar::item {
+         border: 1px solid red;
+         border-radius: 3px;}</string>
+   </property>
+  </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -789,6 +804,9 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
      <height>524287</height>
     </size>
    </property>
+   <property name="floating">
+    <bool>false</bool>
+   </property>
    <property name="allowedAreas">
     <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
    </property>
@@ -801,7 +819,14 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
    <widget class="QWidget" name="dockWidgetContents_SearchResults">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="0">
-      <widget class="QListWidget" name="listFind"/>
+      <widget class="QListWidget" name="listFind">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
