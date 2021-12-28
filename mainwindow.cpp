@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.06";
+QString CurVerison = "1.2.07";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -45,10 +45,13 @@ extern QString strRootType, tabStyleLight;
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+  // this->setWindowFlags(Qt::FramelessWindowHint);
+  ui->frameTitle->setHidden(true);
 
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   ver = "";
   setWindowTitle("PlistEDPlus");
+  ui->lblTitle->setText("PlistEDPlus");
 
   loading = true;
 
@@ -122,7 +125,11 @@ MainWindow::MainWindow(QWidget* parent)
   tabWidget = new EditorTabsWidget(this);
   dlgAutoUpdate = new AutoUpdateDialog(this);
 
-  if (osx1012) ui->centralWidget->layout()->setContentsMargins(1, 12, 1, 1);
+  if (mac || osx1012)
+    ui->centralWidget->layout()->setContentsMargins(2, 10, 2, 2);
+  else
+    ui->centralWidget->layout()->setContentsMargins(2, 2, 2, 2);
+
   ui->centralWidget->layout()->addWidget(tabWidget);
   tabWidget->setHidden(true);
 
@@ -289,7 +296,9 @@ void MainWindow::initMenuToolsBar() {
   ui->btnExpand->setHidden(true);
   ui->btnDel->setHidden(true);
   ui->btnSort->setHidden(true);
-  if (mac || osx1012) ui->gridLayout_main->setContentsMargins(1, 8, 1, 1);
+  QFont font;
+  font.setBold(true);
+  ui->lblTitle->setFont(font);
 
   ui->actionAbout->setMenuRole(QAction::AboutRole);
   ui->mainToolBar->setIconSize(QSize(26, 26));
@@ -855,6 +864,7 @@ void MainWindow::on_TabCloseRequest(int i) {
     lblStaInfo1->setHidden(true);
     lblStaInfo2->setHidden(true);
     setWindowTitle("PlistEDPlus");
+    ui->lblTitle->setText("PlistEDPlus");
   }
 }
 
@@ -1054,6 +1064,7 @@ void MainWindow::actionSaveAs() {
       savePlist(str);
 
       this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
+      ui->lblTitle->setText(this->windowTitle());
 
       QSettings settings;
       QFileInfo fInfo(str);
@@ -1165,6 +1176,7 @@ void MainWindow::onTabWidget_currentChanged(int index) {
 
       QString strCurrentFile = tabWidget->getCurentTab()->getPath();
       this->setWindowTitle(ver + "[*] " + strCurrentFile);
+      ui->lblTitle->setText(this->windowTitle());
 
       // get undo stack
       QUndoStack* stack = tab->getUndoStack();
@@ -3406,3 +3418,22 @@ void MainWindow::on_btnReplaceFind_clicked() {
 void MainWindow::on_btnNew_clicked() { actionNew(); }
 
 void MainWindow::on_btnSave_clicked() { actionSave(); }
+
+void MainWindow::mousePressEvent(QMouseEvent* e) {
+  if (e->button() == Qt::LeftButton) {
+    isDrag = true;
+    m_position = e->globalPos() - this->pos();
+    e->accept();
+  }
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent* e) {
+  if (isDrag & (e->buttons() & Qt::LeftButton)) {
+    move(e->globalPos() - m_position);
+    e->accept();
+  }
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent*) { isDrag = false; }
+
+void MainWindow::on_btnClose_clicked() { close(); }

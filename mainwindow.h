@@ -298,7 +298,11 @@ class MainWindow : public QMainWindow {
 
   void on_btnSave_clicked();
 
+  void on_btnClose_clicked();
+
  private:
+  bool isDrag;
+  QPoint m_position;
   bool useQtWriteXML = true;
   RecentFiles* m_recentFiles;
   QMenu* reFileMenu;
@@ -350,6 +354,9 @@ class MainWindow : public QMainWindow {
   void closeEvent(QCloseEvent* event) override;
   void resizeEvent(QResizeEvent* event) override;
   void paintEvent(QPaintEvent* event) override;
+  void mousePressEvent(QMouseEvent*) override;
+  void mouseReleaseEvent(QMouseEvent*) override;
+  void mouseMoveEvent(QMouseEvent*) override;
 };
 
 #endif  // MAINWINDOW_H
