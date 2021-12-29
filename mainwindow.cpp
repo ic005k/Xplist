@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.07";
+QString CurVerison = "1.2.08";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -46,7 +46,8 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
   // this->setWindowFlags(Qt::FramelessWindowHint);
-  ui->frameTitle->setHidden(true);
+  // setAttribute(Qt::WA_TranslucentBackground);
+  // this->setMouseTracking(true);
 
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   ver = "";
@@ -54,6 +55,9 @@ MainWindow::MainWindow(QWidget* parent)
   ui->lblTitle->setText("PlistEDPlus");
 
   loading = true;
+
+  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+  QSettings Reg(qfile, QSettings::IniFormat);
 
   // 获取背景色
   QPalette pal = this->palette();
@@ -74,6 +78,15 @@ MainWindow::MainWindow(QWidget* parent)
 #ifdef Q_OS_LINUX
   linuxOS = true;
 #endif
+
+  tabWidget = new EditorTabsWidget(this);
+  // tabWidget->setMouseTracking(true);
+  dlgAutoUpdate = new AutoUpdateDialog(this);
+  plistTextEditor = new CodeEditor(this);
+  plistTextEditor->setFont(getFont());
+  plistTextEditor->setReadOnly(true);
+  myHL = new MyHighLighter(plistTextEditor->document());
+  myHL->rehighlight();
 
   ui->mainToolBar->setStyleSheet(
 
@@ -118,20 +131,49 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo2->setHidden(true);
   if (red > 55) {
     ui->statusBar->setStyleSheet(sbarStyleLight);
+
   } else {
     ui->statusBar->setStyleSheet(sbarStyleDark);
   }
 
-  tabWidget = new EditorTabsWidget(this);
-  dlgAutoUpdate = new AutoUpdateDialog(this);
+  // if (mac || osx1012)
+  //  ui->centralWidget->layout()->setContentsMargins(2, 10, 2, 2);
+  // else
+  //  ui->centralWidget->layout()->setContentsMargins(2, 2, 2, 2);
 
-  if (mac || osx1012)
-    ui->centralWidget->layout()->setContentsMargins(2, 10, 2, 2);
-  else
-    ui->centralWidget->layout()->setContentsMargins(2, 2, 2, 2);
-
-  ui->centralWidget->layout()->addWidget(tabWidget);
   tabWidget->setHidden(true);
+  // ui->frameStatusBar->layout()->addWidget(ui->statusBar);
+  QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
+  ui->frameMain->layout()->addWidget(ui->frameTip);
+  ui->frameMain->layout()->addWidget(ui->frameFind);
+  ui->frameMain->layout()->addWidget(tabWidget);
+  ui->frameMain->layout()->addWidget(ui->frameData);
+  // ui->frameMain->layout()->addWidget(ui->frameStatusBar);
+  splitter1->addWidget(ui->frameMain);
+  splitter1->addWidget(plistTextEditor);
+
+  ui->centralWidget->layout()->addWidget(splitter1);
+  int h0 = Reg.value("frameMainHeight", 350).toInt();
+  int h1 = Reg.value("PlistTextDockHeight", 100).toInt();
+  if (h0 < 150) h0 = 150;
+  if (h1 < 100) h1 = 100;
+  splitter1->setStretchFactor(0, h0 / 100);
+  splitter1->setStretchFactor(1, h1 / 100);
+  qDebug() << h0 << h1;
+
+  QSplitter* splitterMain = new QSplitter(Qt::Horizontal, this);
+  splitterMain->addWidget(splitter1);
+  splitterMain->addWidget(ui->listFind_2);
+  ui->centralWidget->layout()->addWidget(splitterMain);
+  h0 = Reg.value("frameMainWidth", 500).toInt();
+  h1 = Reg.value("dockFindWidth", 100).toInt();
+  if (h0 < 150) h0 = 150;
+  if (h1 < 100) h1 = 100;
+  splitterMain->setStretchFactor(0, h0 / 100);
+  splitterMain->setStretchFactor(1, h1 / 100);
+  qDebug() << h0 << h1;
+
+  ui->frameTitle->setHidden(true);
 
   QApplication::setApplicationName("PlistEDPlus");
   QApplication::setOrganizationName("PlistED");
@@ -149,9 +191,7 @@ MainWindow::MainWindow(QWidget* parent)
   // ui->frameData->setAutoFillBackground(true);
   // ui->frameData->setPalette(QPalette(QColor(250, 250, 224)));
   ui->frameData->setHidden(true);
-  ui->centralWidget->layout()->addWidget(ui->frameData);
-
-  initPlistTextShow();
+  // ui->centralWidget->layout()->addWidget(ui->frameData);
 
   initFindReplace();
 
@@ -170,6 +210,9 @@ MainWindow::MainWindow(QWidget* parent)
   blAutoCheckUpdate = true;
   CheckUpdate();
   readINIProxy();
+
+  initPlistTextShow();
+
   loading = false;
 }
 
@@ -255,9 +298,9 @@ void MainWindow::init_iniData() {
   //是否显示plist文本
   ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 0).toBool());
   if (ui->actionShowPlistText->isChecked())
-    ui->dockPlistText->setHidden(false);
+    plistTextEditor->setHidden(false);
   else
-    ui->dockPlistText->setHidden(true);
+    plistTextEditor->setHidden(true);
 
   // 主窗口位置和大小
   int x, y, width, height;
@@ -532,7 +575,7 @@ void MainWindow::openFiles(QStringList list) {
 
 void MainWindow::openPlist(QString filePath) {
   tabWidget->setHidden(false);
-  ui->listFind->clear();  // 否则会导致App崩溃
+  ui->listFind_2->clear();  // 否则会导致App崩溃
   removeWatchFiles();
 
   map<string, boost::any> dict;
@@ -1197,7 +1240,7 @@ void MainWindow::onTabWidget_currentChanged(int index) {
       ui->btnPrevious->setEnabled(false);
       ui->btnNext->setEnabled(false);
       ui->btnReplace->setEnabled(false);
-      ui->listFind->clear();
+      ui->listFind_2->clear();
       ui->frameData->setHidden(true);
     }
   }
@@ -1358,7 +1401,7 @@ void MainWindow::on_Find() {
 
     if (index.isValid()) {
       indexFindList.clear();
-      ui->listFind->clear();
+      ui->listFind_2->clear();
       indexCount = -1;
 
       QString strFind = ui->editFind->text().trimmed();
@@ -1403,7 +1446,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       ui->actionSort->setEnabled(false);
 
       indexFindList.append(index2);
-      ui->listFind->addItem(originalValue);
+      ui->listFind_2->addItem(originalValue);
     }
     //搜索键
     if (name.contains(str.trimmed()) && str.trimmed() != "") {
@@ -1420,7 +1463,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       ui->actionSort->setEnabled(false);
 
       indexFindList.append(index);
-      ui->listFind->addItem(originalName);
+      ui->listFind_2->addItem(originalName);
     }
 
     if (model->hasChildren(index)) {
@@ -1431,8 +1474,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
   if (find) {
     ui->btnPrevious->setEnabled(true);
     ui->btnNext->setEnabled(true);
-    ui->listFind->setCurrentRow(0);
-    ui->dockShowSearchResults->show();
+    ui->listFind_2->setCurrentRow(0);
+    ui->listFind_2->show();
     findTextChanged = false;
   }
 }
@@ -1460,13 +1503,17 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   //记录是否显示Plist文本
   Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
-  if (ui->dockPlistText->isVisible())
-    Reg.setValue("PlistTextDockHeight", ui->dockPlistText->height());
+  if (plistTextEditor->isVisible()) {
+    Reg.setValue("PlistTextDockHeight", plistTextEditor->height());
+    Reg.setValue("frameMainHeight", ui->frameMain->height());
+  }
+
   Reg.setValue("restore", ui->actionRestoreScene->isChecked());
   Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
   Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
   Reg.setValue("drag", false);
-  Reg.setValue("dockFindWidth", ui->dockShowSearchResults->width());
+  Reg.setValue("dockFindWidth", ui->listFind_2->width());
+  Reg.setValue("frameMainWidth", ui->frameMain->width());
 
   // 存储窗口大小和位置
   Reg.setValue("x", this->x());
@@ -1893,9 +1940,12 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     if (red > 55) {
       tabWidget->setStyleSheet(tabStyleLight);
       ui->statusBar->setStyleSheet(sbarStyleLight);
+      // ui->frameM->setStyleSheet(mainStyleLight);
+
     } else {
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
       ui->statusBar->setStyleSheet(sbarStyleDark);
+      // ui->frameM->setStyleSheet(mainStyleDark);
     }
   }
 }
@@ -2209,9 +2259,9 @@ void MainWindow::loadText(QString textFile) {
 
 void MainWindow::on_actionShowPlistText_triggered(bool checked) {
   if (checked)
-    ui->dockPlistText->setVisible(true);
+    plistTextEditor->setVisible(true);
   else
-    ui->dockPlistText->setVisible(false);
+    plistTextEditor->setVisible(false);
 }
 
 void MainWindow::on_actionPaste_as_child_triggered() {
@@ -2277,7 +2327,7 @@ void MainWindow::on_editFind_textChanged(const QString& arg1) {
     if (arg1 == "" || !find) {
       findCount = 0;
       ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
-      ui->listFind->clear();
+      ui->listFind_2->clear();
 
       EditorTab* tab = tabWidget->getCurentTab();
 
@@ -2294,35 +2344,35 @@ void MainWindow::on_btnFind_clicked() { on_Find(); }
 
 void MainWindow::on_btnHideFind_clicked() {
   ui->frameFind->close();
-  ui->dockShowSearchResults->setHidden(true);
+  ui->listFind_2->setHidden(true);
 }
 
 void MainWindow::on_btnPrevious_clicked() {
-  if (ui->listFind->count() == 0) return;
+  if (ui->listFind_2->count() == 0) return;
 
-  int row = ui->listFind->currentRow();
+  int row = ui->listFind_2->currentRow();
 
   if (row - 1 == -1)
     row = 0;
   else
     row = row - 1;
 
-  ui->listFind->setCurrentRow(row);
-  on_listFind_itemClicked(NULL);
+  ui->listFind_2->setCurrentRow(row);
+  on_listFind_2_itemClicked(NULL);
 }
 
 void MainWindow::on_btnNext_clicked() {
-  if (ui->listFind->count() == 0) return;
+  if (ui->listFind_2->count() == 0) return;
 
-  int row = ui->listFind->currentRow();
+  int row = ui->listFind_2->currentRow();
 
-  if (row + 1 == ui->listFind->count())
+  if (row + 1 == ui->listFind_2->count())
     row = 0;
   else
     row = row + 1;
 
-  ui->listFind->setCurrentRow(row);
-  on_listFind_itemClicked(NULL);
+  ui->listFind_2->setCurrentRow(row);
+  on_listFind_2_itemClicked(NULL);
 }
 
 void MainWindow::on_btnReplace_clicked() {
@@ -2369,7 +2419,7 @@ void MainWindow::on_btnReplace_clicked() {
       indexFindList.remove(indexCount);
 
       loading = true;
-      ui->listFind->takeItem(indexCount);
+      ui->listFind_2->takeItem(indexCount);
       loading = false;
 
       findCount = indexFindList.count();
@@ -2389,7 +2439,7 @@ void MainWindow::on_btnReplace_clicked() {
       indexFindList.remove(indexCount);
 
       loading = true;
-      ui->listFind->takeItem(indexCount);
+      ui->listFind_2->takeItem(indexCount);
       loading = false;
 
       findCount = indexFindList.count();
@@ -2471,7 +2521,7 @@ void MainWindow::on_btnReplaceAll_clicked() {
   ui->btnPrevious->setEnabled(false);
   ui->btnNext->setEnabled(false);
   loading = true;
-  ui->listFind->clear();
+  ui->listFind_2->clear();
   loading = false;
 }
 
@@ -2534,48 +2584,22 @@ void MainWindow::initFindReplace() {
   ui->btnNext->setEnabled(false);
   ui->btnReplace->setEnabled(false);
 
-  // 显示结果
-  ui->dockShowSearchResults->layout()->setMargin(1);
-  ui->dockWidgetContents_SearchResults->layout()->setMargin(1);
-  ui->dockShowSearchResults->close();
+  ui->listFind_2->setHidden(true);
 }
 
-void MainWindow::initPlistTextShow() {
-  //初始化plist文本Dock并删除Title棒（暂时）
-  QWidget* lTitleBar = ui->dockPlistText->titleBarWidget();
-  QWidget* lEmptyWidget = new QWidget();
-  ui->dockPlistText->setTitleBarWidget(lEmptyWidget);
-  delete lTitleBar;
+void MainWindow::initPlistTextShow() {}
 
-  ui->dockWidgetContents->layout()->setMargin(1);
-
-  plistTextEditor = new CodeEditor(this);
-  plistTextEditor->setFont(getFont());
-  plistTextEditor->setReadOnly(true);
-  ui->dockWidgetContents->layout()->addWidget(plistTextEditor);
-
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
-  int h = Reg.value("PlistTextDockHeight", 150).toInt();
-  resizeDocks({ui->dockPlistText}, {h}, Qt::Vertical);
-  myHL = new MyHighLighter(plistTextEditor->document());
-  myHL->rehighlight();
-
-  int w = Reg.value("dockFindWidth", 200).toInt();
-  resizeDocks({ui->dockShowSearchResults}, {w}, Qt::Horizontal);
-}
-
-void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
+void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
   Q_UNUSED(item);
-  if (ui->listFind->count() <= 0) return;
+  if (ui->listFind_2->count() <= 0) return;
 
   if (tabWidget->hasTabs()) {
     bool focus = false;
     bool focus1 = false;
     if (ui->editFind->hasFocus()) focus = true;
-    if (ui->listFind->hasFocus()) focus1 = true;
+    if (ui->listFind_2->hasFocus()) focus1 = true;
 
-    indexCount = ui->listFind->currentRow();
+    indexCount = ui->listFind_2->currentRow();
 
     if (indexCount >= indexFindList.count()) {
       indexCount = indexFindList.count() - 1;
@@ -2593,7 +2617,7 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
     loading = false;
     tab->treeView->resizeColumnToContents(0);
 
-    if (ui->listFind->count() == 1) {
+    if (ui->listFind_2->count() == 1) {
       QModelIndex index0 = tab->getModel()->index(0, 0);
       tab->treeView->setCurrentIndex(index0);
     }
@@ -2605,7 +2629,7 @@ void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
     ui->btnReplace->setEnabled(true);
 
     if (focus) ui->editFind->setFocus();
-    if (focus1) ui->listFind->setFocus();
+    if (focus1) ui->listFind_2->setFocus();
   }
 }
 
@@ -3051,8 +3075,8 @@ void MainWindow::initRecentFilesForToolBar() {
 
 void MainWindow::on_actionQuit_triggered() { this->close(); }
 
-void MainWindow::on_listFind_itemSelectionChanged() {
-  if (!loading) on_listFind_itemClicked(NULL);
+void MainWindow::on_listFind_2_itemSelectionChanged() {
+  if (!loading) on_listFind_2_itemClicked(NULL);
 }
 
 void MainWindow::on_actionFont_triggered() {
@@ -3109,7 +3133,7 @@ QFont MainWindow::getFont() {
   return font;
 }
 
-void MainWindow::on_listFind_currentRowChanged(int currentRow) {
+void MainWindow::on_listFind_2_currentRowChanged(int currentRow) {
   Q_UNUSED(currentRow)
 }
 
@@ -3437,3 +3461,5 @@ void MainWindow::mouseMoveEvent(QMouseEvent* e) {
 void MainWindow::mouseReleaseEvent(QMouseEvent*) { isDrag = false; }
 
 void MainWindow::on_btnClose_clicked() { close(); }
+
+void MainWindow::on_btnMax_clicked() {}

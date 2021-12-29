@@ -22,6 +22,7 @@
 #include <QScreen>
 #include <QScrollBar>
 #include <QSortFilterProxyModel>
+#include <QSplitter>
 #include <QStandardItemModel>
 #include <QTableWidget>
 #include <QTextBlock>
@@ -138,6 +139,26 @@ class MainWindow : public QMainWindow {
                    border: 1px solid red;\
                    border-radius: 3px;}";
 
+  QString mainStyleLight =
+      "QFrame#frame\
+          {\
+          background-color: rgb(236, 236, 236);\
+          border-top-left-radius:10px;\
+          border-top-right-radius:10px;\
+          border-bottom-left-radius:10px;\
+          border-bottom-right-radius:10px;\
+          }";
+
+  QString mainStyleDark =
+      "QFrame#frame\
+          {\
+          background-color: rgb(66, 66, 66);\
+          border-top-left-radius:10px;\
+          border-top-right-radius:10px;\
+          border-bottom-left-radius:10px;\
+          border-bottom-right-radius:10px;\
+          }";
+
  public slots:
   void on_Find();
   void on_actionMoveUp();
@@ -244,7 +265,7 @@ class MainWindow : public QMainWindow {
 
   void on_actionSave_as_triggered();
 
-  void on_listFind_itemClicked(QListWidgetItem* item);
+  void on_listFind_2_itemClicked(QListWidgetItem* item);
 
   void on_actionBug_Report_triggered();
 
@@ -252,11 +273,11 @@ class MainWindow : public QMainWindow {
 
   void on_actionQuit_triggered();
 
-  void on_listFind_itemSelectionChanged();
+  void on_listFind_2_itemSelectionChanged();
 
   void on_actionFont_triggered();
 
-  void on_listFind_currentRowChanged(int currentRow);
+  void on_listFind_2_currentRowChanged(int currentRow);
 
   void on_btnNo_clicked();
 
@@ -299,6 +320,8 @@ class MainWindow : public QMainWindow {
   void on_btnSave_clicked();
 
   void on_btnClose_clicked();
+
+  void on_btnMax_clicked();
 
  private:
   bool isDrag;
