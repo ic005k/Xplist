@@ -80,7 +80,6 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 
   tabWidget = new EditorTabsWidget(this);
-  // tabWidget->setMouseTracking(true);
   dlgAutoUpdate = new AutoUpdateDialog(this);
   plistTextEditor = new CodeEditor(this);
   plistTextEditor->setFont(getFont());
@@ -142,13 +141,11 @@ MainWindow::MainWindow(QWidget* parent)
   //  ui->centralWidget->layout()->setContentsMargins(2, 2, 2, 2);
 
   tabWidget->setHidden(true);
-  // ui->frameStatusBar->layout()->addWidget(ui->statusBar);
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
   ui->frameMain->layout()->addWidget(ui->frameTip);
   ui->frameMain->layout()->addWidget(ui->frameFind);
   ui->frameMain->layout()->addWidget(tabWidget);
   ui->frameMain->layout()->addWidget(ui->frameData);
-  // ui->frameMain->layout()->addWidget(ui->frameStatusBar);
   splitter1->addWidget(ui->frameMain);
   splitter1->addWidget(plistTextEditor);
 
@@ -157,9 +154,10 @@ MainWindow::MainWindow(QWidget* parent)
   int h1 = Reg.value("PlistTextDockHeight", 100).toInt();
   if (h0 < 150) h0 = 150;
   if (h1 < 100) h1 = 100;
-  splitter1->setStretchFactor(0, h0 / 100);
-  splitter1->setStretchFactor(1, h1 / 100);
-  qDebug() << h0 << h1;
+  QList<int> list;
+  list.append(h0);
+  list.append(h1);
+  splitter1->setSizes(list);
 
   QSplitter* splitterMain = new QSplitter(Qt::Horizontal, this);
   splitterMain->addWidget(splitter1);
@@ -169,9 +167,10 @@ MainWindow::MainWindow(QWidget* parent)
   h1 = Reg.value("dockFindWidth", 100).toInt();
   if (h0 < 150) h0 = 150;
   if (h1 < 100) h1 = 100;
-  splitterMain->setStretchFactor(0, h0 / 100);
-  splitterMain->setStretchFactor(1, h1 / 100);
-  qDebug() << h0 << h1;
+  list.clear();
+  list.append(h0);
+  list.append(h1);
+  splitterMain->setSizes(list);
 
   ui->frameTitle->setHidden(true);
 
@@ -1512,8 +1511,11 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
   Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
   Reg.setValue("drag", false);
-  Reg.setValue("dockFindWidth", ui->listFind_2->width());
-  Reg.setValue("frameMainWidth", ui->frameMain->width());
+
+  if (!ui->listFind_2->isHidden()) {
+    Reg.setValue("dockFindWidth", ui->listFind_2->width());
+    Reg.setValue("frameMainWidth", ui->frameMain->width());
+  }
 
   // 存储窗口大小和位置
   Reg.setValue("x", this->x());
@@ -2343,6 +2345,11 @@ void MainWindow::on_ShowFindReplace() { on_Find(); }
 void MainWindow::on_btnFind_clicked() { on_Find(); }
 
 void MainWindow::on_btnHideFind_clicked() {
+  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+  QSettings Reg(qfile, QSettings::IniFormat);
+  Reg.setValue("dockFindWidth", ui->listFind_2->width());
+  Reg.setValue("frameMainWidth", ui->frameMain->width());
+
   ui->frameFind->close();
   ui->listFind_2->setHidden(true);
 }
