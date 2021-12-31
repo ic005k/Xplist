@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.12";
+QString CurVerison = "1.2.13";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -127,12 +127,23 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo0->setHidden(true);
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
+
+  if (mac || osx1012) {
+    this->setUnifiedTitleAndToolBarOnMac(true);
+    blMacNative = true;
+  } else {
+    this->setUnifiedTitleAndToolBarOnMac(false);
+    blMacNative = false;
+  }
+
   if (red > 55) {
-    this->setStyleSheet("QMainWindow { background-color: lightgray;}");
+    if (blMacNative)
+      this->setStyleSheet("QMainWindow { background-color: lightgray;}");
     ui->statusBar->setStyleSheet(sbarStyleLight);
 
   } else {
-    this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
+    if (blMacNative)
+      this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
     ui->statusBar->setStyleSheet(sbarStyleDark);
   }
 
@@ -317,7 +328,6 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
-  this->setUnifiedTitleAndToolBarOnMac(true);
   ui->actionDiscussion_Forum->setVisible(false);
   ui->actionRestoreScene->setVisible(false);
   ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
@@ -1939,13 +1949,16 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     myHL->rehighlight();
 
     if (red > 55) {
-      tabWidget->setStyleSheet(tabStyleLight);
       ui->statusBar->setStyleSheet(sbarStyleLight);
-      this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
+      tabWidget->setStyleSheet(tabStyleLight);
+      if (blMacNative)
+        this->setStyleSheet(
+            "QMainWindow { background-color: rgb(212,212,212);}");
     } else {
-      tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
       ui->statusBar->setStyleSheet(sbarStyleDark);
-      this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
+      tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+      if (blMacNative)
+        this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
     }
   }
 }
@@ -3471,6 +3484,7 @@ void MainWindow::on_btnMax_clicked() {}
 
 bool MainWindow::eventFilter(QObject* o, QEvent* e) {
   if (e->type() == QEvent::ActivationChange) {
+    return QWidget::eventFilter(o, e);
     if (QApplication::activeWindow() != this) {
       if (red > 55) {
         this->setStyleSheet(

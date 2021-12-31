@@ -57,7 +57,7 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
   Ui::MainWindow* ui;
-
+  bool blMacNative = false;
   bool mac = false;
   bool win = false;
   bool linuxOS = false;
