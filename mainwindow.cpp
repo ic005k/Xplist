@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.10";
+QString CurVerison = "1.2.12";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -45,9 +45,7 @@ extern QString strRootType, tabStyleLight;
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
-  // this->setWindowFlags(Qt::FramelessWindowHint);
-  // setAttribute(Qt::WA_TranslucentBackground);
-  // this->setMouseTracking(true);
+  installEventFilter(this);
 
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   ver = "";
@@ -555,7 +553,10 @@ void MainWindow::actionClose_activated() {
 }
 
 void MainWindow::actionClose_all_activated() {
-  if (tabWidget->hasTabs()) tabWidget->closeAllTabs();
+  if (tabWidget->hasTabs()) {
+    tabWidget->closeAllTabs();
+    ui->btnHideFind->click();
+  }
 }
 
 void MainWindow::openFiles(QStringList list) {
@@ -841,7 +842,10 @@ void MainWindow::addWatchFiles() {
 }
 
 void MainWindow::on_TabCloseRequest(int i) {
-  if (i != -1) tabWidget->setCurrentIndex(i);
+  if (i != -1)
+    tabWidget->setCurrentIndex(i);
+  else
+    return;
 
   QString fn = tabWidget->getCurentTab()->getFileName();
 
@@ -889,10 +893,6 @@ void MainWindow::on_TabCloseRequest(int i) {
   if (tabWidget->currentIndex() != -1)
     tabWidget->getCurentTab()->treeView->setFocus();
 
-  if (tabWidget->tabBar()->count() == 0) {
-    plistTextEditor->clear();
-  }
-
   // 整体移除并添加
   if (!blExit) {
     removeWatchFiles();
@@ -905,6 +905,8 @@ void MainWindow::on_TabCloseRequest(int i) {
     lblStaInfo2->setHidden(true);
     setWindowTitle("PlistEDPlus");
     ui->lblTitle->setText("PlistEDPlus");
+    plistTextEditor->clear();
+    ui->btnHideFind->click();
   }
 }
 
@@ -1939,12 +1941,11 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     if (red > 55) {
       tabWidget->setStyleSheet(tabStyleLight);
       ui->statusBar->setStyleSheet(sbarStyleLight);
-      this->setStyleSheet("QMainWindow { background-color: lightgray;}");
-
+      this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
     } else {
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
       ui->statusBar->setStyleSheet(sbarStyleDark);
-      this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
+      this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
     }
   }
 }
@@ -3467,3 +3468,24 @@ void MainWindow::mouseReleaseEvent(QMouseEvent*) { isDrag = false; }
 void MainWindow::on_btnClose_clicked() { close(); }
 
 void MainWindow::on_btnMax_clicked() {}
+
+bool MainWindow::eventFilter(QObject* o, QEvent* e) {
+  if (e->type() == QEvent::ActivationChange) {
+    if (QApplication::activeWindow() != this) {
+      if (red > 55) {
+        this->setStyleSheet(
+            "QMainWindow { background-color: rgb(246,246,246);}");
+      } else {
+        this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
+      }
+    } else {
+      if (red > 55) {
+        this->setStyleSheet(
+            "QMainWindow { background-color: rgb(212,212,212);}");
+      } else {
+        this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
+      }
+    }
+  }
+  return QWidget::eventFilter(o, e);
+}

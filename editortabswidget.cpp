@@ -201,7 +201,7 @@ EditorTab* EditorTabsWidget::getTab(int i) {
 void EditorTabsWidget::closeTab(int i) {
   EditorTab* tab = getTab(i);
   this->removeTab(indexOf(tab));
-  delete tab;
+  // delete tab;  //容易引起APP崩溃，让其自动回收即可
 }
 
 bool EditorTabsWidget::hasTabs() { return (this->count() > 0) ? true : false; }

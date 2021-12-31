@@ -165,6 +165,7 @@ class MainWindow : public QMainWindow {
   void on_actionMoveDown();
   void actionAdd_activated();
   void actionRemove_activated();
+  bool eventFilter(QObject*, QEvent*) override;
 
   void on_NewWindow();
 
