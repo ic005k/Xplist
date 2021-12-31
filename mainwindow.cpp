@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.09";
+QString CurVerison = "1.2.10";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -1927,7 +1927,7 @@ void MainWindow::paintEvent(QPaintEvent* event) {
   Q_UNUSED(event);
 
   //获取背景色
-  QPalette pal = tabWidget->getCurentTab()->treeView->palette();
+  QPalette pal = ui->btnFind->palette();
   QBrush brush = pal.window();
   int c_red = brush.color().red();
 
