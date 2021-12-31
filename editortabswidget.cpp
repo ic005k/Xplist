@@ -39,8 +39,8 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   tabStyleLight =
 
       "QTabWidget::pane {\
-                  border: 1px solid gray;\
-                  background: rgb(236, 236, 236);\
+            border: 1px solid gray;\
+            background: rgb(236,236,236);\
             }\
             QTabBar::close-button:hover {\
             image: url(:/new/toolbar/res/c0.png);\
@@ -52,6 +52,9 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
             subcontrol-origin: padding;\
             subcontrol-position: bottom right;\
             } \
+            QTabWidget::tab-bar{\
+              background: red; \
+            }\
             QTabWidget::tab-bar:top {\
               top: 1px;\
             }\
@@ -144,7 +147,7 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   if (red > 55)
     this->setStyleSheet(tabStyleLight);
   else
-    setStyleSheet(mainWindow->ui->tabWidget->styleSheet());
+    this->setStyleSheet(mainWindow->ui->tabWidget->styleSheet());
 
   mainWindow->ui->tabWidget->setHidden(true);
 

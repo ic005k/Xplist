@@ -26,6 +26,14 @@
    <iconset resource="res.qrc">
     <normaloff>:/new/toolbar/res/my.png</normaloff>:/new/toolbar/res/my.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow { background-color: lightgray; }
+
+/*QMainWindow
+          {
+          background-color: rgb(66,66,66);
+          }*/</string>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
@@ -73,6 +81,16 @@
     </item>
     <item row="2" column="0">
      <widget class="QFrame" name="frameMain">
+      <property name="styleSheet">
+       <string notr="true">/*QFrame#frameMain
+          {
+          background-color: rgb(236, 36, 236);
+          border-top-left-radius:10px;
+          border-top-right-radius:10px;
+          border-bottom-left-radius:10px;
+          border-bottom-right-radius:10px;
+          }*/</string>
+      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -707,7 +725,7 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="usesScrollButtons">
           <bool>false</bool>
@@ -733,12 +751,24 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
     <item row="0" column="0">
      <widget class="QFrame" name="frameTitle">
       <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
+       <enum>QFrame::NoFrame</enum>
       </property>
       <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
+       <enum>QFrame::Plain</enum>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QToolButton" name="btnMax">
          <property name="text">
@@ -897,10 +927,10 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="styleSheet">
-    <string notr="true">QStatusBar { background: rgb(236, 236, 236);}
+    <string notr="true">/*QStatusBar { background: rgb(236, 236, 236);}
 QStatusBar::item {
          border: 1px solid blue;
-         border-radius: 3px;}
+         border-radius: 3px;}*/
 
 QStatusBar { background: rgb(64, 65, 66);}
 QStatusBar::item {
@@ -911,6 +941,9 @@ QStatusBar::item {
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
     <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
    </property>
    <property name="allowedAreas">
     <set>Qt::BottomToolBarArea|Qt::TopToolBarArea</set>

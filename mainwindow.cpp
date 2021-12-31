@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.08";
+QString CurVerison = "1.2.09";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget* parent)
   );
   myToolBar = ui->mainToolBar;
   myStatusBar = ui->statusBar;
+
   lblStaInfo0 = new QLabel(this);
   lblStaInfo1 = new QLabel(this);
   lblStaInfo0->setStyleSheet(
@@ -129,9 +130,11 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
   if (red > 55) {
+    this->setStyleSheet("QMainWindow { background-color: lightgray;}");
     ui->statusBar->setStyleSheet(sbarStyleLight);
 
   } else {
+    this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
     ui->statusBar->setStyleSheet(sbarStyleDark);
   }
 
@@ -148,7 +151,6 @@ MainWindow::MainWindow(QWidget* parent)
   ui->frameMain->layout()->addWidget(ui->frameData);
   splitter1->addWidget(ui->frameMain);
   splitter1->addWidget(plistTextEditor);
-
   ui->centralWidget->layout()->addWidget(splitter1);
   int h0 = Reg.value("frameMainHeight", 350).toInt();
   int h1 = Reg.value("PlistTextDockHeight", 100).toInt();
@@ -322,6 +324,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
+  this->setUnifiedTitleAndToolBarOnMac(true);
   ui->actionDiscussion_Forum->setVisible(false);
   ui->actionRestoreScene->setVisible(false);
   ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
@@ -457,17 +460,17 @@ void MainWindow::initMenuToolsBar() {
           &MainWindow::actionRemove_activated);
 
   // 全部展开与折叠
-  ui->mainToolBar->addAction(ui->actionExpand_all);
+  // ui->mainToolBar->addAction(ui->actionExpand_all);
   ui->actionExpand_all->setIcon(QIcon(":/new/toolbar/res/exp.svg"));
 
   connect(ui->actionExpand_all, SIGNAL(triggered()), this,
           SLOT(actionExpand_all_activated()));
 
-  ui->mainToolBar->addSeparator();
+  // ui->mainToolBar->addSeparator();
   //条目上移
   QAction* actionMoveUp = new QAction(tr("Move up"));
   actionMoveUp->setIcon(QIcon(":/new/toolbar/res/up.svg"));
-  ui->mainToolBar->addAction(actionMoveUp);
+  // ui->mainToolBar->addAction(actionMoveUp);
   connect(actionMoveUp, &QAction::triggered, this,
           &MainWindow::on_actionMoveUp);
 
@@ -1929,7 +1932,7 @@ void MainWindow::paintEvent(QPaintEvent* event) {
   Q_UNUSED(event);
 
   //获取背景色
-  QPalette pal = this->palette();
+  QPalette pal = tabWidget->getCurentTab()->treeView->palette();
   QBrush brush = pal.window();
   int c_red = brush.color().red();
 
@@ -1938,16 +1941,16 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     myHL = new MyHighLighter(plistTextEditor->document());
     myHL->rehighlight();
     plistTextEditor->repaint();
-
+    qDebug() << red << c_red;
     if (red > 55) {
       tabWidget->setStyleSheet(tabStyleLight);
       ui->statusBar->setStyleSheet(sbarStyleLight);
-      // ui->frameM->setStyleSheet(mainStyleLight);
+      this->setStyleSheet("QMainWindow { background-color: lightgray;}");
 
     } else {
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
       ui->statusBar->setStyleSheet(sbarStyleDark);
-      // ui->frameM->setStyleSheet(mainStyleDark);
+      this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
     }
   }
 }
