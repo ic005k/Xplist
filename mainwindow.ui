@@ -501,7 +501,7 @@
           <item row="0" column="1">
            <layout class="QGridLayout" name="gridLayout_2">
             <property name="topMargin">
-             <number>5</number>
+             <number>0</number>
             </property>
             <item row="1" column="0">
              <widget class="QComboBox" name="cboxFileType">
