@@ -138,11 +138,6 @@ MainWindow::MainWindow(QWidget* parent)
     ui->statusBar->setStyleSheet(sbarStyleDark);
   }
 
-  // if (mac || osx1012)
-  //  ui->centralWidget->layout()->setContentsMargins(2, 10, 2, 2);
-  // else
-  //  ui->centralWidget->layout()->setContentsMargins(2, 2, 2, 2);
-
   tabWidget->setHidden(true);
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
   ui->frameMain->layout()->addWidget(ui->frameTip);
@@ -1940,8 +1935,7 @@ void MainWindow::paintEvent(QPaintEvent* event) {
     red = c_red;
     myHL = new MyHighLighter(plistTextEditor->document());
     myHL->rehighlight();
-    plistTextEditor->repaint();
-    qDebug() << red << c_red;
+
     if (red > 55) {
       tabWidget->setStyleSheet(tabStyleLight);
       ui->statusBar->setStyleSheet(sbarStyleLight);
