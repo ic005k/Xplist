@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.13";
+QString CurVerison = "1.2.14";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -82,8 +82,8 @@ MainWindow::MainWindow(QWidget* parent)
   plistTextEditor = new CodeEditor(this);
   plistTextEditor->setFont(getFont());
   plistTextEditor->setReadOnly(true);
-  myHL = new MyHighLighter(plistTextEditor->document());
-  myHL->rehighlight();
+
+  init_UIStyle();
 
   ui->mainToolBar->setStyleSheet(
 
@@ -127,25 +127,6 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo0->setHidden(true);
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
-
-  if (mac || osx1012) {
-    this->setUnifiedTitleAndToolBarOnMac(true);
-    blMacNative = true;
-  } else {
-    this->setUnifiedTitleAndToolBarOnMac(false);
-    blMacNative = false;
-  }
-
-  if (red > 55) {
-    if (blMacNative)
-      this->setStyleSheet("QMainWindow { background-color: lightgray;}");
-    ui->statusBar->setStyleSheet(sbarStyleLight);
-
-  } else {
-    if (blMacNative)
-      this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
-    ui->statusBar->setStyleSheet(sbarStyleDark);
-  }
 
   tabWidget->setHidden(true);
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
@@ -328,6 +309,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
+  this->setUnifiedTitleAndToolBarOnMac(true);
   ui->actionDiscussion_Forum->setVisible(false);
   ui->actionRestoreScene->setVisible(false);
   ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
@@ -1945,21 +1927,8 @@ void MainWindow::paintEvent(QPaintEvent* event) {
 
   if (c_red != red) {
     red = c_red;
-    myHL = new MyHighLighter(plistTextEditor->document());
-    myHL->rehighlight();
 
-    if (red > 55) {
-      ui->statusBar->setStyleSheet(sbarStyleLight);
-      tabWidget->setStyleSheet(tabStyleLight);
-      if (blMacNative)
-        this->setStyleSheet(
-            "QMainWindow { background-color: rgb(212,212,212);}");
-    } else {
-      ui->statusBar->setStyleSheet(sbarStyleDark);
-      tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
-      if (blMacNative)
-        this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
-    }
+    init_UIStyle();
   }
 }
 
@@ -3502,4 +3471,20 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
     }
   }
   return QWidget::eventFilter(o, e);
+}
+
+void MainWindow::init_UIStyle() {
+  myHL = new MyHighLighter(plistTextEditor->document());
+  myHL->rehighlight();
+  if (red > 55) {
+    ui->statusBar->setStyleSheet(sbarStyleLight);
+    this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
+    tabWidget->setStyleSheet(tabStyleLight);
+
+  } else {
+    ui->statusBar->setStyleSheet(sbarStyleDark);
+
+    this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
+    tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+  }
 }

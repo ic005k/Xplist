@@ -141,14 +141,6 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
               margin-bottom: 0;\
             }";
 
-  QPalette pal = this->palette();
-  QBrush brush = pal.window();
-  red = brush.color().red();
-  if (red > 55)
-    this->setStyleSheet(tabStyleLight);
-  else
-    this->setStyleSheet(mainWindow->ui->tabWidget->styleSheet());
-
   mainWindow->ui->tabWidget->setHidden(true);
 
   mainWindow->ui->wTools->layout()->setContentsMargins(1, 5, 1, 5);

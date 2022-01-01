@@ -57,7 +57,6 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
   Ui::MainWindow* ui;
-  bool blMacNative = false;
   bool mac = false;
   bool win = false;
   bool linuxOS = false;
@@ -129,12 +128,12 @@ class MainWindow : public QMainWindow {
   QString getProxy();
 
   QString sbarStyleLight =
-      "QStatusBar { background: rgb(236, 236, 236);}\
+      "QStatusBar { background: rgb(212, 212, 212);}\
           QStatusBar::item {\
                    border: 1px solid blue;\
                    border-radius: 3px;}";
   QString sbarStyleDark =
-      "QStatusBar { background: rgb(64, 65, 66);}\
+      "QStatusBar { background: rgb(42, 42, 42);}\
           QStatusBar::item {\
                    border: 1px solid red;\
                    border-radius: 3px;}";
@@ -159,6 +158,7 @@ class MainWindow : public QMainWindow {
           border-bottom-right-radius:10px;\
           }";
 
+  void init_UIStyle();
  public slots:
   void on_Find();
   void on_actionMoveUp();
