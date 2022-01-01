@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.15";
+QString CurVerison = "1.2.16";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -130,7 +130,6 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo2->setHidden(true);
 
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
-  if (win || linuxOS) ui->frameMain->layout()->addWidget(ui->menuBar);
   ui->frameMain->layout()->addWidget(ui->frameTip);
   ui->frameMain->layout()->addWidget(ui->frameFind);
   ui->frameMain->layout()->addWidget(tabWidget);
@@ -3478,18 +3477,22 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
 void MainWindow::init_UIStyle() {
   myHL = new MyHighLighter(plistTextEditor->document());
   myHL->rehighlight();
-  if (red > 55) {
-    if (mac || osx1012) {
+
+  if (mac || osx1012) {
+    if (red > 55) {
       ui->statusBar->setStyleSheet(sbarStyleLight);
       this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
       tabWidget->setStyleSheet(tabStyleLight);
-    }
 
-  } else {
-    if (mac || osx1012) {
+    } else {
       ui->statusBar->setStyleSheet(sbarStyleDark);
       this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
     }
+  }
+
+  if (win || linuxOS) {
+    QString tabBarStyle = "QTabBar::tab{min-height:35px;}";
+    tabWidget->setStyleSheet(tabBarStyle);
   }
 }
