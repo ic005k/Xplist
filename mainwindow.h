@@ -127,6 +127,9 @@ class MainWindow : public QMainWindow {
   void writeINIProxy();
   QString getProxy();
 
+  QString mbarStyleLight = "QMenuBar{Background-color:rgb(212, 212, 212);}";
+  QString mbarStyleDark = "QMenuBar{Background-color:rgb(42, 42, 42);}";
+
   QString sbarStyleLight =
       "QStatusBar { background: rgb(212, 212, 212);}\
           QStatusBar::item {\

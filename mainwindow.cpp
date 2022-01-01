@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.14";
+QString CurVerison = "1.2.15";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 
   tabWidget = new EditorTabsWidget(this);
+  tabWidget->setHidden(true);
   dlgAutoUpdate = new AutoUpdateDialog(this);
   plistTextEditor = new CodeEditor(this);
   plistTextEditor->setFont(getFont());
@@ -128,8 +129,8 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
 
-  tabWidget->setHidden(true);
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
+  if (win || linuxOS) ui->frameMain->layout()->addWidget(ui->menuBar);
   ui->frameMain->layout()->addWidget(ui->frameTip);
   ui->frameMain->layout()->addWidget(ui->frameFind);
   ui->frameMain->layout()->addWidget(tabWidget);
@@ -309,7 +310,8 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
-  this->setUnifiedTitleAndToolBarOnMac(true);
+  if (mac || osx1012) this->setUnifiedTitleAndToolBarOnMac(true);
+  ui->menuBar->setMouseTracking(true);
   ui->actionDiscussion_Forum->setVisible(false);
   ui->actionRestoreScene->setVisible(false);
   ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
@@ -3477,14 +3479,17 @@ void MainWindow::init_UIStyle() {
   myHL = new MyHighLighter(plistTextEditor->document());
   myHL->rehighlight();
   if (red > 55) {
-    ui->statusBar->setStyleSheet(sbarStyleLight);
-    this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
-    tabWidget->setStyleSheet(tabStyleLight);
+    if (mac || osx1012) {
+      ui->statusBar->setStyleSheet(sbarStyleLight);
+      this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
+      tabWidget->setStyleSheet(tabStyleLight);
+    }
 
   } else {
-    ui->statusBar->setStyleSheet(sbarStyleDark);
-
-    this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
-    tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+    if (mac || osx1012) {
+      ui->statusBar->setStyleSheet(sbarStyleDark);
+      this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
+      tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+    }
   }
 }
