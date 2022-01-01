@@ -33,9 +33,6 @@ EditorTabsWidget::EditorTabsWidget(QWidget* parent) {
   this->setDocumentMode(false);
   this->setTabBarAutoHide(false);
 
-  QString tabBarStyle2 = "QTabBar::tab{min-height:35px;}";
-  this->setStyleSheet(tabBarStyle2);
-
   tabStyleLight =
 
       "QTabWidget::pane {\

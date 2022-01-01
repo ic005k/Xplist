@@ -16,7 +16,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.16";
+QString CurVerison = "1.2.17";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -64,13 +64,17 @@ MainWindow::MainWindow(QWidget* parent)
 
   this->resize(QSize(1200, 650));
 
+#ifdef Q_OS_WIN32
+  reg_win();
+  win = true;
+#endif
+
 #ifdef Q_OS_MAC
   mac = true;
 #if (QT_VERSION <= QT_VERSION_CHECK(5, 9, 9))
   osx1012 = true;
   mac = false;
 #endif
-
 #endif
 
 #ifdef Q_OS_LINUX
@@ -182,11 +186,6 @@ MainWindow::MainWindow(QWidget* parent)
   initFindReplace();
 
   initMenuToolsBar();
-
-#ifdef Q_OS_WIN32
-  reg_win();
-  win = true;
-#endif
 
   init_iniData();
 
@@ -3492,7 +3491,7 @@ void MainWindow::init_UIStyle() {
   }
 
   if (win || linuxOS) {
-    QString tabBarStyle = "QTabBar::tab{min-height:35px;}";
-    tabWidget->setStyleSheet(tabBarStyle);
+      QString tabBarStyle = "QTabBar::tab{min-height:35px;min-width:80px;}";
+      tabWidget->setStyleSheet(tabBarStyle);
   }
 }
