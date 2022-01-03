@@ -82,6 +82,20 @@ DISTFILES += \
     Info.plist \
     myapp.rc
 
+mac {
+    # Only include / compile these files on OS X
+    OBJECTIVE_SOURCES += \
+        OSXHideTitleBar.mm
+    HEADERS  +=\
+        OSXHideTitleBar.h
+
+    # Additionally include Cocoa for OS X code
+
+    LIBS += -framework Foundation -framework Cocoa
+    INCLUDEPATH += /System/Library/Frameworks/Foundation.framework/Versions/C/Headers
+}
+
+
 CONFIG(debug,debug|release) {
     DESTDIR = $$absolute_path($${_PRO_FILE_PWD_}/bin/debug)
 } else {

@@ -127,16 +127,16 @@ class MainWindow : public QMainWindow {
   void writeINIProxy();
   QString getProxy();
 
-  QString mbarStyleLight = "QMenuBar{Background-color:rgb(212, 212, 212);}";
+  QString mbarStyleLight = "QMenuBar{Background-color:rgb(236, 236, 236);}";
   QString mbarStyleDark = "QMenuBar{Background-color:rgb(42, 42, 42);}";
 
   QString sbarStyleLight =
-      "QStatusBar { background: rgb(212, 212, 212);}\
+      "QStatusBar { background: rgb(236, 236, 236);}\
           QStatusBar::item {\
                    border: 1px solid blue;\
                    border-radius: 3px;}";
   QString sbarStyleDark =
-      "QStatusBar { background: rgb(42, 42, 42);}\
+      "QStatusBar { background: rgb(50, 50, 50);}\
           QStatusBar::item {\
                    border: 1px solid red;\
                    border-radius: 3px;}";
@@ -169,7 +169,7 @@ class MainWindow : public QMainWindow {
   void actionAdd_activated();
   void actionRemove_activated();
   bool eventFilter(QObject*, QEvent*) override;
-
+  virtual void changeEvent(QEvent* event);
   void on_NewWindow();
 
  private slots:

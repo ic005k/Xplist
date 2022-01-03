@@ -10,13 +10,18 @@
 #include "myapp.h"
 #include "mytreeview.h"
 #include "ui_mainwindow.h"
+
+#ifdef __APPLE__
+#include "OSXHideTitleBar.h"
+#endif
+
 using namespace std;
 
 #include <QMessageBox>
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.17";
+QString CurVerison = "1.2.18";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -133,6 +138,9 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
 
+#ifdef __APPLE__
+  ui->centralWidget->setContentsMargins(2, 30, 2, 2);
+#endif
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
   ui->frameMain->layout()->addWidget(ui->frameTip);
   ui->frameMain->layout()->addWidget(ui->frameFind);
@@ -308,7 +316,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
-  if (mac || osx1012) this->setUnifiedTitleAndToolBarOnMac(true);
+  // if (mac || osx1012) this->setUnifiedTitleAndToolBarOnMac(true);
   ui->menuBar->setMouseTracking(true);
   ui->actionDiscussion_Forum->setVisible(false);
   ui->actionRestoreScene->setVisible(false);
@@ -1466,7 +1474,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
     ui->btnPrevious->setEnabled(true);
     ui->btnNext->setEnabled(true);
     ui->listFind_2->setCurrentRow(0);
-    ui->listFind_2->show();
+    ui->listFind_2->setHidden(false);
+    update();
     findTextChanged = false;
   }
 }
@@ -1611,7 +1620,13 @@ void MainWindow::reg_win() {
 #endif
 }
 
-void MainWindow::resizeEvent(QResizeEvent* event) { Q_UNUSED(event); }
+void MainWindow::resizeEvent(QResizeEvent* event) {
+  Q_UNUSED(event);
+  QString t = windowTitle();
+  setWindowTitle("");
+  setWindowTitle(t);
+  this->update();
+}
 
 void MainWindow::on_actionMoveUp() {
   if (tabWidget->hasTabs()) {
@@ -2331,7 +2346,7 @@ void MainWindow::on_btnHideFind_clicked() {
   Reg.setValue("frameMainWidth", ui->frameMain->width());
 
   ui->frameFind->close();
-  ui->listFind_2->setHidden(true);
+  ui->listFind_2->close();
 }
 
 void MainWindow::on_btnPrevious_clicked() {
@@ -3480,18 +3495,25 @@ void MainWindow::init_UIStyle() {
   if (mac || osx1012) {
     if (red > 55) {
       ui->statusBar->setStyleSheet(sbarStyleLight);
-      this->setStyleSheet("QMainWindow { background-color: rgb(212,212,212);}");
+      // this->setStyleSheet("QMainWindow { background-color:
+      // rgb(212,212,212);}");
       tabWidget->setStyleSheet(tabStyleLight);
 
     } else {
       ui->statusBar->setStyleSheet(sbarStyleDark);
-      this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
+      // this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
     }
   }
 
   if (win || linuxOS) {
-      QString tabBarStyle = "QTabBar::tab{min-height:35px;min-width:80px;}";
-      tabWidget->setStyleSheet(tabBarStyle);
+    QString tabBarStyle = "QTabBar::tab{min-height:35px;min-width:80px;}";
+    tabWidget->setStyleSheet(tabBarStyle);
   }
+}
+
+void MainWindow::changeEvent(QEvent* e) {
+#ifdef __APPLE__
+  OSXHideTitleBar::HideTitleBar(winId());
+#endif
 }

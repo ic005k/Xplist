@@ -72,6 +72,7 @@ int main(int argc, char* argv[]) {
     a->new_win();
   } else {
     mw_one = new MainWindow();
+
     mw_one->show();
   }
   f.setPixelSize(12);
