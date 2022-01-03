@@ -138,9 +138,6 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);
 
-#ifdef __APPLE__
-  ui->centralWidget->setContentsMargins(2, 30, 2, 2);
-#endif
   QSplitter* splitter1 = new QSplitter(Qt::Vertical, this);
   ui->frameMain->layout()->addWidget(ui->frameTip);
   ui->frameMain->layout()->addWidget(ui->frameFind);
@@ -3515,6 +3512,7 @@ void MainWindow::init_UIStyle() {
 void MainWindow::changeEvent(QEvent* e) {
   Q_UNUSED(e);
 #ifdef __APPLE__
+  return;
   OSXHideTitleBar::HideTitleBar(winId());
 #endif
 }
