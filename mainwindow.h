@@ -169,7 +169,7 @@ class MainWindow : public QMainWindow {
   void actionAdd_activated();
   void actionRemove_activated();
   bool eventFilter(QObject*, QEvent*) override;
-  virtual void changeEvent(QEvent* event);
+  virtual void changeEvent(QEvent* event) override;
   void on_NewWindow();
 
  private slots:

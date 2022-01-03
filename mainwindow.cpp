@@ -3513,6 +3513,7 @@ void MainWindow::init_UIStyle() {
 }
 
 void MainWindow::changeEvent(QEvent* e) {
+  Q_UNUSED(e);
 #ifdef __APPLE__
   OSXHideTitleBar::HideTitleBar(winId());
 #endif
