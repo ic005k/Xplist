@@ -197,8 +197,11 @@ MainWindow::MainWindow(QWidget* parent)
   manager = new QNetworkAccessManager(this);
   connect(manager, SIGNAL(finished(QNetworkReply*)), this,
           SLOT(replyFinished(QNetworkReply*)));
-  blAutoCheckUpdate = true;
-  CheckUpdate();
+  // blAutoCheckUpdate = false;
+  if (blAutoCheckUpdate) {
+    CheckUpdate();
+  }
+  
   readINIProxy();
 
   initPlistTextShow();
@@ -217,6 +220,9 @@ void MainWindow::init_iniData() {
 
   defaultIcon = Reg.value("DefaultIcon").toBool();
   ui->actionDefaultNodeIcon->setChecked(defaultIcon);
+
+  blAutoCheckUpdate = Reg.value("EnableAutoUpdate").toBool();
+  ui->actionCheck_Update_Enable->setChecked(blAutoCheckUpdate);
 
   ui->actionExpandAllOpenFile->setChecked(Reg.value("ExpAll").toBool());
 
@@ -1505,6 +1511,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     Reg.setValue("frameMainHeight", ui->frameMain->height());
   }
 
+  Reg.setValue("EnableAutoUpdate", blAutoCheckUpdate);
   Reg.setValue("restore", ui->actionRestoreScene->isChecked());
   Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
   Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
@@ -2560,6 +2567,8 @@ void MainWindow::on_actionCopy_between_windows_triggered() { on_copyBW(); }
 void MainWindow::on_actionPaste_between_windows_triggered() { on_pasteBW(); }
 
 void MainWindow::on_actionCheck_Update_triggered() { CheckUpdate(); }
+
+void MainWindow::on_actionCheck_Update_Enable_triggered() { blAutoCheckUpdate = ui->actionCheck_Update_Enable->isChecked(); }
 
 void MainWindow::on_actionAbout_triggered() { actionAbout_activated(); }
 

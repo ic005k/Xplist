@@ -892,6 +892,7 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
      <addaction name="actProxy4"/>
      <addaction name="actProxy5"/>
     </widget>
+    <addaction name="actionCheck_Update_Enable"/>
     <addaction name="actionCheck_Update"/>
     <addaction name="menuUpgrade_Download_Proxy"/>
     <addaction name="actionDownload_Upgrade_Packages"/>
@@ -1112,6 +1113,14 @@ QStatusBar::item {
    </property>
    <property name="text">
     <string>DefaultNodeIcon</string>
+   </property>
+  </action>
+  <action name="actionCheck_Update_Enable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable or disable update checking</string>
    </property>
   </action>
   <action name="actionCheck_Update">
