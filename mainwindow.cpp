@@ -23,16 +23,8 @@ using namespace std;
 
 QString CurVerison = "1.2.21";
 
-QStatusBar* myStatusBar;
-QToolBar* myToolBar;
-
 EditorTabsWidget* tabWidget;
-ItemState* copy_state;
-
-ItemState* AddMoveTemp;
-
 QUndoGroup* undoGroup;
-
 QString fileName;
 QVector<QString> openFileList;
 
@@ -95,33 +87,6 @@ MainWindow::MainWindow(QWidget* parent)
 
   init_UIStyle();
 
-  ui->mainToolBar->setStyleSheet(
-
-      "QToolButton:hover{ "
-      "color:rgb(255, 255, 255); "
-      "border-style:solid; "
-      "border-top-left-radius:2px;  "
-      "border-top-right-radius:2px; "
-      "background:#bfbfbf; "
-      "border:1px;"
-      "border-radius:5px;padding:2px 4px; }"
-
-      "QToolButton:pressed{ "
-      "color:rgb(255, 255, 255); "
-      "border-style:solid; "
-      "border-top-left-radius:2px;  "
-      "border-top-right-radius:2px; "
-      "background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop:0 "
-      "rgb(226,236,241),"
-      "stop: 0.3 rgb(190,190,190),"
-      "stop: 1 rgb(160,160,160));"
-      "border:1px;"
-      "border-radius:5px;padding:2px 4px; }"
-
-  );
-  myToolBar = ui->mainToolBar;
-  myStatusBar = ui->statusBar;
-
   lblStaInfo0 = new QLabel(this);
   lblStaInfo1 = new QLabel(this);
   lblStaInfo0->setStyleSheet(
@@ -131,9 +96,9 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo2 = new QLabel(this);
   lblStaInfo2->setStyleSheet(
       "QLabel { background-color : lightgreen; color : black; }");
-  myStatusBar->addPermanentWidget(lblStaInfo0);
-  myStatusBar->addPermanentWidget(lblStaInfo2);
-  myStatusBar->addPermanentWidget(lblStaInfo1);
+  ui->statusBar->addPermanentWidget(lblStaInfo0);
+  ui->statusBar->addPermanentWidget(lblStaInfo2);
+  ui->statusBar->addPermanentWidget(lblStaInfo1);
   lblStaInfo0->setHidden(true);
   lblStaInfo1->setHidden(true);
   lblStaInfo2->setHidden(true);

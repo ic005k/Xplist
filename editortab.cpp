@@ -4,9 +4,6 @@
 #include "ui_editortab.h"
 #include "ui_mainwindow.h"
 
-extern QStatusBar* myStatusBar;
-extern QToolBar* myToolBar;
-extern ItemState* copy_state;
 extern EditorTabsWidget* tabWidget;
 
 QVector<DomItem*> copy_item;
