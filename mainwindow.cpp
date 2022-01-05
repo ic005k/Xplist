@@ -96,6 +96,7 @@ MainWindow::MainWindow(QWidget* parent)
   lblStaInfo2 = new QLabel(this);
   lblStaInfo2->setStyleSheet(
       "QLabel { background-color : lightgreen; color : black; }");
+
   ui->statusBar->addPermanentWidget(lblStaInfo0);
   ui->statusBar->addPermanentWidget(lblStaInfo2);
   ui->statusBar->addPermanentWidget(lblStaInfo1);
@@ -2658,7 +2659,15 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
           str1 + "</font>";
     }
 
-    lblStaInfo0->setText(strR);
+    if (str1.length() <= 60)
+      lblStaInfo0->setText(strR);
+    else
+      lblStaInfo0->setText(" ... ");
+
+    if (lblStaInfo0->text() == "")
+      lblStaInfo0->setHidden(true);
+    else
+      lblStaInfo0->setHidden(false);
   }
 }
 
