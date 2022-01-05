@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.23";
+QString CurVerison = "1.2.24";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -943,7 +943,7 @@ void MainWindow::savePlist(QString filePath) {
         } else
           Plist::writePlistXML(baseName.c_str(), dict);
 
-        tabWidget->setTabText(index, name);
+        tabWidget->setTabText(index, QFileInfo(name).baseName());
       }
 
       // BIN
@@ -1032,7 +1032,7 @@ void MainWindow::savePlist(QString filePath) {
           QProcess::execute("plutil", QStringList() << "-convert"
                                                     << "binary1" << filePath);
         }
-        tabWidget->setTabText(index, "[BIN] " + name);
+        tabWidget->setTabText(index, "[BIN] " + QFileInfo(name).baseName());
       }
 
       loadText(filePath);
