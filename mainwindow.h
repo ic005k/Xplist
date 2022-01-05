@@ -328,6 +328,7 @@ class MainWindow : public QMainWindow {
   void on_btnMax_clicked();
 
  private:
+  bool blShowFindItem = false;
   bool isDrag;
   QPoint m_position;
   bool useQtWriteXML = true;

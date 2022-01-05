@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.21";
+QString CurVerison = "1.2.22";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -1714,7 +1714,11 @@ void MainWindow::showMsg() {
 
   str1 = index.data().toString().trimmed();
   if (str1.count() >= 100) str1 = str1.mid(0, 97) + "...";
-  lblStaInfo0->setText(str1);
+  if (!blShowFindItem) {
+    lblStaInfo0->setText(str1);
+  }
+  blShowFindItem = false;
+
   lblStaInfo2->setText(str2 + str3 + str5);
   lblStaInfo1->setText(str4 + str6 + str7);
 
@@ -2609,6 +2613,52 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
 
     if (focus) ui->editFind->setFocus();
     if (focus1) ui->listFind_2->setFocus();
+
+    // Mark item
+    blShowFindItem = true;
+    QString strR, strS;
+    QString str0 = ui->editFind->text();
+    QString str1 = ui->listFind_2->currentItem()->text();
+    for (int i = 0; i < str1.length(); i++) {
+      if (str1.mid(i, str0.length()).toLower() == str0.toLower()) {
+        strS = str1.mid(i, str0.length());
+        break;
+      }
+    }
+
+    QStringList list = str1.split(strS);
+
+    if (list.count() >= 2) {
+      for (int i = 0; i < list.count(); i++) {
+        if (i + 1 < list.count())
+          strR = strR + list.at(i) +
+                 "<font style='font-size:16px; background-color:white; "
+                 "color:blue;'>" +
+                 strS + "</font>" + list.at(i + 1);
+      }
+    }
+
+    if (list.count() == 1) {
+      if (str1.mid(0, strS.length()) == strS) {
+        strR =
+            "<font style='font-size:16px; background-color:white; "
+            "color:blue;'>" +
+            strS + "</font>" + str1.replace(strS, "");
+      } else {
+        strR = str1.replace(strS, "") +
+               "<font style='font-size:16px; background-color:white; "
+               "color:blue;'>" +
+               strS + "</font>";
+      }
+    }
+
+    if (str0.toLower() == str1.toLower()) {
+      strR =
+          "<font style='font-size:16px; background-color:white; color:blue;'>" +
+          str1 + "</font>";
+    }
+
+    lblStaInfo0->setText(strR);
   }
 }
 
@@ -3446,6 +3496,7 @@ void MainWindow::on_btnMax_clicked() {}
 bool MainWindow::eventFilter(QObject* o, QEvent* e) {
   if (e->type() == QEvent::ActivationChange) {
     return QWidget::eventFilter(o, e);
+
     if (QApplication::activeWindow() != this) {
       if (red > 55) {
         this->setStyleSheet(

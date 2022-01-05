@@ -10,32 +10,27 @@
 #include <QWidget>
 
 typedef struct _NodeP {
-    int nRowNo;
-    std::vector<_NodeP> arChildren;
+  int nRowNo;
+  std::vector<_NodeP> arChildren;
 } NodeExpand;
 
 class MyTreeView : public QTreeView {
-    Q_OBJECT
+  Q_OBJECT
 
-    enum DropIndicatorPosition {
-        OnItem,
-        AboveItem,
-        BelowItem,
-        OnViewport
-    };
+  enum DropIndicatorPosition { OnItem, AboveItem, BelowItem, OnViewport };
 
-protected:
-    void keyPressEvent(QKeyEvent* event) override;
+ protected:
+  void keyPressEvent(QKeyEvent* event) override;
 
-    void dropEvent(QDropEvent* event) override;
-    void dragEnterEvent(QDragEnterEvent* event) override;
-    void dragMoveEvent(QDragMoveEvent* event) override;
-    void dragLeaveEvent(QDragLeaveEvent* event) override;
+  void dropEvent(QDropEvent* event) override;
+  void dragEnterEvent(QDragEnterEvent* event) override;
+  void dragMoveEvent(QDragMoveEvent* event) override;
+  void dragLeaveEvent(QDragLeaveEvent* event) override;
 
-public:
-    explicit MyTreeView(QWidget* parent);
+ public:
+  explicit MyTreeView(QWidget* parent);
 
-private:
+ private:
 };
 
-#endif // MYTREEVIEW_H
+#endif  // MYTREEVIEW_H
