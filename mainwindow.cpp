@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.20";
+QString CurVerison = "1.2.21";
 
 QStatusBar* myStatusBar;
 QToolBar* myToolBar;
@@ -197,10 +197,11 @@ MainWindow::MainWindow(QWidget* parent)
   manager = new QNetworkAccessManager(this);
   connect(manager, SIGNAL(finished(QNetworkReply*)), this,
           SLOT(replyFinished(QNetworkReply*)));
-  blAutoCheckUpdate = true;
   ui->actionAutoUpdateCheck->setChecked(
       Reg.value("AutoUpdateCheck", 1).toBool());
-  if (ui->actionAutoUpdateCheck->isChecked()) CheckUpdate();
+  blAutoCheckUpdate = true;
+  CheckUpdate();
+
   readINIProxy();
 
   initPlistTextShow();
@@ -2071,12 +2072,22 @@ int MainWindow::parse_UpdateJSON(QString str) {
                            tr("Version: ") + "V" + Verison + "\n" +
                            tr("Published at: ") + UpdateTime + "\n" +
                            tr("Release Notes: ") + "\n" + ReleaseNote;
-      int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
-                                     tr("Cancel"));
-      if (ret == 0) {
-        // Url = "https://github.com/ic005k/PlistEDPlus/releases/latest";
-        // QDesktopServices::openUrl(QUrl(Url));
-        ShowAutoUpdateDlg(false);
+
+      if (!ui->actionAutoUpdateCheck->isChecked()) {
+        if (!blAutoCheckUpdate) {
+          int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
+                                         tr("Cancel"));
+          if (ret == 0) {
+            ShowAutoUpdateDlg(false);
+          }
+        }
+
+      } else {
+        int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
+                                       tr("Cancel"));
+        if (ret == 0) {
+          ShowAutoUpdateDlg(false);
+        }
       }
 
     } else {
@@ -2086,6 +2097,7 @@ int MainWindow::parse_UpdateJSON(QString str) {
     }
   }
   blAutoCheckUpdate = false;
+
   return 0;
 }
 
