@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.22";
+QString CurVerison = "1.2.23";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -2630,13 +2630,16 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     }
 
     QStringList list = str1.split(strS);
+    // strR =
+    //    "<font style='font-size:16px; background-color:white; color:blue;'>" +
+    //    str1 + "</font>";
 
     if (list.count() >= 2) {
       for (int i = 0; i < list.count(); i++) {
         if (i + 1 < list.count())
           strR = strR + list.at(i) +
-                 "<font style='font-size:16px; background-color:white; "
-                 "color:blue;'>" +
+                 "<font style=' background-color:red; "
+                 "color:white;'>" +
                  strS + "</font>" + list.at(i + 1);
       }
     }
@@ -2644,21 +2647,20 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     if (list.count() == 1) {
       if (str1.mid(0, strS.length()) == strS) {
         strR =
-            "<font style='font-size:16px; background-color:white; "
-            "color:blue;'>" +
+            "<font style='background-color:red; "
+            "color:white;'>" +
             strS + "</font>" + str1.replace(strS, "");
       } else {
         strR = str1.replace(strS, "") +
-               "<font style='font-size:16px; background-color:white; "
-               "color:blue;'>" +
+               "<font style=' background-color:red; "
+               "color:white;'>" +
                strS + "</font>";
       }
     }
 
     if (str0.toLower() == str1.toLower()) {
-      strR =
-          "<font style='font-size:16px; background-color:white; color:blue;'>" +
-          str1 + "</font>";
+      strR = "<font style=' background-color:red; color:white;'>" + str1 +
+             "</font>";
     }
 
     if (str1.length() <= 60)
