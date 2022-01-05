@@ -824,7 +824,7 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>30</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -892,7 +892,6 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
      <addaction name="actProxy4"/>
      <addaction name="actProxy5"/>
     </widget>
-    <addaction name="actionCheck_Update_Enable"/>
     <addaction name="actionCheck_Update"/>
     <addaction name="menuUpgrade_Download_Proxy"/>
     <addaction name="actionDownload_Upgrade_Packages"/>
@@ -909,6 +908,9 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
     <addaction name="actionDefaultNodeIcon"/>
     <addaction name="actionExpandAllOpenFile"/>
     <addaction name="actionShowPlistText"/>
+    <addaction name="separator"/>
+    <addaction name="actionAutoUpdateCheck"/>
+    <addaction name="separator"/>
     <addaction name="actionFont"/>
    </widget>
    <addaction name="menuFile"/>
@@ -1113,14 +1115,6 @@ QStatusBar::item {
    </property>
    <property name="text">
     <string>DefaultNodeIcon</string>
-   </property>
-  </action>
-  <action name="actionCheck_Update_Enable">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Enable or disable update checking</string>
    </property>
   </action>
   <action name="actionCheck_Update">
@@ -1369,6 +1363,17 @@ QStatusBar::item {
   <action name="actionCollapse_All">
    <property name="text">
     <string>Collapse All</string>
+   </property>
+  </action>
+  <action name="actionAutoUpdateCheck">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Automatic Update Checking</string>
    </property>
   </action>
  </widget>
