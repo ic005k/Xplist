@@ -2249,6 +2249,7 @@ void MainWindow::on_actionPaste_as_child_triggered() {
 
 void MainWindow::on_editFind_returnPressed() {
   ui->editFind->selectAll();
+  lblStaInfo0->clear();
   if (!findTextChanged) {
     on_btnNext_clicked();
     return;
@@ -2307,6 +2308,7 @@ void MainWindow::on_editFind_textChanged(const QString& arg1) {
       findCount = 0;
       ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       ui->listFind_2->clear();
+      lblStaInfo0->clear();
 
       EditorTab* tab = tabWidget->getCurentTab();
 
