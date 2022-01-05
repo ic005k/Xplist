@@ -255,8 +255,6 @@ class MainWindow : public QMainWindow {
 
   void on_actionCheck_Update_triggered();
 
-  void on_actionCheck_Update_Enable_triggered();
-
   void on_actionAbout_triggered();
 
   void on_actionAdd_triggered();
