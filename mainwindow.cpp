@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.24";
+QString CurVerison = "1.2.25";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -37,7 +37,7 @@ int windowX = 0;
 int windowY = 0;
 
 extern bool loading;
-extern QString strRootType, tabStyleLight;
+extern QString strRootType, tabStyleLight, treeStyleMacLight, treeStyleMacDark;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -282,6 +282,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
+  ui->actionDefaultNodeIcon->setVisible(false);
   // if (mac || osx1012) this->setUnifiedTitleAndToolBarOnMac(true);
   ui->menuBar->setMouseTracking(true);
   ui->actionDiscussion_Forum->setVisible(false);
@@ -3539,11 +3540,19 @@ void MainWindow::init_UIStyle() {
       // this->setStyleSheet("QMainWindow { background-color:
       // rgb(212,212,212);}");
       tabWidget->setStyleSheet(tabStyleLight);
+      if (tabWidget->hasTabs()) {
+        for (int i = 0; i < tabWidget->count(); i++)
+          tabWidget->getTab(i)->treeView->setStyleSheet(treeStyleMacLight);
+      }
 
     } else {
       ui->statusBar->setStyleSheet(sbarStyleDark);
       // this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+      if (tabWidget->hasTabs()) {
+        for (int i = 0; i < tabWidget->count(); i++)
+          tabWidget->getTab(i)->treeView->setStyleSheet(treeStyleMacLight);
+      }
     }
   }
 

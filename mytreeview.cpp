@@ -3,11 +3,16 @@
 #include <editortabswidget.h>
 
 extern bool defaultIcon;
+QString treeStyleMacLight, treeStyleMacDark;
 
 MyTreeView::MyTreeView(QWidget* parent)
     : QTreeView(parent)
 
 {
+  QPalette pal = this->palette();
+  QBrush brush = pal.window();
+  int red = brush.color().red();
+
   QString strStyle0 =
       "QTreeView{outline:none;}"
 
@@ -18,6 +23,22 @@ MyTreeView::MyTreeView(QWidget* parent)
       "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
       "QTreeView::item:selected{background-color:rgba(0, 124, 221, 255); "
+      "color:rgba(255,255,255,255);}";
+
+  QString treeStyleMacLight =
+      "QTreeView{outline:none;}"
+
+      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+
+      "QTreeView::item:selected{background-color:rgba(0, 99, 225, 255); "
+      "color:rgba(255,255,255,255);}";
+
+  QString treeStyleMacDark =
+      "QTreeView{outline:none;}"
+
+      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+
+      "QTreeView::item:selected{background-color:rgba(0, 88, 208, 255); "
       "color:rgba(255,255,255,255);}";
 
   QString strStyleWin =
@@ -78,6 +99,17 @@ MyTreeView::MyTreeView(QWidget* parent)
     setStyleSheet(strStyle0);
 #endif
   }
+
+#ifdef Q_OS_WIN32
+  setStyleSheet(strStyle0);
+#endif
+
+#ifdef Q_OS_MAC
+  if (red > 55)
+    setStyleSheet(treeStyleMacLight);
+  else
+    setStyleSheet(treeStyleMacDark);
+#endif
 
   setUniformRowHeights(true);
 
