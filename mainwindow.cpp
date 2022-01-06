@@ -1370,7 +1370,6 @@ void MainWindow::on_Find() {
     find = false;
 
     if (index.isValid()) {
-      clearTreeIndexWidget();
       indexFindList.clear();
       ui->listFind_2->clear();
       indexCount = -1;
@@ -2301,11 +2300,21 @@ void MainWindow::on_editFind_returnPressed() {
 }
 
 void MainWindow::clearTreeIndexWidget() {
-  lblShowFind->setHidden(true);
+  if (indexFindList.count() == 0) return;
+  try {
+    if (lblShowFind->isVisible()) lblShowFind->setHidden(true);
+  } catch (...) {
+  }
+
   for (int i = 0; i < indexFindList.count(); i++) {
-    if (tabWidget->hasTabs())
-      tabWidget->getCurentTab()->treeView->setIndexWidget(indexFindList.at(i),
-                                                          NULL);
+    if (tabWidget->hasTabs()) {
+      for (int j = 0; j < tabWidget->count(); j++) {
+        if (indexFindList.at(i).isValid()) {
+          tabWidget->getTab(j)->treeView->setIndexWidget(indexFindList.at(i),
+                                                         NULL);
+        }
+      }
+    }
   }
 }
 

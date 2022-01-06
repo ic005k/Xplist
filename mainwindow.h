@@ -70,6 +70,7 @@ class MainWindow : public QMainWindow {
 
   Ui::MainWindow* ui;
   QLabel* lblShowFind;
+  QTreeView* bakTree;
   bool mac = false;
   bool win = false;
   bool linuxOS = false;
@@ -174,9 +175,9 @@ class MainWindow : public QMainWindow {
           border-bottom-right-radius:10px;\
           }";
 
-          void init_UIStyle();
+  void init_UIStyle();
   void clearTreeIndexWidget();
-public slots:
+ public slots:
   void on_Find();
   void on_actionMoveUp();
   void on_actionMoveDown();
