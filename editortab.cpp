@@ -287,6 +287,9 @@ void EditorTab::changeDataType(QString txt) {
 
 void EditorTab::treeView_clicked(const QModelIndex& index) {
   if (!index.isValid()) return;
+  for (int i = 0; i < mw_one->ui->listFind_2->count(); i++) {
+    treeView->setIndexWidget(mw_one->indexFindList.at(i), NULL);
+  }
 
   int c_count = 0;
   DomItem* item;

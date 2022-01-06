@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.25";
+QString CurVerison = "1.2.26";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -37,7 +37,8 @@ int windowX = 0;
 int windowY = 0;
 
 extern bool loading;
-extern QString strRootType, tabStyleLight, treeStyleMacLight, treeStyleMacDark;
+extern QString strRootType, tabStyleLight, treeStyleMacLight, treeStyleMacDark,
+    treeStyleFind;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -80,6 +81,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   tabWidget = new EditorTabsWidget(this);
   tabWidget->setHidden(true);
+  lblShowFind = new QLabel(this);
+  lblShowFind->setHidden(true);
   dlgAutoUpdate = new AutoUpdateDialog(this);
   plistTextEditor = new CodeEditor(this);
   plistTextEditor->setFont(getFont());
@@ -1208,6 +1211,7 @@ void MainWindow::onTabWidget_currentChanged(int index) {
       ui->btnReplace->setEnabled(false);
       ui->listFind_2->clear();
       ui->frameData->setHidden(true);
+      clearTreeIndexWidget();
     }
   }
 }
@@ -1366,6 +1370,7 @@ void MainWindow::on_Find() {
     find = false;
 
     if (index.isValid()) {
+      clearTreeIndexWidget();
       indexFindList.clear();
       ui->listFind_2->clear();
       indexCount = -1;
@@ -1716,10 +1721,8 @@ void MainWindow::showMsg() {
 
   str1 = index.data().toString().trimmed();
   if (str1.count() >= 100) str1 = str1.mid(0, 97) + "...";
-  if (!blShowFindItem) {
-    lblStaInfo0->setText(str1);
-  }
-  blShowFindItem = false;
+
+  lblStaInfo0->setText(str1);
 
   lblStaInfo2->setText(str2 + str3 + str5);
   lblStaInfo1->setText(str4 + str6 + str7);
@@ -2297,6 +2300,15 @@ void MainWindow::on_editFind_returnPressed() {
   }
 }
 
+void MainWindow::clearTreeIndexWidget() {
+  lblShowFind->setHidden(true);
+  for (int i = 0; i < indexFindList.count(); i++) {
+    if (tabWidget->hasTabs())
+      tabWidget->getCurentTab()->treeView->setIndexWidget(indexFindList.at(i),
+                                                          NULL);
+  }
+}
+
 void MainWindow::on_editFind_textChanged(const QString& arg1) {
   if (tabWidget->hasTabs()) {
     findTextChanged = true;
@@ -2309,7 +2321,7 @@ void MainWindow::on_editFind_textChanged(const QString& arg1) {
       findCount = 0;
       ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
       ui->listFind_2->clear();
-      lblStaInfo0->clear();
+      clearTreeIndexWidget();
 
       EditorTab* tab = tabWidget->getCurentTab();
 
@@ -2330,6 +2342,7 @@ void MainWindow::on_btnHideFind_clicked() {
   Reg.setValue("dockFindWidth", ui->listFind_2->width());
   Reg.setValue("frameMainWidth", ui->frameMain->width());
 
+  clearTreeIndexWidget();
   ui->frameFind->close();
   ui->listFind_2->close();
 }
@@ -2619,7 +2632,6 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     if (focus1) ui->listFind_2->setFocus();
 
     // Mark item
-    blShowFindItem = true;
     QString strR, strS;
     QString str0 = ui->editFind->text();
     QString str1 = ui->listFind_2->currentItem()->text();
@@ -2664,15 +2676,25 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
              "</font>";
     }
 
+    lblShowFind = new QLabel(this);
+    lblShowFind->installEventFilter(this);
+    lblShowFind->setHidden(true);
     if (str1.length() <= 60)
-      lblStaInfo0->setText(strR);
+      lblShowFind->setText(strR);
     else
-      lblStaInfo0->setText(" ... ");
+      lblShowFind->setText(" ... ");
 
-    if (lblStaInfo0->text() == "")
-      lblStaInfo0->setHidden(true);
+    if (red > 55)
+      lblShowFind->setStyleSheet(
+          "QLabel { background-color : rgb(220,220,220); color : black; }");
     else
-      lblStaInfo0->setHidden(false);
+      lblShowFind->setStyleSheet(
+          "QLabel { background-color : rgb(70,70,70); color : white; }");
+    for (int i = 0; i < ui->listFind_2->count(); i++) {
+      tab->treeView->setIndexWidget(indexFindList.at(i), NULL);
+    }
+    tab->treeView->setIndexWidget(index, lblShowFind);
+    lblShowFind->setHidden(false);
   }
 }
 
@@ -3508,6 +3530,27 @@ void MainWindow::on_btnClose_clicked() { close(); }
 void MainWindow::on_btnMax_clicked() {}
 
 bool MainWindow::eventFilter(QObject* o, QEvent* e) {
+  if (o == lblShowFind) {
+    if (e->type() == QEvent::MouseButtonPress)  // mouse button pressed
+    {
+      QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(e);
+      if (mouseEvent->button() == Qt::LeftButton) {
+        for (int i = 0; i < ui->listFind_2->count(); i++) {
+          tabWidget->getCurentTab()->treeView->setIndexWidget(
+              indexFindList.at(i), NULL);
+        }
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } else {
+    // pass the event on to the parent class
+    return QMainWindow::eventFilter(o, e);
+  }
+
   if (e->type() == QEvent::ActivationChange) {
     return QWidget::eventFilter(o, e);
 
@@ -3527,6 +3570,7 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
       }
     }
   }
+
   return QWidget::eventFilter(o, e);
 }
 
@@ -3568,4 +3612,15 @@ void MainWindow::changeEvent(QEvent* e) {
   return;
   OSXHideTitleBar::HideTitleBar(winId());
 #endif
+}
+
+ClickableLabel::ClickableLabel(const QString& text, QWidget* parent)
+    : QLabel(parent) {
+  setText(text);
+}
+
+ClickableLabel::~ClickableLabel() {}
+void ClickableLabel::mousePressEvent(QMouseEvent* event) {
+  Q_UNUSED(event);
+  emit clicked();
 }

@@ -49,6 +49,18 @@ namespace Ui {
 class MainWindow;
 }
 
+class ClickableLabel : public QLabel {
+  Q_OBJECT
+ public:
+  explicit ClickableLabel(const QString& text = "", QWidget* parent = 0);
+  ~ClickableLabel();
+ signals:
+  void clicked();
+
+ protected:
+  void mousePressEvent(QMouseEvent* event);
+};
+
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -57,6 +69,7 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
   Ui::MainWindow* ui;
+  QLabel* lblShowFind;
   bool mac = false;
   bool win = false;
   bool linuxOS = false;
@@ -161,8 +174,9 @@ class MainWindow : public QMainWindow {
           border-bottom-right-radius:10px;\
           }";
 
-  void init_UIStyle();
- public slots:
+          void init_UIStyle();
+  void clearTreeIndexWidget();
+public slots:
   void on_Find();
   void on_actionMoveUp();
   void on_actionMoveDown();
@@ -328,7 +342,6 @@ class MainWindow : public QMainWindow {
   void on_btnMax_clicked();
 
  private:
-  bool blShowFindItem = false;
   bool isDrag;
   QPoint m_position;
   bool useQtWriteXML = true;
