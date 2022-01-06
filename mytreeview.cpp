@@ -94,26 +94,11 @@ MyTreeView::MyTreeView(QWidget* parent)
       "QTreeView::branch:closed:has-children:has-siblings {image: "
       "url(:/new/toolbar/res/main.svg);}";
 
-  /* if (!defaultIcon) {
-     setStyleSheet(strStyle);
- #ifdef Q_OS_WIN32
-     setStyleSheet(strStyleWin);
- #endif
-   } else {
- #ifdef Q_OS_WIN32
-     setStyleSheet(strStyle0);
- #endif
-   }*/
-
 #ifdef Q_OS_WIN32
   setStyleSheet(strStyle0);
 #endif
 
 #ifdef Q_OS_MAC
-  // if (red > 55)
-  //  setStyleSheet(treeStyleMacLight);
-  // else
-  //  setStyleSheet(treeStyleMacDark);
 
 #endif
 

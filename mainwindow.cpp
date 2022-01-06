@@ -3593,19 +3593,11 @@ void MainWindow::init_UIStyle() {
       // this->setStyleSheet("QMainWindow { background-color:
       // rgb(212,212,212);}");
       tabWidget->setStyleSheet(tabStyleLight);
-      if (tabWidget->hasTabs()) {
-        for (int i = 0; i < tabWidget->count(); i++)
-          tabWidget->getTab(i)->treeView->setStyleSheet(treeStyleMacLight);
-      }
 
     } else {
       ui->statusBar->setStyleSheet(sbarStyleDark);
       // this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
-      if (tabWidget->hasTabs()) {
-        for (int i = 0; i < tabWidget->count(); i++)
-          tabWidget->getTab(i)->treeView->setStyleSheet(treeStyleMacLight);
-      }
     }
   }
 
