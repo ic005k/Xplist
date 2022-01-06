@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.27";
+QString CurVerison = "1.2.28";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -2299,24 +2299,23 @@ void MainWindow::on_editFind_returnPressed() {
   }
 }
 
-void MainWindow::clearTreeIndexWidget()
-{
-    if (indexFindList.count() == 0 || blExit)
-        return;
+void MainWindow::clearTreeIndexWidget() {
+  if (indexFindList.count() == 0 || blExit) return;
 
-    lblShowFind->setHidden(true);
+  lblShowFind->setHidden(true);
 
-    for (int i = 0; i < indexFindList.count(); i++) {
-        if (tabWidget->hasTabs()) {
-            for (int j = 0; j < tabWidget->count(); j++) {
-                if (indexFindList.at(i).isValid()) {
-                    tabWidget->getTab(j)->treeView->setIndexWidget(indexFindList.at(i), NULL);
-                }
-            }
+  for (int i = 0; i < indexFindList.count(); i++) {
+    if (tabWidget->hasTabs()) {
+      for (int j = 0; j < tabWidget->count(); j++) {
+        if (indexFindList.at(i).isValid()) {
+          tabWidget->getTab(j)->treeView->setIndexWidget(indexFindList.at(i),
+                                                         NULL);
         }
+      }
     }
+  }
 
-    indexFindList.clear();
+  indexFindList.clear();
 }
 
 void MainWindow::on_editFind_textChanged(const QString& arg1) {
