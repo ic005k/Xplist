@@ -70,6 +70,7 @@ class MainWindow : public QMainWindow {
 
   Ui::MainWindow* ui;
   QLabel* lblShowFind;
+  bool isNULL = false;
   bool mac = false;
   bool win = false;
   bool linuxOS = false;

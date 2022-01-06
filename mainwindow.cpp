@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.28";
+QString CurVerison = "1.2.29";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -1370,6 +1370,7 @@ void MainWindow::on_Find() {
     find = false;
 
     if (index.isValid()) {
+      clearTreeIndexWidget();
       indexFindList.clear();
       ui->listFind_2->clear();
       indexCount = -1;
@@ -2300,9 +2301,7 @@ void MainWindow::on_editFind_returnPressed() {
 }
 
 void MainWindow::clearTreeIndexWidget() {
-  if (indexFindList.count() == 0 || blExit) return;
-
-  lblShowFind->setHidden(true);
+  if (indexFindList.count() == 0 || blExit || isNULL) return;
 
   for (int i = 0; i < indexFindList.count(); i++) {
     if (tabWidget->hasTabs()) {
@@ -2315,7 +2314,10 @@ void MainWindow::clearTreeIndexWidget() {
     }
   }
 
-  indexFindList.clear();
+  if (lblShowFind != NULL) {
+    delete lblShowFind;
+    isNULL = true;
+  }
 }
 
 void MainWindow::on_editFind_textChanged(const QString& arg1) {
@@ -2323,7 +2325,6 @@ void MainWindow::on_editFind_textChanged(const QString& arg1) {
     findTextChanged = true;
 
     if (arg1 != "") {
-      // on_Find();
     }
 
     if (arg1 == "" || !find) {
@@ -2685,6 +2686,7 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     }
 
     lblShowFind = new QLabel(this);
+    isNULL = false;
     lblShowFind->installEventFilter(this);
     lblShowFind->setHidden(true);
     if (str1.length() <= 60)
