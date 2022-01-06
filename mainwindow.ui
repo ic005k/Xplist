@@ -908,7 +908,6 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
     <addaction name="actionDefaultNodeIcon"/>
     <addaction name="actionExpandAllOpenFile"/>
     <addaction name="actionShowPlistText"/>
-    <addaction name="separator"/>
     <addaction name="actionAutoUpdateCheck"/>
     <addaction name="separator"/>
     <addaction name="actionFont"/>

@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.29";
+QString CurVerison = "1.2.30";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -2307,6 +2307,7 @@ void MainWindow::clearTreeIndexWidget() {
     if (tabWidget->hasTabs()) {
       for (int j = 0; j < tabWidget->count(); j++) {
         if (indexFindList.at(i).isValid()) {
+          // tabWidget->getTab(j)->treeView->doItemsLayout();
           tabWidget->getTab(j)->treeView->setIndexWidget(indexFindList.at(i),
                                                          NULL);
         }
@@ -2314,7 +2315,7 @@ void MainWindow::clearTreeIndexWidget() {
     }
   }
 
-  if (lblShowFind != NULL) {
+  if (!isNULL) {
     delete lblShowFind;
     isNULL = true;
   }
@@ -3545,10 +3546,7 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
     {
       QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(e);
       if (mouseEvent->button() == Qt::LeftButton) {
-        for (int i = 0; i < ui->listFind_2->count(); i++) {
-          tabWidget->getCurentTab()->treeView->setIndexWidget(
-              indexFindList.at(i), NULL);
-        }
+        clearTreeIndexWidget();
         return true;
       } else {
         return false;
