@@ -70,7 +70,6 @@ class MainWindow : public QMainWindow {
 
   Ui::MainWindow* ui;
   QLabel* lblShowFind;
-  QTreeView* bakTree;
   bool mac = false;
   bool win = false;
   bool linuxOS = false;

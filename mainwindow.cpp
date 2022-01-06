@@ -2314,6 +2314,8 @@ void MainWindow::clearTreeIndexWidget() {
       }
     }
   }
+
+  indexFindList.clear();
 }
 
 void MainWindow::on_editFind_textChanged(const QString& arg1) {
@@ -2349,7 +2351,6 @@ void MainWindow::on_btnHideFind_clicked() {
   Reg.setValue("dockFindWidth", ui->listFind_2->width());
   Reg.setValue("frameMainWidth", ui->frameMain->width());
 
-  clearTreeIndexWidget();
   ui->frameFind->close();
   ui->listFind_2->close();
 }
