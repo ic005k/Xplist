@@ -36,31 +36,6 @@ MyTreeView::MyTreeView(QWidget* parent)
       "QTreeView::item:selected{background-color:rgba(0, 99, 225, 255); "
       "color:rgba(255,255,255,255);}";
 
-  QString treeStyleMacLight =
-      "QTreeView{outline:none;}"
-
-      //"QTreeView::branch {background: transparent;}"
-
-      //"QTreeView::branch:selected {background: rgba(0, 99, 225, 255);}"
-
-      "QTreeView::item:hover{background-color:rgba(127,255,0,50);}"
-      //"QTreeView::branch:hover {background-color:rgba(127,255,0,0)}"
-      //"border-left:0px solid blue; "
-      //"border-right:0px solid blue; "
-      //"border-top:1px solid blue; "
-      //"border-bottom:1px solid blue;}"
-
-      "QTreeView::item:selected{background-color:rgba(0, 99, 225, 255); "
-      "color:rgba(255,255,255,255);}";
-
-  QString treeStyleMacDark =
-      "QTreeView{outline:none;}"
-
-      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
-
-      "QTreeView::item:selected{background-color:rgba(0, 88, 208, 255); "
-      "color:rgba(255,255,255,255);}";
-
   QString strStyle =
       "QTreeView{outline:none;}"
 
@@ -94,13 +69,76 @@ MyTreeView::MyTreeView(QWidget* parent)
       "QTreeView::branch:closed:has-children:has-siblings {image: "
       "url(:/new/toolbar/res/main.svg);}";
 
+  treeStyleMacLight =
+      "QTreeView{outline:none;}"
+
+      "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
+
+      "QTreeView::branch:selected {background: "
+      "rgb(180, 209, 255);selection-background-color:rgb(180, 209, 255);"
+      "border-left:0px solid rgb(64,40,230); "
+      "border-right:0px solid gray; "
+      "border-top:0px solid rgb(64,40,230); "
+      "border-bottom:0px solid rgb(64,40,230);"
+      "}"
+
+      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+
+      "QTreeView::item:selected{background-color:rgb(180, 209, 255);"
+      "border-left:0px solid blue; "
+      "border-right:0px solid blue; "
+      "border-top:0px solid rgb(64,40,230); "
+      "border-bottom:0px solid rgb(64,40,230);"
+      "color:rgb(27,31,39);}"
+
+      "QTreeView::branch:open:has-children:!has-siblings,"
+      "QTreeView::branch:open:has-children:has-siblings {image: "
+      "url(:/new/toolbar/res/sub.svg);}"
+      "QTreeView::branch:has-children:!has-siblings:closed,"
+      "QTreeView::branch:closed:has-children:has-siblings {image: "
+      "url(:/new/toolbar/res/main.svg);}";
+
+  treeStyleMacDark =
+      "QTreeView{outline:none;}"
+
+      "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
+
+      "QTreeView::branch:selected {background: "
+      "rgb(66, 92, 141);selection-background-color:rgb(66, 92, 141);"
+      "border-left:0px solid blue; "
+      "border-right:0px solid gray; "
+      "border-top:0px solid blue; "
+      "border-bottom:0px solid blue;"
+      "}"
+
+      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+
+      "QTreeView::item:selected{background-color:rgb(66, 92, 141);"
+      "border-left:0px solid blue; "
+      "border-right:0px solid blue; "
+      "border-top:0px solid blue; "
+      "border-bottom:0px solid blue;"
+      "color:rgb(226,230,237);}"
+
+      "QTreeView::branch:open:has-children:!has-siblings,"
+      "QTreeView::branch:open:has-children:has-siblings {image: "
+      "url(:/new/toolbar/res/sub.svg);}"
+      "QTreeView::branch:has-children:!has-siblings:closed,"
+      "QTreeView::branch:closed:has-children:has-siblings {image: "
+      "url(:/new/toolbar/res/main.svg);}";
+
 #ifdef Q_OS_WIN32
-  setStyleSheet(strStyle0);
+  // setStyleSheet(strStyle0);
 #endif
 
 #ifdef Q_OS_MAC
 
 #endif
+
+  if (red > 55)
+    setStyleSheet(treeStyleMacLight);
+  else
+    setStyleSheet(treeStyleMacDark);
 
   setUniformRowHeights(true);
 

@@ -2694,10 +2694,10 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
 
     if (red > 55)
       lblShowFind->setStyleSheet(
-          "QLabel { background-color : rgb(220,220,220); color : black; }");
+          "QLabel { background-color : rgb(180, 209, 255); color : black; }");
     else
       lblShowFind->setStyleSheet(
-          "QLabel { background-color : rgb(70,70,70); color : white; }");
+          "QLabel { background-color : rgb(66, 92, 141); color : white; }");
     for (int i = 0; i < ui->listFind_2->count(); i++) {
       tab->treeView->setIndexWidget(indexFindList.at(i), NULL);
     }
@@ -3597,6 +3597,15 @@ void MainWindow::init_UIStyle() {
       ui->statusBar->setStyleSheet(sbarStyleDark);
       // this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
+    }
+  }
+
+  if (tabWidget->hasTabs()) {
+    for (int i = 0; i < tabWidget->count(); i++) {
+      if (red > 55)
+        tabWidget->getTab(i)->treeView->setStyleSheet(treeStyleMacLight);
+      else
+        tabWidget->getTab(i)->treeView->setStyleSheet(treeStyleMacDark);
     }
   }
 
