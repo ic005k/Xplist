@@ -2301,10 +2301,8 @@ void MainWindow::on_editFind_returnPressed() {
 
 void MainWindow::clearTreeIndexWidget() {
   if (indexFindList.count() == 0) return;
-  try {
-    if (lblShowFind->isVisible()) lblShowFind->setHidden(true);
-  } catch (...) {
-  }
+
+  lblShowFind->setHidden(true);
 
   for (int i = 0; i < indexFindList.count(); i++) {
     if (tabWidget->hasTabs()) {
