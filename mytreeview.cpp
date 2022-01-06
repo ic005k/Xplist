@@ -13,28 +13,40 @@ MyTreeView::MyTreeView(QWidget* parent)
   QBrush brush = pal.window();
   int red = brush.color().red();
 
-  QString strStyle0 =
-      "QTreeView{outline:none;}"
+  QString treeStyleWin = "QTreeView{outline:none;}"
 
-      //"QTreeView::branch {background: background: transparent;}"
+                         "QTreeView::branch:selected {background: "
+                         "rgb(255, 255, 255);selection-background-color:rgb(255, 255, 255);"
+                         "border-left:0px solid rgb(64,40,230); "
+                         "border-right:0px solid gray; "
+                         "border-top:0px solid rgb(64,40,230); "
+                         "border-bottom:0px solid rgb(64,40,230);"
+                         "}"
 
-      //"QTreeView::branch:selected {background: transparent;}"
+                         "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
-      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+                         "QTreeView::item:selected{background-color:rgb(180, 209, 255);"
+                         "border-left:0px solid blue; "
+                         "border-right:0px solid blue; "
+                         "border-top:0px solid rgb(64,40,230); "
+                         "border-bottom:0px solid rgb(64,40,230);"
+                         "color:rgb(27,31,39);}"
 
-      "QTreeView::item:selected{background-color:rgba(0, 124, 221, 255); "
+                         "QTreeView::branch:open:has-children:!has-siblings,"
+                         "QTreeView::branch:open:has-children:has-siblings {image: "
+                         "url(:/new/toolbar/res/sub.svg);}"
+                         "QTreeView::branch:has-children:!has-siblings:closed,"
+                         "QTreeView::branch:closed:has-children:has-siblings {image: "
+                         "url(:/new/toolbar/res/main.svg);}";
 
-      "color:rgba(255,255,255,255);}";
+  QString treeStyleFind = "QTreeView{outline:none;}"
 
-  QString treeStyleFind =
-      "QTreeView{outline:none;}"
+                          "QTreeView::branch {background: rgba(255, 255, 255, 255);}"
 
-      "QTreeView::branch {background: rgba(255, 255, 255, 255);}"
+                          "QTreeView::branch:selected {background: rgba(255, 255, 255, 255);}"
 
-      "QTreeView::branch:selected {background: rgba(255, 255, 255, 255);}"
-
-      "QTreeView::item:selected{background-color:rgba(0, 99, 225, 255); "
-      "color:rgba(255,255,255,255);}";
+                          "QTreeView::item:selected{background-color:rgba(0, 99, 225, 255); "
+                          "color:rgba(255,255,255,255);}";
 
   QString strStyle =
       "QTreeView{outline:none;}"
@@ -69,34 +81,33 @@ MyTreeView::MyTreeView(QWidget* parent)
       "QTreeView::branch:closed:has-children:has-siblings {image: "
       "url(:/new/toolbar/res/main.svg);}";
 
-  treeStyleMacLight =
-      "QTreeView{outline:none;}"
+  treeStyleMacLight = "QTreeView{outline:none;}"
 
-      "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
+                      "QTreeView::branch:hover {background-color:rgba(127,255,0,50)}"
 
-      "QTreeView::branch:selected {background: "
-      "rgb(180, 209, 255);selection-background-color:rgb(180, 209, 255);"
-      "border-left:0px solid rgb(64,40,230); "
-      "border-right:0px solid gray; "
-      "border-top:0px solid rgb(64,40,230); "
-      "border-bottom:0px solid rgb(64,40,230);"
-      "}"
+                      "QTreeView::branch:selected {background: "
+                      "rgb(180, 209, 255);selection-background-color:rgb(180, 209, 255);"
+                      "border-left:0px solid rgb(64,40,230); "
+                      "border-right:0px solid gray; "
+                      "border-top:0px solid rgb(64,40,230); "
+                      "border-bottom:0px solid rgb(64,40,230);"
+                      "}"
 
-      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
+                      "QTreeView::item:hover{background-color:rgba(127,255,0,50)}"
 
-      "QTreeView::item:selected{background-color:rgb(180, 209, 255);"
-      "border-left:0px solid blue; "
-      "border-right:0px solid blue; "
-      "border-top:0px solid rgb(64,40,230); "
-      "border-bottom:0px solid rgb(64,40,230);"
-      "color:rgb(27,31,39);}"
+                      "QTreeView::item:selected{background-color:rgb(180, 209, 255);"
+                      "border-left:0px solid blue; "
+                      "border-right:0px solid blue; "
+                      "border-top:0px solid rgb(64,40,230); "
+                      "border-bottom:0px solid rgb(64,40,230);"
+                      "color:rgb(27,31,39);}"
 
-      "QTreeView::branch:open:has-children:!has-siblings,"
-      "QTreeView::branch:open:has-children:has-siblings {image: "
-      "url(:/new/toolbar/res/sub.svg);}"
-      "QTreeView::branch:has-children:!has-siblings:closed,"
-      "QTreeView::branch:closed:has-children:has-siblings {image: "
-      "url(:/new/toolbar/res/main.svg);}";
+                      "QTreeView::branch:open:has-children:!has-siblings,"
+                      "QTreeView::branch:open:has-children:has-siblings {image: "
+                      "url(:/new/toolbar/res/sub.svg);}"
+                      "QTreeView::branch:has-children:!has-siblings:closed,"
+                      "QTreeView::branch:closed:has-children:has-siblings {image: "
+                      "url(:/new/toolbar/res/main.svg);}";
 
   treeStyleMacDark =
       "QTreeView{outline:none;}"
@@ -127,10 +138,6 @@ MyTreeView::MyTreeView(QWidget* parent)
       "QTreeView::branch:closed:has-children:has-siblings {image: "
       "url(:/new/toolbar/res/main.svg);}";
 
-#ifdef Q_OS_WIN32
-  // setStyleSheet(strStyle0);
-#endif
-
 #ifdef Q_OS_MAC
 
 #endif
@@ -138,7 +145,11 @@ MyTreeView::MyTreeView(QWidget* parent)
   if (red > 55)
     setStyleSheet(treeStyleMacLight);
   else
-    setStyleSheet(treeStyleMacDark);
+      setStyleSheet(treeStyleMacDark);
+
+#ifdef Q_OS_WIN32
+  setStyleSheet(treeStyleWin);
+#endif
 
   setUniformRowHeights(true);
 
