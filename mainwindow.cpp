@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.30";
+QString CurVerison = "1.2.31";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -47,8 +47,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   ver = "PlistEDPlus  V" + CurVerison + "        ";
   ver = "";
-  setWindowTitle("PlistEDPlus");
-  ui->lblTitle->setText("PlistEDPlus");
+  setTitle("PlistEDPlus");
 
   loading = true;
 
@@ -87,6 +86,10 @@ MainWindow::MainWindow(QWidget* parent)
   plistTextEditor = new CodeEditor(this);
   plistTextEditor->setFont(getFont());
   plistTextEditor->setReadOnly(true);
+  ui->frameTitle->setHidden(true);
+  ui->btnMax->setHidden(true);
+  ui->btnMin->setHidden(true);
+  ui->btnClose->setHidden(true);
 
   init_UIStyle();
 
@@ -136,8 +139,6 @@ MainWindow::MainWindow(QWidget* parent)
   list.append(h0);
   list.append(h1);
   splitterMain->setSizes(list);
-
-  ui->frameTitle->setHidden(true);
 
   QApplication::setApplicationName("PlistEDPlus");
   QApplication::setOrganizationName("PlistED");
@@ -873,11 +874,16 @@ void MainWindow::on_TabCloseRequest(int i) {
     lblStaInfo0->setHidden(true);
     lblStaInfo1->setHidden(true);
     lblStaInfo2->setHidden(true);
-    setWindowTitle("PlistEDPlus");
-    ui->lblTitle->setText("PlistEDPlus");
+    setTitle("PlistEDPlus");
     plistTextEditor->clear();
     ui->btnHideFind->click();
   }
+}
+
+void MainWindow::setTitle(QString title) {
+  setWindowTitle(title);
+  if (title.length() > 60) title = "..." + title.mid(title.length() - 60, 60);
+  if (!ui->frameTitle->isHidden()) ui->lblTitle->setText(title);
 }
 
 void MainWindow::savePlist(QString filePath) {
@@ -1075,8 +1081,10 @@ void MainWindow::actionSaveAs() {
 
       savePlist(str);
 
-      this->setWindowTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
-      ui->lblTitle->setText(this->windowTitle());
+      if (win || linuxOS)
+        setTitle(ver + "[*] " + tabWidget->getCurentTab()->getPath());
+      else
+        setTitle(ver + tabWidget->getCurentTab()->getPath());
 
       QSettings settings;
       QFileInfo fInfo(str);
@@ -1187,8 +1195,10 @@ void MainWindow::onTabWidget_currentChanged(int index) {
       }
 
       QString strCurrentFile = tabWidget->getCurentTab()->getPath();
-      this->setWindowTitle(ver + "[*] " + strCurrentFile);
-      ui->lblTitle->setText(this->windowTitle());
+      if (win || linuxOS)
+        setTitle(ver + "[*] " + strCurrentFile);
+      else
+        setTitle(ver + strCurrentFile);
 
       // get undo stack
       QUndoStack* stack = tab->getUndoStack();
@@ -1593,12 +1603,13 @@ void MainWindow::reg_win() {
 #endif
 }
 
-void MainWindow::resizeEvent(QResizeEvent* event) {
-  Q_UNUSED(event);
-  QString t = windowTitle();
-  setWindowTitle("");
-  setWindowTitle(t);
-  this->update();
+void MainWindow::resizeEvent(QResizeEvent* event) { Q_UNUSED(event); }
+
+void MainWindow::setNoTitleBar() {
+#ifdef __APPLE__
+  return;
+  OSXHideTitleBar::HideTitleBar(winId());
+#endif
 }
 
 void MainWindow::on_actionMoveUp() {
@@ -2350,11 +2361,13 @@ void MainWindow::on_btnFind_clicked() { on_Find(); }
 void MainWindow::on_btnHideFind_clicked() {
   QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
   QSettings Reg(qfile, QSettings::IniFormat);
-  Reg.setValue("dockFindWidth", ui->listFind_2->width());
-  Reg.setValue("frameMainWidth", ui->frameMain->width());
+  if (!ui->listFind_2->isHidden()) {
+    Reg.setValue("dockFindWidth", ui->listFind_2->width());
+    Reg.setValue("frameMainWidth", ui->frameMain->width());
+  }
 
-  ui->frameFind->close();
-  ui->listFind_2->close();
+  ui->frameFind->setVisible(false);
+  ui->listFind_2->setVisible(false);
 }
 
 void MainWindow::on_btnPrevious_clicked() {
@@ -2690,6 +2703,7 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     isNULL = false;
     lblShowFind->installEventFilter(this);
     lblShowFind->setHidden(true);
+
     if (str1.length() <= 60)
       lblShowFind->setText(strR);
     else
@@ -2701,6 +2715,7 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     else
       lblShowFind->setStyleSheet(
           "QLabel { background-color : rgb(66, 92, 141); color : white; }");
+
     for (int i = 0; i < ui->listFind_2->count(); i++) {
       tab->treeView->setIndexWidget(indexFindList.at(i), NULL);
     }
@@ -3617,10 +3632,7 @@ void MainWindow::init_UIStyle() {
 
 void MainWindow::changeEvent(QEvent* e) {
   Q_UNUSED(e);
-#ifdef __APPLE__
-  return;
-  OSXHideTitleBar::HideTitleBar(winId());
-#endif
+  setNoTitleBar();
 }
 
 ClickableLabel::ClickableLabel(const QString& text, QWidget* parent)

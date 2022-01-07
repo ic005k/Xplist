@@ -177,7 +177,9 @@ class MainWindow : public QMainWindow {
 
   void init_UIStyle();
   void clearTreeIndexWidget();
- public slots:
+  void setTitle(QString title);
+  void setNoTitleBar();
+public slots:
   void on_Find();
   void on_actionMoveUp();
   void on_actionMoveDown();
