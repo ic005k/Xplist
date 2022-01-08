@@ -69,6 +69,7 @@ class MainWindow : public QMainWindow {
   ~MainWindow();
 
   Ui::MainWindow* ui;
+  bool blListItemClick = false;
   QLabel* lblShowFind;
   bool isNULL = false;
   bool mac = false;
@@ -180,7 +181,7 @@ class MainWindow : public QMainWindow {
   void setTitle(QString title);
   void setNoTitleBar();
   void setModifyMarker();
-public slots:
+ public slots:
   void on_Find();
   void on_actionMoveUp();
   void on_actionMoveDown();

@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.32";
+QString CurVerison = "1.2.33";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -2636,6 +2636,8 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
   Q_UNUSED(item);
   if (ui->listFind_2->count() <= 0) return;
 
+  blListItemClick = true;
+
   if (tabWidget->hasTabs()) {
     bool focus = false;
     bool focus1 = false;
@@ -2742,6 +2744,8 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     tab->treeView->setIndexWidget(index, lblShowFind);
     lblShowFind->setHidden(false);
   }
+
+  blListItemClick = false;
 }
 
 void MainWindow::AddACPI(QString fileStr) {

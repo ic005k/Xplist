@@ -422,7 +422,10 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
     mw_one->ui->editBase64->setText(HexStrToByte(str).toBase64());
     setTipsFixedHeight();
     lblTips->setHidden(true);
-    mw_one->ui->frameData->setHidden(false);
+    if (!mw_one->blListItemClick)
+      mw_one->ui->frameData->setHidden(false);
+    else
+      mw_one->ui->frameData->setHidden(true);
   }
 }
 
