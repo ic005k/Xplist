@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.31";
+QString CurVerison = "1.2.32";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -395,6 +395,9 @@ void MainWindow::initMenuToolsBar() {
   actRecentlyOpen->setText(tr("Recently Open"));
   ui->menuFile->insertAction(ui->actionSave, actRecentlyOpen);
   actRecentlyOpen->setMenu(reFileMenu);
+#ifdef Q_OS_MAC
+  reFileMenu->setAsDockMenu();
+#endif
 
   //最近打开的文件
   QCoreApplication::setOrganizationName("ic005k");
@@ -545,6 +548,7 @@ void MainWindow::openFiles(QStringList list) {
 void MainWindow::openPlist(QString filePath) {
   tabWidget->setHidden(false);
   ui->listFind_2->clear();  // 否则会导致App崩溃
+  clearTreeIndexWidget();
   removeWatchFiles();
 
   map<string, boost::any> dict;
@@ -813,6 +817,7 @@ void MainWindow::addWatchFiles() {
 }
 
 void MainWindow::on_TabCloseRequest(int i) {
+  clearTreeIndexWidget();
   if (i != -1)
     tabWidget->setCurrentIndex(i);
   else
@@ -1455,7 +1460,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
   if (find) {
     ui->btnPrevious->setEnabled(true);
     ui->btnNext->setEnabled(true);
-    ui->listFind_2->setCurrentRow(0);
+    ui->listFind_2->setCurrentRow(-1);
     ui->listFind_2->setHidden(false);
     update();
     findTextChanged = false;
