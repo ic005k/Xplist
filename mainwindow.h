@@ -179,6 +179,7 @@ class MainWindow : public QMainWindow {
   void clearTreeIndexWidget();
   void setTitle(QString title);
   void setNoTitleBar();
+  void setModifyMarker();
 public slots:
   void on_Find();
   void on_actionMoveUp();

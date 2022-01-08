@@ -36,6 +36,8 @@
         <file>res/find.png</file>
         <file>res/c.png</file>
         <file>res/c0.png</file>
+        <file>res/green.svg</file>
+        <file>res/red.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

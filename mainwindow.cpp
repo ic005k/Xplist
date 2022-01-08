@@ -728,6 +728,7 @@ void MainWindow::openPlist(QString filePath) {
 
   setOrgMD5(filePath);
   addWatchFiles();
+  setModifyMarker();
 
   loading = false;
 }
@@ -1063,6 +1064,7 @@ void MainWindow::savePlist(QString filePath) {
 
   setOrgMD5(filePath);
   addWatchFiles();
+  setModifyMarker();
 }
 
 void MainWindow::actionSave() {
@@ -1228,6 +1230,19 @@ void MainWindow::onTabWidget_currentChanged(int index) {
       ui->frameData->setHidden(true);
       clearTreeIndexWidget();
     }
+  }
+}
+
+void MainWindow::setModifyMarker() {
+  return;
+  if (tabWidget->hasTabs()) {
+    tabWidget->setIconSize(QSize(12, 12));
+    if (this->isWindowModified())
+      tabWidget->setTabIcon(tabWidget->currentIndex(),
+                            QIcon(":/new/toolbar/res/red.svg"));
+    else
+      tabWidget->setTabIcon(tabWidget->currentIndex(),
+                            QIcon(":/new/toolbar/res/green.svg"));
   }
 }
 
