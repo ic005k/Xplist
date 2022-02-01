@@ -217,7 +217,7 @@
     <message>
         <location filename="mainwindow.ui" line="1162"/>
         <source>Remove</source>
-        <translation>移除条目</translation>
+        <translation>删除条目</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="978"/>
