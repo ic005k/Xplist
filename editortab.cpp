@@ -138,6 +138,7 @@ void EditorTab::contextMenuEvent(QContextMenuEvent* event) {
 
   menu.addAction(mw_one->ui->actionNew_Sibling);
   menu.addAction(mw_one->ui->actionNew_Child);
+  menu.addAction(mw_one->ui->actionRemove_2);
 
   menu.addSeparator();
 

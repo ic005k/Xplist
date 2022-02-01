@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.34";
+QString CurVerison = "1.2.35";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
