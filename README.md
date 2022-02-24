@@ -23,7 +23,7 @@
 
 This is a lightweight plist editor with rich features. The file format supports XML and binary plist files under all platforms.
 
-### Thanks
+### Credits
 
 [PlistED](https://github.com/alpex92/PlistED)&nbsp; &nbsp; &nbsp; &nbsp;
 [PlistCpp](https://github.com/animetrics/PlistCpp)&nbsp; &nbsp; &nbsp; &nbsp;
