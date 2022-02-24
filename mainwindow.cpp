@@ -822,6 +822,7 @@ void MainWindow::addWatchFiles() {
 
 void MainWindow::on_TabCloseRequest(int i) {
   ui->editFind->setFocus();
+  ui->frameData->setHidden(true);
   clearTreeIndexWidget();
   if (i != -1)
     tabWidget->setCurrentIndex(i);
