@@ -411,7 +411,7 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
 
   mw_one->showMsg();
 
-  mw_one->goPlistText();
+  if (mw_one->ui->actionShowPlistText->isChecked()) mw_one->goPlistText();
 
   if (item->getType() == "data") {
     QString str =

@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.35";
+QString CurVerison = "1.2.36";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -79,6 +79,8 @@ MainWindow::MainWindow(QWidget* parent)
 #endif
 
   tabWidget = new EditorTabsWidget(this);
+  connect(tabWidget, &QTabWidget::tabBarClicked, this,
+          &MainWindow::ontabBarClicked);
   tabWidget->setHidden(true);
   lblShowFind = new QLabel(this);
   lblShowFind->setHidden(true);
@@ -1187,50 +1189,53 @@ void MainWindow::actionAbout_activated() {
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
 
+void MainWindow::ontabBarClicked(int index) {
+  if (index < 0) return;
+  if (!tabWidget->hasTabs()) return;
+  ui->editFind->setFocus();
+  EditorTab* tab = tabWidget->getCurentTab();
+  tab->treeView->setFocus();
+}
+
 void MainWindow::onTabWidget_currentChanged(int index) {
-  if (index >= 0) {
-    if (tabWidget->hasTabs()) {
-      EditorTab* tab = tabWidget->getCurentTab();
-      setExpandText(tab);
+  if (index < 0) return;
+  if (!tabWidget->hasTabs()) return;
 
-      QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
-      if (strBin.contains("[BIN]")) {
-        ui->cboxFileType->setCurrentIndex(1);
-
-      } else {
-        ui->cboxFileType->setCurrentIndex(0);
-      }
-
-      QString strCurrentFile = tabWidget->getCurentTab()->getPath();
-      if (win || linuxOS)
-        setTitle(ver + "[*] " + strCurrentFile);
-      else
-        setTitle(ver + strCurrentFile);
-
-      // get undo stack
-      QUndoStack* stack = tab->getUndoStack();
-
-      // set active stack
-      if (!undoGroup->stacks().contains(stack)) undoGroup->addStack(stack);
-
-      undoGroup->setActiveStack(stack);
-
-      if (!loading) {
-        loadText(tabWidget->getCurentTab()->getPath());
-        goPlistText();
-        showMsg();
-
-        writeINITab();
-      }
-
-      ui->btnPrevious->setEnabled(false);
-      ui->btnNext->setEnabled(false);
-      ui->btnReplace->setEnabled(false);
-      ui->listFind_2->clear();
-      ui->frameData->setHidden(true);
-      clearTreeIndexWidget();
-    }
+  EditorTab* tab = tabWidget->getCurentTab();
+  setExpandText(tab);
+  QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
+  if (strBin.contains("[BIN]")) {
+    ui->cboxFileType->setCurrentIndex(1);
+  } else {
+    ui->cboxFileType->setCurrentIndex(0);
   }
+
+  QString strCurrentFile = tabWidget->getCurentTab()->getPath();
+  if (win || linuxOS)
+    setTitle(ver + "[*] " + strCurrentFile);
+  else
+    setTitle(ver + strCurrentFile);
+
+  // get undo stack
+  QUndoStack* stack = tab->getUndoStack();
+
+  // set active stack
+  if (!undoGroup->stacks().contains(stack)) undoGroup->addStack(stack);
+  undoGroup->setActiveStack(stack);
+
+  if (!loading) {
+    loadText(tabWidget->getCurentTab()->getPath());
+    goPlistText();
+    showMsg();
+    writeINITab();
+  }
+
+  ui->btnPrevious->setEnabled(false);
+  ui->btnNext->setEnabled(false);
+  ui->btnReplace->setEnabled(false);
+  ui->listFind_2->clear();
+  ui->frameData->setHidden(true);
+  clearTreeIndexWidget();
 }
 
 void MainWindow::setModifyMarker() {

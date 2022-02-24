@@ -346,6 +346,8 @@ class MainWindow : public QMainWindow {
 
   void on_btnMax_clicked();
 
+  void ontabBarClicked(int index);
+
  private:
   bool isDrag;
   QPoint m_position;
