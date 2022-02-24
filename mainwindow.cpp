@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.36";
+QString CurVerison = "1.2.37";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -550,6 +550,7 @@ void MainWindow::openFiles(QStringList list) {
 void MainWindow::openPlist(QString filePath) {
   tabWidget->setHidden(false);
   ui->listFind_2->clear();  // 否则会导致App崩溃
+  ui->editFind->setFocus();
   clearTreeIndexWidget();
   removeWatchFiles();
 
@@ -820,6 +821,7 @@ void MainWindow::addWatchFiles() {
 }
 
 void MainWindow::on_TabCloseRequest(int i) {
+  ui->editFind->setFocus();
   clearTreeIndexWidget();
   if (i != -1)
     tabWidget->setCurrentIndex(i);
