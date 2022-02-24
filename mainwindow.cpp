@@ -21,7 +21,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.37";
+QString CurVerison = "1.2.38";
 
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
@@ -88,10 +88,6 @@ MainWindow::MainWindow(QWidget* parent)
   plistTextEditor = new CodeEditor(this);
   plistTextEditor->setFont(getFont());
   plistTextEditor->setReadOnly(true);
-  ui->frameTitle->setHidden(true);
-  ui->btnMax->setHidden(true);
-  ui->btnMin->setHidden(true);
-  ui->btnClose->setHidden(true);
 
   init_UIStyle();
 
@@ -131,7 +127,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   QSplitter* splitterMain = new QSplitter(Qt::Horizontal, this);
   splitterMain->addWidget(splitter1);
-  splitterMain->addWidget(ui->listFind_2);
+  splitterMain->addWidget(ui->listFind);
   ui->centralWidget->layout()->addWidget(splitterMain);
   h0 = Reg.value("frameMainWidth", 500).toInt();
   h1 = Reg.value("dockFindWidth", 100).toInt();
@@ -150,8 +146,8 @@ MainWindow::MainWindow(QWidget* parent)
   }
 
   // 初始化文件被修改后的提示
-  ui->frameTip->setAutoFillBackground(true);
-  ui->frameTip->setPalette(QPalette(QColor(255, 204, 204)));
+  // ui->frameTip->setAutoFillBackground(true);
+  // ui->frameTip->setPalette(QPalette(QColor(255, 204, 204)));
   ui->btnYes->setDefault(true);
   ui->frameTip->setHidden(true);
 
@@ -307,9 +303,6 @@ void MainWindow::initMenuToolsBar() {
   ui->btnExpand->setHidden(true);
   ui->btnDel->setHidden(true);
   ui->btnSort->setHidden(true);
-  QFont font;
-  font.setBold(true);
-  ui->lblTitle->setFont(font);
 
   ui->actionAbout->setMenuRole(QAction::AboutRole);
   ui->mainToolBar->setIconSize(QSize(26, 26));
@@ -549,7 +542,7 @@ void MainWindow::openFiles(QStringList list) {
 
 void MainWindow::openPlist(QString filePath) {
   tabWidget->setHidden(false);
-  ui->listFind_2->clear();  // 否则会导致App崩溃
+  ui->listFind->clear();  // 否则会导致App崩溃
   ui->editFind->setFocus();
   clearTreeIndexWidget();
   removeWatchFiles();
@@ -894,7 +887,6 @@ void MainWindow::on_TabCloseRequest(int i) {
 void MainWindow::setTitle(QString title) {
   setWindowTitle(title);
   if (title.length() > 60) title = "..." + title.mid(title.length() - 60, 60);
-  if (!ui->frameTitle->isHidden()) ui->lblTitle->setText(title);
 }
 
 void MainWindow::savePlist(QString filePath) {
@@ -1147,9 +1139,9 @@ void MainWindow::actionRemove_activated() {
     QItemSelectionModel* selections = tab->treeView->selectionModel();
     QModelIndexList selectedsList = selections->selectedRows();
 
-    qSort(selectedsList.begin(), selectedsList.end(),
-          qGreater<QModelIndex>());  // so that rows are removed from highest
-                                     // index
+    std::sort(selectedsList.begin(), selectedsList.end(),
+              qGreater<QModelIndex>());  // so that rows are removed from
+                                         // highest index
 
     foreach (QModelIndex index, selectedsList) {
       if (index.isValid()) {
@@ -1236,7 +1228,7 @@ void MainWindow::onTabWidget_currentChanged(int index) {
   ui->btnPrevious->setEnabled(false);
   ui->btnNext->setEnabled(false);
   ui->btnReplace->setEnabled(false);
-  ui->listFind_2->clear();
+  ui->listFind->clear();
   ui->frameData->setHidden(true);
   clearTreeIndexWidget();
 }
@@ -1410,7 +1402,7 @@ void MainWindow::on_Find() {
     if (index.isValid()) {
       clearTreeIndexWidget();
       indexFindList.clear();
-      ui->listFind_2->clear();
+      ui->listFind->clear();
       indexCount = -1;
 
       QString strFind = ui->editFind->text().trimmed();
@@ -1455,7 +1447,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       ui->actionSort->setEnabled(false);
 
       indexFindList.append(index2);
-      ui->listFind_2->addItem(originalValue);
+      ui->listFind->addItem(originalValue);
     }
     //搜索键
     if (name.contains(str.trimmed()) && str.trimmed() != "") {
@@ -1472,7 +1464,7 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
       ui->actionSort->setEnabled(false);
 
       indexFindList.append(index);
-      ui->listFind_2->addItem(originalName);
+      ui->listFind->addItem(originalName);
     }
 
     if (model->hasChildren(index)) {
@@ -1483,8 +1475,8 @@ void MainWindow::forEach(QAbstractItemModel* model, QModelIndex parent,
   if (find) {
     ui->btnPrevious->setEnabled(true);
     ui->btnNext->setEnabled(true);
-    ui->listFind_2->setCurrentRow(-1);
-    ui->listFind_2->setHidden(false);
+    ui->listFind->setCurrentRow(-1);
+    ui->listFind->setHidden(false);
     update();
     findTextChanged = false;
   }
@@ -1524,8 +1516,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   Reg.setValue("drag", false);
   Reg.setValue("AutoUpdateCheck", ui->actionAutoUpdateCheck->isChecked());
 
-  if (!ui->listFind_2->isHidden()) {
-    Reg.setValue("dockFindWidth", ui->listFind_2->width());
+  if (!ui->listFind->isHidden()) {
+    Reg.setValue("dockFindWidth", ui->listFind->width());
     Reg.setValue("frameMainWidth", ui->frameMain->width());
   }
 
@@ -2370,7 +2362,7 @@ void MainWindow::on_editFind_textChanged(const QString& arg1) {
     if (arg1 == "" || !find) {
       findCount = 0;
       ui->lblFindCount->setText("  " + QString::number(findCount) + "  ");
-      ui->listFind_2->clear();
+      ui->listFind->clear();
       clearTreeIndexWidget();
 
       EditorTab* tab = tabWidget->getCurentTab();
@@ -2389,41 +2381,41 @@ void MainWindow::on_btnFind_clicked() { on_Find(); }
 void MainWindow::on_btnHideFind_clicked() {
   QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
   QSettings Reg(qfile, QSettings::IniFormat);
-  if (!ui->listFind_2->isHidden()) {
-    Reg.setValue("dockFindWidth", ui->listFind_2->width());
+  if (!ui->listFind->isHidden()) {
+    Reg.setValue("dockFindWidth", ui->listFind->width());
     Reg.setValue("frameMainWidth", ui->frameMain->width());
   }
 
   ui->frameFind->setVisible(false);
-  ui->listFind_2->setVisible(false);
+  ui->listFind->setVisible(false);
 }
 
 void MainWindow::on_btnPrevious_clicked() {
-  if (ui->listFind_2->count() == 0) return;
+  if (ui->listFind->count() == 0) return;
 
-  int row = ui->listFind_2->currentRow();
+  int row = ui->listFind->currentRow();
 
   if (row - 1 == -1)
     row = 0;
   else
     row = row - 1;
 
-  ui->listFind_2->setCurrentRow(row);
-  on_listFind_2_itemClicked(NULL);
+  ui->listFind->setCurrentRow(row);
+  on_listFind_itemClicked(NULL);
 }
 
 void MainWindow::on_btnNext_clicked() {
-  if (ui->listFind_2->count() == 0) return;
+  if (ui->listFind->count() == 0) return;
 
-  int row = ui->listFind_2->currentRow();
+  int row = ui->listFind->currentRow();
 
-  if (row + 1 == ui->listFind_2->count())
+  if (row + 1 == ui->listFind->count())
     row = 0;
   else
     row = row + 1;
 
-  ui->listFind_2->setCurrentRow(row);
-  on_listFind_2_itemClicked(NULL);
+  ui->listFind->setCurrentRow(row);
+  on_listFind_itemClicked(NULL);
 }
 
 void MainWindow::on_btnReplace_clicked() {
@@ -2470,7 +2462,7 @@ void MainWindow::on_btnReplace_clicked() {
       indexFindList.remove(indexCount);
 
       loading = true;
-      ui->listFind_2->takeItem(indexCount);
+      ui->listFind->takeItem(indexCount);
       loading = false;
 
       findCount = indexFindList.count();
@@ -2490,7 +2482,7 @@ void MainWindow::on_btnReplace_clicked() {
       indexFindList.remove(indexCount);
 
       loading = true;
-      ui->listFind_2->takeItem(indexCount);
+      ui->listFind->takeItem(indexCount);
       loading = false;
 
       findCount = indexFindList.count();
@@ -2572,7 +2564,7 @@ void MainWindow::on_btnReplaceAll_clicked() {
   ui->btnPrevious->setEnabled(false);
   ui->btnNext->setEnabled(false);
   loading = true;
-  ui->listFind_2->clear();
+  ui->listFind->clear();
   loading = false;
 }
 
@@ -2635,14 +2627,14 @@ void MainWindow::initFindReplace() {
   ui->btnNext->setEnabled(false);
   ui->btnReplace->setEnabled(false);
 
-  ui->listFind_2->setHidden(true);
+  ui->listFind->setHidden(true);
 }
 
 void MainWindow::initPlistTextShow() {}
 
-void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
+void MainWindow::on_listFind_itemClicked(QListWidgetItem* item) {
   Q_UNUSED(item);
-  if (ui->listFind_2->count() <= 0) return;
+  if (ui->listFind->count() <= 0) return;
 
   blListItemClick = true;
 
@@ -2650,9 +2642,9 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     bool focus = false;
     bool focus1 = false;
     if (ui->editFind->hasFocus()) focus = true;
-    if (ui->listFind_2->hasFocus()) focus1 = true;
+    if (ui->listFind->hasFocus()) focus1 = true;
 
-    indexCount = ui->listFind_2->currentRow();
+    indexCount = ui->listFind->currentRow();
 
     if (indexCount >= indexFindList.count()) {
       indexCount = indexFindList.count() - 1;
@@ -2670,7 +2662,7 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     loading = false;
     tab->treeView->resizeColumnToContents(0);
 
-    if (ui->listFind_2->count() == 1) {
+    if (ui->listFind->count() == 1) {
       QModelIndex index0 = tab->getModel()->index(0, 0);
       tab->treeView->setCurrentIndex(index0);
     }
@@ -2682,12 +2674,12 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
     ui->btnReplace->setEnabled(true);
 
     if (focus) ui->editFind->setFocus();
-    if (focus1) ui->listFind_2->setFocus();
+    if (focus1) ui->listFind->setFocus();
 
     // Mark item
     QString strR, strS;
     QString str0 = ui->editFind->text();
-    QString str1 = ui->listFind_2->currentItem()->text();
+    QString str1 = ui->listFind->currentItem()->text();
     for (int i = 0; i < str1.length(); i++) {
       if (str1.mid(i, str0.length()).toLower() == str0.toLower()) {
         strS = str1.mid(i, str0.length());
@@ -2746,7 +2738,7 @@ void MainWindow::on_listFind_2_itemClicked(QListWidgetItem* item) {
       lblShowFind->setStyleSheet(
           "QLabel { background-color : rgb(66, 92, 141); color : white; }");
 
-    for (int i = 0; i < ui->listFind_2->count(); i++) {
+    for (int i = 0; i < ui->listFind->count(); i++) {
       tab->treeView->setIndexWidget(indexFindList.at(i), NULL);
     }
     tab->treeView->setIndexWidget(index, lblShowFind);
@@ -3198,8 +3190,8 @@ void MainWindow::initRecentFilesForToolBar() {
 
 void MainWindow::on_actionQuit_triggered() { this->close(); }
 
-void MainWindow::on_listFind_2_itemSelectionChanged() {
-  if (!loading) on_listFind_2_itemClicked(NULL);
+void MainWindow::on_listFind_itemSelectionChanged() {
+  if (!loading) on_listFind_itemClicked(NULL);
 }
 
 void MainWindow::on_actionFont_triggered() {
@@ -3256,7 +3248,7 @@ QFont MainWindow::getFont() {
   return font;
 }
 
-void MainWindow::on_listFind_2_currentRowChanged(int currentRow) {
+void MainWindow::on_listFind_currentRowChanged(int currentRow) {
   Q_UNUSED(currentRow)
 }
 

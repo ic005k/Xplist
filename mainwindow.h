@@ -288,7 +288,7 @@ class MainWindow : public QMainWindow {
 
   void on_actionSave_as_triggered();
 
-  void on_listFind_2_itemClicked(QListWidgetItem* item);
+  void on_listFind_itemClicked(QListWidgetItem* item);
 
   void on_actionBug_Report_triggered();
 
@@ -296,11 +296,11 @@ class MainWindow : public QMainWindow {
 
   void on_actionQuit_triggered();
 
-  void on_listFind_2_itemSelectionChanged();
+  void on_listFind_itemSelectionChanged();
 
   void on_actionFont_triggered();
 
-  void on_listFind_2_currentRowChanged(int currentRow);
+  void on_listFind_currentRowChanged(int currentRow);
 
   void on_btnNo_clicked();
 

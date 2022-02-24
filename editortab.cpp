@@ -540,7 +540,8 @@ void EditorTab::on_copyAction() {
   QModelIndexList selectedsList = selections->selectedRows();
 
   copy_item.clear();
-  qSort(selectedsList.begin(), selectedsList.end(), qGreater<QModelIndex>());
+  std::sort(selectedsList.begin(), selectedsList.end(),
+            qGreater<QModelIndex>());
   foreach (QModelIndex index, selectedsList) {
     item = model->itemForIndex(index);
     if (item->getName() != "plist") {
@@ -556,7 +557,8 @@ void EditorTab::on_cutAction() {
   QModelIndexList selectedsList = selections->selectedRows();
 
   copy_item.clear();
-  qSort(selectedsList.begin(), selectedsList.end(), qGreater<QModelIndex>());
+  std::sort(selectedsList.begin(), selectedsList.end(),
+            qGreater<QModelIndex>());
   foreach (QModelIndex index, selectedsList) {
     if (index.parent().data().toString() != "")  //最顶层不允许剪切
     {

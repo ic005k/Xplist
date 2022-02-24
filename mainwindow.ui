@@ -48,8 +48,8 @@
     <property name="bottomMargin">
      <number>2</number>
     </property>
-    <item row="1" column="0">
-     <widget class="QListWidget" name="listFind_2">
+    <item row="0" column="0">
+     <widget class="QListWidget" name="listFind">
       <property name="minimumSize">
        <size>
         <width>150</width>
@@ -76,7 +76,7 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
      <widget class="QFrame" name="frameMain">
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -107,16 +107,16 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
           <property name="leftMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="topMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="rightMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="bottomMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <item row="0" column="1">
            <widget class="QPushButton" name="btnNo">
@@ -737,96 +737,6 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
           </attribute>
          </widget>
         </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QFrame" name="frameTitle">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>32</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>32</height>
-       </size>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Plain</enum>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QToolButton" name="btnMax">
-         <property name="text">
-          <string>Max</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="btnMin">
-         <property name="text">
-          <string>Min</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="btnClose">
-         <property name="text">
-          <string>Exit</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="lblTitle">
-         <property name="text">
-          <string>Title</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
