@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.40";
+QString CurVerison = "1.2.41";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -2166,24 +2166,17 @@ void MainWindow::on_pasteBW() {
     bool bak = ui->actionExpandAllOpenFile->isChecked();
     ui->actionExpandAllOpenFile->setChecked(false);
     openPlist(fn);
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     int count = tabWidget->tabBar()->count();
-    tabWidget->tabBar()->setTabVisible(count - 1, false);
     tabWidget->setCurrentIndex(count - 1);
-#endif
-
     ui->actionExpandAllOpenFile->setChecked(bak);
-
     QModelIndex index = tabWidget->getCurentTab()->currentIndex();
     QModelIndex index1 =
         tabWidget->getCurentTab()->getModel()->index(0, 0, index);
     if (index1.isValid())
       tabWidget->getCurentTab()->treeView->setCurrentIndex(index1);
-
     tabWidget->getCurentTab()->treeView->selectAll();
     on_copyAction();
-    actionClose_activated();
+    on_TabCloseRequest(count - 1);
 
     tabWidget->setCurrentIndex(ci);
     tabWidget->getCurentTab()->treeView->setFocus();
@@ -3513,10 +3506,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent* e) {
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent*) { isDrag = false; }
-
-void MainWindow::on_btnClose_clicked() { close(); }
-
-void MainWindow::on_btnMax_clicked() {}
 
 bool MainWindow::eventFilter(QObject* o, QEvent* e) {
   if (o == lblShowFind) {

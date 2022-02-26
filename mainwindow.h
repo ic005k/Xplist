@@ -338,10 +338,6 @@ class MainWindow : public QMainWindow {
 
   void on_btnSave_clicked();
 
-  void on_btnClose_clicked();
-
-  void on_btnMax_clicked();
-
   void ontabBarClicked(int index);
 
  private:
