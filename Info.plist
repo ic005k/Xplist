@@ -12,7 +12,7 @@
                 <key>CFBundleTypeIconFile</key>
                 <string>my.icns</string>
                 <key>CFBundleTypeName</key>
-                <string>PlistEDPlus Document</string>
+                <string>Xplist Document</string>
                 <key>CFBundleTypeRole</key>
                 <string>Editor</string>
                 <key>LSHandlerRank</key>
@@ -26,19 +26,19 @@
             </dict>
         </array>
         <key>CFBundleExecutable</key>
-        <string>PlistEDPlus</string>
+        <string>Xplist</string>
         <key>CFBundleIconFile</key>
         <string>my.icns</string>
         <key>CFBundleIdentifier</key>
-        <string>z.PlistEDPlus</string>
+        <string>z.Xplist</string>
         <key>CFBundlePackageType</key>
         <string>APPL</string>
         <key>CFBundleShortVersionString</key>
-        <string>1.2.36</string>
+        <string>1.2.40</string>
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>1.2.36</string>
+        <string>1.2.40</string>
         <key>LSMinimumSystemVersion</key>
         <string>10.13</string>
         <key>NOTE</key>
