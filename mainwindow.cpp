@@ -11,10 +11,6 @@
 #include "mytreeview.h"
 #include "ui_mainwindow.h"
 
-#ifdef __APPLE__
-#include "OSXHideTitleBar.h"
-#endif
-
 using namespace std;
 
 #include <QMessageBox>
@@ -1600,13 +1596,6 @@ void MainWindow::reg_win() {
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event) { Q_UNUSED(event); }
-
-void MainWindow::setNoTitleBar() {
-#ifdef __APPLE__
-  return;
-  OSXHideTitleBar::HideTitleBar(winId());
-#endif
-}
 
 void MainWindow::on_actionMoveUp() {
   if (tabWidget->hasTabs()) {
@@ -3612,10 +3601,7 @@ void MainWindow::init_UIStyle() {
   }
 }
 
-void MainWindow::changeEvent(QEvent* e) {
-  Q_UNUSED(e);
-  setNoTitleBar();
-}
+void MainWindow::changeEvent(QEvent* e) { Q_UNUSED(e); }
 
 ClickableLabel::ClickableLabel(const QString& text, QWidget* parent)
     : QLabel(parent) {
