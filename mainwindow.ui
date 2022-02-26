@@ -809,7 +809,7 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
     </property>
     <widget class="QMenu" name="menuUpgrade_Download_Proxy">
      <property name="title">
-      <string>Select the mirror server for upgrade download</string>
+      <string>Select the Mirror Server for Upgrade Download</string>
      </property>
      <addaction name="actProxy1"/>
      <addaction name="actProxy2"/>
@@ -948,7 +948,7 @@ QStatusBar::item {
      <normaloff>:/new/toolbar/res/saveas.svg</normaloff>:/new/toolbar/res/saveas.svg</iconset>
    </property>
    <property name="text">
-    <string>Save as</string>
+    <string>Save As...</string>
    </property>
    <property name="iconText">
     <string>Save as</string>
@@ -997,7 +997,7 @@ QStatusBar::item {
   </action>
   <action name="actionClose_all">
    <property name="text">
-    <string>Close all</string>
+    <string>Close All</string>
    </property>
    <property name="iconText">
     <string>Close all</string>
@@ -1037,7 +1037,7 @@ QStatusBar::item {
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>DefaultNodeIcon</string>
+    <string>Default Node Icon</string>
    </property>
   </action>
   <action name="actionCheck_Update">
@@ -1093,7 +1093,7 @@ QStatusBar::item {
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Expand all when opening a file</string>
+    <string>Expand All When Opening File</string>
    </property>
   </action>
   <action name="actionNew_Window">
@@ -1110,12 +1110,12 @@ QStatusBar::item {
   </action>
   <action name="actionCopy_between_windows">
    <property name="text">
-    <string>Copy between windows</string>
+    <string>Copy Between Windows</string>
    </property>
   </action>
   <action name="actionPaste_between_windows">
    <property name="text">
-    <string>Paste between windows</string>
+    <string>Paste Between Windows</string>
    </property>
   </action>
   <action name="actionShowPlistText">
@@ -1126,12 +1126,12 @@ QStatusBar::item {
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Show plist text</string>
+    <string>Show Plist Text</string>
    </property>
   </action>
   <action name="actionPaste_as_child">
    <property name="text">
-    <string>Paste as child</string>
+    <string>Paste As Child</string>
    </property>
   </action>
   <action name="actionFind">
@@ -1147,7 +1147,7 @@ QStatusBar::item {
   </action>
   <action name="actionFindNext">
    <property name="text">
-    <string>Go to the next</string>
+    <string>Next</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+2</string>
@@ -1158,7 +1158,7 @@ QStatusBar::item {
   </action>
   <action name="actionFindPrevious">
    <property name="text">
-    <string>Go to the previous</string>
+    <string>Previous</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+1</string>
