@@ -1,4 +1,4 @@
-[简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
+[简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-cn.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 ## Xplist -- 开源跨平台的轻量级plist文件编辑器
 
 这是一个轻量级的plist编辑器，功能丰富。支持Windows、MacOS、Linux。文件格式在所有的平台下支持XML和二进制plist文件。
