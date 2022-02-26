@@ -27,7 +27,7 @@ jobs:
         qt_arch: [gcc_64]
         
     env:
-        targetName: PlistEDPlus
+        targetName: Xplist
         VERSION: Linux
               
     steps:
