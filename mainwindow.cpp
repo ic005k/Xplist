@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.41";
+QString CurVerison = "1.2.42";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -2127,11 +2127,8 @@ void MainWindow::on_copyBW() {
     on_copyAction();
     actionNew();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
     int count = tabWidget->tabBar()->count();
-    tabWidget->tabBar()->setTabVisible(count - 1, false);
     tabWidget->setCurrentIndex(count - 1);
-#endif
 
     on_actionNewChild();
 
@@ -2145,7 +2142,7 @@ void MainWindow::on_copyBW() {
     savePlist(fn);
 
     tabWidget->getCurentTab()->setWindowModified(false);
-    actionClose_activated();
+    on_TabCloseRequest(count - 1);
 
     tabWidget->setCurrentIndex(ci);
     tabWidget->getCurentTab()->treeView->setFocus();
