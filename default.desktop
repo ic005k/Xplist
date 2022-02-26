@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=PlistEDPlus
+Name=Xplist
 Exec=AppRun %F
 Icon=icon
 Comment=PlistEditor
