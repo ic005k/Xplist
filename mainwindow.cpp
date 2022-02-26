@@ -17,8 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.38";
-
+QString CurVerison = "1.2.39";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -32,9 +31,9 @@ bool Save = false;
 int red = 0;
 int windowX = 0;
 int windowY = 0;
-QString qfile =
+QString iniFile =
     QDir::homePath() + "/.config/" + appName + "/" + appName + ".ini";
-QSettings Reg(qfile, QSettings::IniFormat);
+QSettings Reg(iniFile, QSettings::IniFormat);
 
 extern bool loading;
 extern QString strRootType, tabStyleLight, treeStyleMacLight, treeStyleMacDark,
@@ -59,8 +58,6 @@ MainWindow::MainWindow(QWidget* parent)
   QPalette pal = this->palette();
   QBrush brush = pal.window();
   red = brush.color().red();
-
-  this->resize(QSize(1200, 650));
 
 #ifdef Q_OS_WIN32
   reg_win();
@@ -257,8 +254,8 @@ void MainWindow::init_iniData() {
   int x, y, width, height;
   x = Reg.value("x", 0).toInt();
   y = Reg.value("y", 0).toInt();
-  width = Reg.value("width", 1200).toInt();
-  height = Reg.value("height", 600).toInt();
+  width = Reg.value("width", 640).toInt();
+  height = Reg.value("height", 480).toInt();
   if (x < 0) {
     width = width + x;
     x = 0;
@@ -1501,18 +1498,13 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   //记录搜索文本列表
   //先读取，采用增量保存的方式，以免覆盖之前的已有数据
-  QFileInfo fi(qfile);
+  QStringList tempList;
+  int count = Reg.value("FindTextListTotal").toInt();
+  for (int i = 0; i < count; i++) {
+    tempList.append(Reg.value("FindTextList" + QString::number(i)).toString());
+  }
 
-  if (fi.exists()) {
-    QStringList tempList;
-    int count = Reg.value("FindTextListTotal").toInt();
-    for (int i = 0; i < count; i++) {
-      tempList.append(
-          Reg.value("FindTextList" + QString::number(i)).toString());
-    }
-
-    if (FindTextList.count() < tempList.count()) {
-    }
+  if (FindTextList.count() < tempList.count()) {
   }
 
   int findTotal;
