@@ -26,6 +26,7 @@ QString CurVerison = "1.2.38";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
+QString appName = "Xplist";
 QVector<QString> openFileList;
 
 bool defaultIcon = false;
@@ -35,6 +36,9 @@ bool Save = false;
 int red = 0;
 int windowX = 0;
 int windowY = 0;
+QString qfile =
+    QDir::homePath() + "/.config/" + appName + "/" + appName + ".ini";
+QSettings Reg(qfile, QSettings::IniFormat);
 
 extern bool loading;
 extern QString strRootType, tabStyleLight, treeStyleMacLight, treeStyleMacDark,
@@ -45,13 +49,14 @@ MainWindow::MainWindow(QWidget* parent)
   ui->setupUi(this);
   installEventFilter(this);
 
-  ver = "PlistEDPlus  V" + CurVerison + "        ";
+  ver = appName + "  V" + CurVerison + "        ";
   ver = "";
-  setTitle("PlistEDPlus");
+  setTitle(appName);
 
   loading = true;
 
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
+  QString qfile =
+      QDir::homePath() + "/.config/" + appName + "/" + appName + ".ini";
   QSettings Reg(qfile, QSettings::IniFormat);
 
   // 获取背景色
@@ -138,23 +143,15 @@ MainWindow::MainWindow(QWidget* parent)
   list.append(h1);
   splitterMain->setSizes(list);
 
-  QApplication::setApplicationName("PlistEDPlus");
+  QApplication::setApplicationName(appName);
   QApplication::setOrganizationName("PlistED");
-
-  QDir dir;
-  if (dir.mkpath(QDir::homePath() + "/.config/PlistEDPlus/")) {
-  }
 
   // 初始化文件被修改后的提示
   // ui->frameTip->setAutoFillBackground(true);
   // ui->frameTip->setPalette(QPalette(QColor(255, 204, 204)));
   ui->btnYes->setDefault(true);
   ui->frameTip->setHidden(true);
-
-  // ui->frameData->setAutoFillBackground(true);
-  // ui->frameData->setPalette(QPalette(QColor(250, 250, 224)));
   ui->frameData->setHidden(true);
-  // ui->centralWidget->layout()->addWidget(ui->frameData);
 
   initFindReplace();
 
@@ -183,9 +180,6 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::init_iniData() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
-
   defaultIcon = Reg.value("DefaultIcon").toBool();
   ui->actionDefaultNodeIcon->setChecked(defaultIcon);
 
@@ -287,7 +281,6 @@ void MainWindow::initMenuToolsBar() {
   ui->actionDefaultNodeIcon->setVisible(false);
   // if (mac || osx1012) this->setUnifiedTitleAndToolBarOnMac(true);
   ui->menuBar->setMouseTracking(true);
-  ui->actionDiscussion_Forum->setVisible(false);
   ui->actionRestoreScene->setVisible(false);
   ui->btnFind_Tool->setIcon(QIcon(":/new/toolbar/res/find.png"));
   ui->btnFind->setIcon(QIcon(":/new/toolbar/res/find.png"));
@@ -397,7 +390,7 @@ void MainWindow::initMenuToolsBar() {
   //最近打开的文件
   QCoreApplication::setOrganizationName("ic005k");
   QCoreApplication::setOrganizationDomain("github.com/ic005k");
-  QCoreApplication::setApplicationName("PlistEdPlus");
+  QCoreApplication::setApplicationName(appName);
 
   m_recentFiles = new RecentFiles(this);
   // m_recentFiles->attachToMenuAfterItem(ui->menuFile, tr("Save as"),
@@ -551,8 +544,8 @@ void MainWindow::openPlist(QString filePath) {
   string baseName;
   QString path;
   QDomDocument document;
-  QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
-  QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+  QString strConfigDir = QDir::homePath() + "/.config/" + appName;
+  QString fn = QDir::homePath() + "/.config/" + appName + "/temp.plist";
 
   if (filePath == fn) {
     QFile file(filePath);
@@ -691,7 +684,8 @@ void MainWindow::openPlist(QString filePath) {
     }
     tabWidget->createTab(model, filePath);
 
-    QString tempText = QDir::homePath() + "/.config/PlistEDPlus/tempText.plist";
+    QString tempText =
+        QDir::homePath() + "/.config/" + appName + "/tempText.plist";
     if (filePath != fn && filePath != tempText) {
       QSettings settings;
       QFileInfo fInfo(filePath);
@@ -878,7 +872,7 @@ void MainWindow::on_TabCloseRequest(int i) {
     lblStaInfo0->setHidden(true);
     lblStaInfo1->setHidden(true);
     lblStaInfo2->setHidden(true);
-    setTitle("PlistEDPlus");
+    setTitle(appName);
     plistTextEditor->clear();
     ui->btnHideFind->click();
   }
@@ -894,7 +888,7 @@ void MainWindow::savePlist(QString filePath) {
   if (tabWidget->hasTabs()) {
     Save = true;
 
-    QString fileTemp = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+    QString fileTemp = QDir::homePath() + "/.config/" + appName + "/temp.plist";
 
     EditorTab* tab = tabWidget->getCurentTab();
 
@@ -963,7 +957,7 @@ void MainWindow::savePlist(QString filePath) {
       if (ui->cboxFileType->currentIndex() == 1) {
         if (linuxOS) {
           // Plist::writePlistBinary(baseName.c_str(), dict);
-          QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
+          QString strConfigDir = QDir::homePath() + "/.config/" + appName;
           QString strSource = strConfigDir + "/_util.plist";
 
           QFile file(strSource);
@@ -999,7 +993,7 @@ void MainWindow::savePlist(QString filePath) {
         }
 
         if (win) {
-          QString strConfigDir = QDir::homePath() + "/.config/PlistEDPlus";
+          QString strConfigDir = QDir::homePath() + "/.config/" + appName;
           QString strSource = strConfigDir + "/_util.plist";
 
           QFile file(strSource);
@@ -1166,22 +1160,6 @@ void MainWindow::actionExpand_all_activated() {
 
     setExpandText(tab);
   }
-}
-
-void MainWindow::actionAbout_activated() {
-  QFileInfo appInfo(qApp->applicationFilePath());
-  QString str;
-
-  str = tr("Last modified: ");
-
-  QString last = str + appInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
-  QString str1 =
-      "<a style='color:blue;' href = "
-      "https://github.com/ic005k/PlistEDPlus>PlistEDPlus</a><br><br>";
-  QString str2 = "V " + CurVerison;
-  QString str3 = "<br><br>";
-
-  QMessageBox::about(this, "About", str1 + str2 + str3 + last);
 }
 
 void MainWindow::ontabBarClicked(int index) {
@@ -1500,8 +1478,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   writeINITab();
 
   //记录当前文件
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
 
   //记录是否显示Plist文本
   Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
@@ -1590,7 +1566,7 @@ void MainWindow::reg_win() {
   QString dir = qApp->applicationDirPath();
   // 注意路径的替换
   appPath.replace("/", "\\");
-  QString type = "PlistEDPlus";
+  QString type = appName;
   QSettings* regType =
       new QSettings("HKEY_CLASSES_ROOT\\.plist", QSettings::NativeFormat);
   QSettings* regIcon = new QSettings("HKEY_CLASSES_ROOT\\.plist\\DefaultIcon",
@@ -2004,8 +1980,8 @@ void MainWindow::on_actionNewChild() {
 
 void MainWindow::CheckUpdate() {
   QNetworkRequest quest;
-  quest.setUrl(
-      QUrl("https://api.github.com/repos/ic005k/PlistEDPlus/releases/latest"));
+  quest.setUrl(QUrl("https://api.github.com/repos/ic005k/" + appName +
+                    "/releases/latest"));
   quest.setHeader(QNetworkRequest::UserAgentHeader, "RT-Thread ART");
   manager->get(quest);
 }
@@ -2026,7 +2002,7 @@ QString MainWindow::getUrl(QVariantList list) {
     QVariantMap map = list[i].toMap();
     QString fName = map["name"].toString();
 
-    if (fName.contains("PlistEDPlus_Mac.dmg"))
+    if (fName.contains(appName + "_Mac.dmg"))
       macUrl = map["browser_download_url"].toString();
 
     if (fName.contains("Win")) winUrl = map["browser_download_url"].toString();
@@ -2043,8 +2019,6 @@ QString MainWindow::getUrl(QVariantList list) {
   if (win) Url = winUrl;
   if (linuxOS) Url = linuxUrl;
   if (osx1012) Url = osx1012Url;
-  // if (Url == "") Url =
-  // "https://github.com/ic005k/PlistEDPlus/releases/latest";
 
   return Url;
 }
@@ -2130,10 +2104,6 @@ void MainWindow::on_actionSort() {
 }
 
 void MainWindow::on_NewWindow() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QFile file(qfile);
-  QSettings Reg(qfile, QSettings::IniFormat);
-
   Reg.setValue("drag", true);
   windowX = windowX + 25;
   windowY = windowY + 50;
@@ -2150,7 +2120,7 @@ void MainWindow::on_NewWindow() {
   Reg.setValue("y", windowY);
 
   QFileInfo appInfo(qApp->applicationDirPath());
-  QString pathSource = appInfo.filePath() + "/PlistEDPlus";
+  QString pathSource = appInfo.filePath() + "/" + appName;
   QStringList arguments;
   QString fn = "";
   arguments << fn;
@@ -2190,7 +2160,7 @@ void MainWindow::on_copyBW() {
 
     actionRemove_activated();
 
-    QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+    QString fn = QDir::homePath() + "/.config/" + appName + "/temp.plist";
     savePlist(fn);
 
     tabWidget->getCurentTab()->setWindowModified(false);
@@ -2208,7 +2178,7 @@ void MainWindow::on_pasteBW() {
     this->repaint();
 
     int ci = tabWidget->currentIndex();
-    QString fn = QDir::homePath() + "/.config/PlistEDPlus/temp.plist";
+    QString fn = QDir::homePath() + "/.config/" + appName + "/temp.plist";
     QFileInfo fi(fn);
     if (!fi.exists()) return;
 
@@ -2379,8 +2349,6 @@ void MainWindow::on_ShowFindReplace() { on_Find(); }
 void MainWindow::on_btnFind_clicked() { on_Find(); }
 
 void MainWindow::on_btnHideFind_clicked() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
   if (!ui->listFind->isHidden()) {
     Reg.setValue("dockFindWidth", ui->listFind->width());
     Reg.setValue("frameMainWidth", ui->frameMain->width());
@@ -2605,7 +2573,22 @@ void MainWindow::on_actionPaste_between_windows_triggered() { on_pasteBW(); }
 
 void MainWindow::on_actionCheck_Update_triggered() { CheckUpdate(); }
 
-void MainWindow::on_actionAbout_triggered() { actionAbout_activated(); }
+void MainWindow::on_actionAbout_triggered() {
+  QFileInfo appInfo(qApp->applicationFilePath());
+  QString str;
+
+  str = tr("Last modified: ");
+
+  QString last = str + appInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
+  QString str1 =
+      "<a style='color:blue;' href = "
+      "https://github.com/ic005k/" +
+      appName + ">" + appName + "</a><br><br>";
+  QString str2 = "V " + CurVerison;
+  QString str3 = "<br><br>";
+
+  QMessageBox::about(this, "About", str1 + str2 + str3 + last);
+}
 
 void MainWindow::on_actionAdd_triggered() { actionAdd_activated(); }
 
@@ -3165,14 +3148,7 @@ void MainWindow::AddUEFIDrivers(QString fileStr) {
 }
 
 void MainWindow::on_actionBug_Report_triggered() {
-  QUrl url(QString("https://github.com/ic005k/PlistEDPlus/issues"));
-  QDesktopServices::openUrl(url);
-}
-
-void MainWindow::on_actionDiscussion_Forum_triggered() {
-  QUrl url(QString(
-      "https://www.insanelymac.com/forum/topic/"
-      "345512-open-source-cross-platform-plist-file-editor-plistedplus/"));
+  QUrl url(QString("https://github.com/ic005k/" + appName + "/issues"));
   QDesktopServices::openUrl(url);
 }
 
@@ -3214,35 +3190,24 @@ void MainWindow::on_actionFont_triggered() {
     plistTextEditor->setFont(font);
 
     //存储字体信息
-    QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-    QFile file(qfile);
-
-    QSettings Reg(qfile, QSettings::IniFormat);
     Reg.setValue("FontName", font.family());
     Reg.setValue("FontSize", font.pointSize());
     Reg.setValue("FontBold", font.bold());
     Reg.setValue("FontItalic", font.italic());
     Reg.setValue("FontUnderline", font.underline());
-
-    file.close();
   }
 }
 
 QFont MainWindow::getFont() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QFileInfo fi(qfile);
   QFont font;
-  if (fi.exists()) {
-    QSettings Reg(qfile, QSettings::IniFormat);
-    if (Reg.value("FontName").toString() != "") {
-      font.setFamily(Reg.value("FontName").toString());
-      font.setPointSize(Reg.value("FontSize").toInt());
-      font.setBold(Reg.value("FontBold").toBool());
-      font.setItalic(Reg.value("FontItalic").toBool());
-      font.setUnderline(Reg.value("FontUnderline").toBool());
+  if (Reg.value("FontName").toString() != "") {
+    font.setFamily(Reg.value("FontName").toString());
+    font.setPointSize(Reg.value("FontSize").toInt());
+    font.setBold(Reg.value("FontBold").toBool());
+    font.setItalic(Reg.value("FontItalic").toBool());
+    font.setUnderline(Reg.value("FontUnderline").toBool());
 
-      return font;
-    }
+    return font;
   }
 
   return font;
@@ -3424,8 +3389,6 @@ void MainWindow::on_btnUpdateHex_clicked() {
 }
 
 void MainWindow::writeINITab() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
   int count = tabWidget->count();
   Reg.setValue("count", count);
   if (tabWidget->hasTabs()) {
@@ -3483,8 +3446,6 @@ void MainWindow::on_actProxy5_triggered() {
 }
 
 void MainWindow::writeINIProxy() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
   Reg.setValue("proxy1", ui->actProxy1->isChecked());
   Reg.setValue("proxy2", ui->actProxy2->isChecked());
   Reg.setValue("proxy3", ui->actProxy3->isChecked());
@@ -3493,9 +3454,6 @@ void MainWindow::writeINIProxy() {
 }
 
 void MainWindow::readINIProxy() {
-  QString qfile = QDir::homePath() + "/.config/PlistEDPlus/PlistEDPlus.ini";
-  QSettings Reg(qfile, QSettings::IniFormat);
-
   if (!Reg.allKeys().contains("proxy1")) {
     QLocale locale;
     if (locale.language() != QLocale::Chinese) {

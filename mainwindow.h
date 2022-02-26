@@ -205,7 +205,6 @@ class MainWindow : public QMainWindow {
   void actionSaveAs();
 
   void actionExpand_all_activated();
-  void actionAbout_activated();
 
   void onTabWidget_currentChanged(int index);
   void menu_aboutToShow();
@@ -291,8 +290,6 @@ class MainWindow : public QMainWindow {
   void on_listFind_itemClicked(QListWidgetItem* item);
 
   void on_actionBug_Report_triggered();
-
-  void on_actionDiscussion_Forum_triggered();
 
   void on_actionQuit_triggered();
 

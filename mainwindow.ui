@@ -822,7 +822,6 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
     <addaction name="actionDownload_Upgrade_Packages"/>
     <addaction name="separator"/>
     <addaction name="actionBug_Report"/>
-    <addaction name="actionDiscussion_Forum"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">

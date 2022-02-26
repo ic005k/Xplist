@@ -4,6 +4,7 @@
 #include "ui_autoupdatedialog.h"
 
 extern MainWindow* mw_one;
+extern QString appName;
 
 AutoUpdateDialog::AutoUpdateDialog(QWidget* parent)
     : QDialog(parent), ui(new Ui::AutoUpdateDialog) {
@@ -116,8 +117,8 @@ void AutoUpdateDialog::startUpdate() {
       txtEdit->append("hdiutil mount -mountpoint /Volumes/plist " + strZip);
       txtEdit->append(
           "cp -R -p -f "
-          "/Volumes/plist/PlistEDPlus.app/. " +
-          strTarget);
+          "/Volumes/plist/" +
+          appName + ".app/. " + strTarget);
 
       txtEdit->append("hdiutil eject /Volumes/plist");
     }
@@ -125,8 +126,8 @@ void AutoUpdateDialog::startUpdate() {
       txtEdit->append("hdiutil mount -mountpoint /Volumes/plist1012 " + strZip);
       txtEdit->append(
           "cp -R -p -f "
-          "/Volumes/plist1012/PlistEDPlus.app/. " +
-          strTarget);
+          "/Volumes/plist1012/" +
+          appName + ".app/. " + strTarget);
 
       txtEdit->append("hdiutil eject /Volumes/plist1012");
     }
