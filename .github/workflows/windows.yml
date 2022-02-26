@@ -31,9 +31,9 @@ jobs:
             qt_arch_install: msvc2019_64          
           
     env:
-      targetName: PlistEDPlus.exe
+      targetName: Xplist.exe
       VERSION: Win64
-      orgName: PlistEDPlus
+      orgName: Xplist
       
     # 步骤
     steps:
