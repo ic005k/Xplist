@@ -1,4 +1,4 @@
-[简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-en.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
+[简体中文](https://github.com/ic005k/PlistEDPlus/blob/main/README-cn.md) | [English](https://github.com/ic005k/PlistEDPlus/blob/main/README.md)
 ## Xplist -- Open source cross-platform lightweight plist file editor
 
 This is a lightweight plist editor with rich features. The file format supports XML and binary plist files under all platforms.
