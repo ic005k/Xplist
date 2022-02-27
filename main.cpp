@@ -5,7 +5,7 @@
 #include "mainwindow.h"
 #include "myapp.h"
 
-extern QString fileName;
+extern QString fileName, CurVersion;
 MainWindow* mw_one;
 
 int main(int argc, char* argv[]) {
@@ -20,6 +20,9 @@ int main(int argc, char* argv[]) {
 
   // QApplication a(argc, argv);
   MyApplication* a = new MyApplication(argc, argv);
+#ifdef Q_OS_MAC
+  MainWindow::init_MacVerInfo(CurVersion);
+#endif
 
   static QTranslator translator;  //注意：使translator一直生效
   static QTranslator translator0;

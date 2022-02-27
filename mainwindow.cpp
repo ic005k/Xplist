@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVerison = "1.2.43";
+QString CurVersion = "1.2.44";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget* parent)
   ui->setupUi(this);
   installEventFilter(this);
 
-  ver = appName + "  V" + CurVerison + "        ";
+  ver = appName + "  V" + CurVersion + "        ";
   ver = "";
   setTitle(appName);
 
@@ -705,7 +705,7 @@ void MainWindow::openPlist(QString filePath) {
       tabWidget->tabBar()->setTabToolTip(tabWidget->currentIndex(),
                                          fi.filePath());
 
-    loadText(filePath);
+    loadPlistText(filePath);
     if (binPlistFile) QFile::remove(strLoad);
   }
 
@@ -1035,7 +1035,7 @@ void MainWindow::savePlist(QString filePath) {
         tabWidget->setTabText(index, "[BIN] " + QFileInfo(name).baseName());
       }
 
-      loadText(filePath);
+      loadPlistText(filePath);
     }
 
     undoGroup->activeStack()->clear();
@@ -1190,7 +1190,7 @@ void MainWindow::onTabWidget_currentChanged(int index) {
   undoGroup->setActiveStack(stack);
 
   if (!loading) {
-    loadText(tabWidget->getCurentTab()->getPath());
+    loadPlistText(tabWidget->getCurentTab()->getPath());
     goPlistText();
     showMsg();
     writeINITab();
@@ -2027,7 +2027,7 @@ int MainWindow::parse_UpdateJSON(QString str) {
     QString UpdateTime = root_Obj.value("published_at").toString();
     QString ReleaseNote = root_Obj.value("body").toString();
 
-    if (Verison > CurVerison && Url != "") {
+    if (Verison > CurVersion && Url != "") {
       QString warningStr = tr("New version detected!") + "\n" +
                            tr("Version: ") + "V" + Verison + "\n" +
                            tr("Published at: ") + UpdateTime + "\n" +
@@ -2184,7 +2184,7 @@ void MainWindow::on_pasteBW() {
   }
 }
 
-void MainWindow::loadText(QString textFile) {
+void MainWindow::loadPlistText(QString textFile) {
   QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
   if (strBin.contains("[BIN]")) {
     plistTextEditor->clear();
@@ -2555,7 +2555,7 @@ void MainWindow::on_actionAbout_triggered() {
       "<a style='color:blue;' href = "
       "https://github.com/ic005k/" +
       appName + ">" + appName + "</a><br><br>";
-  QString str2 = "V " + CurVerison;
+  QString str2 = "V " + CurVersion;
   QString str3 = "<br><br>";
 
   QMessageBox::about(this, "About", str1 + str2 + str3 + last);
@@ -3590,4 +3590,78 @@ ClickableLabel::~ClickableLabel() {}
 void ClickableLabel::mousePressEvent(QMouseEvent* event) {
   Q_UNUSED(event);
   emit clicked();
+}
+
+#ifdef Q_OS_MAC
+void MainWindow::init_MacVerInfo(QString ver) {
+  QString str1 = qApp->applicationDirPath();
+  QString infoFile = str1.replace("MacOS", "Info.plist");
+
+  QTextEdit* edit = new QTextEdit;
+  edit->setPlainText(loadText(infoFile));
+
+  bool write = false;
+
+  for (int i = 0; i < edit->document()->lineCount(); i++) {
+    QString lineTxt = getTextEditLineText(edit, i).trimmed();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+    if (lineTxt == "<key>CFBundleShortVersionString</key>" ||
+        lineTxt == "<key>CFBundleVersion</key>") {
+      QString nextTxt = getTextEditLineText(edit, i + 1).trimmed();
+      if (nextTxt != "<string>" + ver + "</string>") {
+        QTextBlock block = edit->document()->findBlockByNumber(i + 1);
+        QTextCursor cursor(block);
+        block = block.next();
+        cursor.select(QTextCursor::BlockUnderCursor);
+        cursor.removeSelectedText();
+        cursor.insertText("\n        <string>" + ver + "</string>");
+
+        write = true;
+      }
+    }
+#endif
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    if (lineTxt == "<key>CFBundleGetInfoString</key>") {
+      QString nextTxt = getTextEditLineText(edit, i + 1).trimmed();
+      if (nextTxt != "<string>" + ver + "</string>") {
+        QTextBlock block = edit->document()->findBlockByNumber(i + 1);
+        QTextCursor cursor(block);
+        block = block.next();
+        cursor.select(QTextCursor::BlockUnderCursor);
+        cursor.removeSelectedText();
+        cursor.insertText("\n        <string>" + ver + "</string>");
+
+        write = true;
+      }
+    }
+
+#endif
+  }
+
+  if (write) {
+    TextEditToFile(edit, infoFile);
+  }
+}
+#endif
+
+QString MainWindow::loadText(QString textFile) {
+  QFileInfo fi(textFile);
+  if (fi.exists()) {
+    QFile file(textFile);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+      qDebug() << tr("Cannot read file %1:\n%2.")
+                      .arg(QDir::toNativeSeparators(textFile),
+                           file.errorString());
+
+    } else {
+      QTextStream in(&file);
+      in.setCodec("UTF-8");
+      QString text = in.readAll();
+      return text;
+    }
+  }
+
+  return "";
 }

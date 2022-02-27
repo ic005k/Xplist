@@ -114,7 +114,7 @@ class MainWindow : public QMainWindow {
 
   void showMsg();
 
-  void loadText(QString textFile);
+  void loadPlistText(QString textFile);
 
   void goPlistText();
 
@@ -135,9 +135,9 @@ class MainWindow : public QMainWindow {
   void setOrgMD5(QString fileName);
   QString getOrgMD5(QString fileName);
 
-  QString getTextEditLineText(QTextEdit* txtEdit, int i);
+  static QString getTextEditLineText(QTextEdit* txtEdit, int i);
   QString readText(QString textFile);
-  void TextEditToFile(QTextEdit* txtEdit, QString fileName);
+  static void TextEditToFile(QTextEdit* txtEdit, QString fileName);
   void writeINITab();
   void writeINIProxy();
   QString getProxy();
@@ -180,6 +180,8 @@ class MainWindow : public QMainWindow {
   void clearTreeIndexWidget();
   void setTitle(QString title);
   void setModifyMarker();
+  static void init_MacVerInfo(QString ver);
+  static QString loadText(QString textFile);
  public slots:
   void on_Find();
   void on_actionMoveUp();
