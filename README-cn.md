@@ -10,5 +10,6 @@
 [pugixml](https://github.com/zeux/pugixml)&nbsp; &nbsp; &nbsp; &nbsp;
 [libplist](https://github.com/libimobiledevice/libplist)&nbsp; &nbsp; &nbsp; &nbsp;
 
-### 备注：此项目开始于2020年10月
-API: https://api.github.com/repos/ic005k/PlistEDPlus/releases/latest
+---
+
+API: https://api.github.com/repos/ic005k/Xplist/releases/latest
