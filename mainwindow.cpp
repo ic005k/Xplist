@@ -500,7 +500,8 @@ void MainWindow::actionNew() {
 
 void MainWindow::actionClose_activated() {
   if (tabWidget->hasTabs()) {
-    on_TabCloseRequest();
+    int index = tabWidget->currentIndex();
+    on_TabCloseRequest(index);
   }
 }
 
@@ -1190,7 +1191,6 @@ void MainWindow::onTabWidget_currentChanged(int index) {
     loadPlistText(tabWidget->getCurentTab()->getPath());
     goPlistText();
     showMsg();
-    writeINITab();
   }
 
   ui->btnPrevious->setEnabled(false);
@@ -2182,6 +2182,7 @@ void MainWindow::on_pasteBW() {
 
 void MainWindow::loadPlistText(QString textFile) {
   if (!ui->actionShowPlistText->isChecked()) return;
+  if (!tabWidget->hasTabs()) return;
 
   QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
   if (strBin.contains("[BIN]")) {
@@ -2212,7 +2213,8 @@ void MainWindow::loadPlistText(QString textFile) {
 void MainWindow::on_actionShowPlistText_triggered(bool checked) {
   if (checked) {
     plistTextEditor->setVisible(true);
-    loadPlistText(this->windowTitle());
+    if (tabWidget->hasTabs())
+      loadPlistText(tabWidget->getCurentTab()->getPath());
   } else
     plistTextEditor->setVisible(false);
 }
@@ -3522,10 +3524,9 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
   }
 
   if (e->type() == QEvent::ActivationChange) {
-    return QWidget::eventFilter(o, e);
-
     if (QApplication::activeWindow() != this) {
-      if (red > 55) {
+      writeINITab();
+      /*if (red > 55) {
         this->setStyleSheet(
             "QMainWindow { background-color: rgb(246,246,246);}");
       } else {
@@ -3537,7 +3538,7 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
             "QMainWindow { background-color: rgb(212,212,212);}");
       } else {
         this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
-      }
+      }*/
     }
   }
 
@@ -3557,7 +3558,8 @@ void MainWindow::init_UIStyle() {
 
     } else {
       ui->statusBar->setStyleSheet(sbarStyleDark);
-      // this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
+      // this->setStyleSheet("QMainWindow { background-color:
+      // rgb(42,42,42);}");
       tabWidget->setStyleSheet(ui->tabWidget->styleSheet());
     }
   }
