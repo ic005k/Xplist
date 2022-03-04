@@ -829,7 +829,6 @@ QTabBar::tab:left:only-one, QTabBar::tab:right:only-one {
      <string>Preferences</string>
     </property>
     <addaction name="actionRestoreScene"/>
-    <addaction name="actionDefaultNodeIcon"/>
     <addaction name="actionExpandAllOpenFile"/>
     <addaction name="actionShowPlistText"/>
     <addaction name="actionAutoUpdateCheck"/>

@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVersion = "1.2.44";
+QString CurVersion = "1.2.45";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   tabWidget = new EditorTabsWidget(this);
   connect(tabWidget, &QTabWidget::tabBarClicked, this,
-          &MainWindow::ontabBarClicked);
+          &MainWindow::onTabBarClicked);
   tabWidget->setHidden(true);
   lblShowFind = new QLabel(this);
   lblShowFind->setHidden(true);
@@ -173,8 +173,12 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::init_iniData() {
-  defaultIcon = Reg.value("DefaultIcon").toBool();
-  ui->actionDefaultNodeIcon->setChecked(defaultIcon);
+  //是否显示plist文本
+  ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 0).toBool());
+  if (ui->actionShowPlistText->isChecked())
+    plistTextEditor->setHidden(false);
+  else
+    plistTextEditor->setHidden(true);
 
   ui->actionExpandAllOpenFile->setChecked(Reg.value("ExpAll").toBool());
 
@@ -243,13 +247,6 @@ void MainWindow::init_iniData() {
   editFindCompleter->setCompletionMode(QCompleter::InlineCompletion);
   ui->editFind->setCompleter(editFindCompleter);
 
-  //是否显示plist文本
-  ui->actionShowPlistText->setChecked(Reg.value("ShowPlistText", 0).toBool());
-  if (ui->actionShowPlistText->isChecked())
-    plistTextEditor->setHidden(false);
-  else
-    plistTextEditor->setHidden(true);
-
   // 主窗口位置和大小
   int x, y, width, height;
   x = Reg.value("x", 0).toInt();
@@ -271,7 +268,7 @@ void MainWindow::init_iniData() {
 
 void MainWindow::initMenuToolsBar() {
   ui->mainToolBar->setHidden(true);
-  ui->actionDefaultNodeIcon->setVisible(false);
+
   // if (mac || osx1012) this->setUnifiedTitleAndToolBarOnMac(true);
   ui->menuBar->setMouseTracking(true);
   ui->actionRestoreScene->setVisible(false);
@@ -1155,7 +1152,7 @@ void MainWindow::actionExpand_all_activated() {
   }
 }
 
-void MainWindow::ontabBarClicked(int index) {
+void MainWindow::onTabBarClicked(int index) {
   if (index < 0) return;
   if (!tabWidget->hasTabs()) return;
   ui->editFind->setFocus();
@@ -1480,7 +1477,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 
   Reg.setValue("restore", ui->actionRestoreScene->isChecked());
-  Reg.setValue("DefaultIcon", ui->actionDefaultNodeIcon->isChecked());
   Reg.setValue("ExpAll", ui->actionExpandAllOpenFile->isChecked());
   Reg.setValue("drag", false);
   Reg.setValue("AutoUpdateCheck", ui->actionAutoUpdateCheck->isChecked());
@@ -2185,6 +2181,8 @@ void MainWindow::on_pasteBW() {
 }
 
 void MainWindow::loadPlistText(QString textFile) {
+  if (!ui->actionShowPlistText->isChecked()) return;
+
   QString strBin = tabWidget->tabBar()->tabText(tabWidget->currentIndex());
   if (strBin.contains("[BIN]")) {
     plistTextEditor->clear();
@@ -2193,9 +2191,8 @@ void MainWindow::loadPlistText(QString textFile) {
     return;
   }
 
-  QFileInfo fi(textFile);
-  if (fi.exists()) {
-    QFile file(textFile);
+  QFile file(textFile);
+  if (file.exists()) {
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
       QMessageBox::warning(
           this, tr("Application"),
@@ -2213,9 +2210,10 @@ void MainWindow::loadPlistText(QString textFile) {
 }
 
 void MainWindow::on_actionShowPlistText_triggered(bool checked) {
-  if (checked)
+  if (checked) {
     plistTextEditor->setVisible(true);
-  else
+    loadPlistText(this->windowTitle());
+  } else
     plistTextEditor->setVisible(false);
 }
 

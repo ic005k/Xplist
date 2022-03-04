@@ -340,7 +340,7 @@ class MainWindow : public QMainWindow {
 
   void on_btnSave_clicked();
 
-  void ontabBarClicked(int index);
+  void onTabBarClicked(int index);
 
  private:
   bool isDrag;
