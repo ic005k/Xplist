@@ -1463,12 +1463,8 @@ void MainWindow::on_pasteAction() {
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
-  loading = true;
-
+  blExit = true;
   writeINITab();
-
-  //记录当前文件
-
   //记录是否显示Plist文本
   Reg.setValue("ShowPlistText", ui->actionShowPlistText->isChecked());
   if (plistTextEditor->isVisible()) {
@@ -1515,7 +1511,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   // 处理TAB
   if (tabWidget->hasTabs()) {
-    blExit = true;
     int count = tabWidget->count();
     for (int i = 0; i < count; i++) {
       tabWidget->setCurrentIndex(0);
@@ -1524,7 +1519,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
       {
         event->ignore();
         close_flag = -1;
-        loading = false;
         break;  //如果第一个标签页选择取消，则直接终止关闭
       }
       if (close_flag == 1) {
@@ -1539,9 +1533,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
     if (tabWidget->count() == 0) event->accept();
   }
-
-  loading = false;
-  blExit = false;
 }
 
 void MainWindow::reg_win() {
@@ -3173,7 +3164,7 @@ QFont MainWindow::getFont() {
   QFont font;
   if (Reg.value("FontName").toString() != "") {
     font.setFamily(Reg.value("FontName").toString());
-    font.setPointSize(Reg.value("FontSize").toInt());
+    font.setPointSize(Reg.value("FontSize", 12).toInt());
     font.setBold(Reg.value("FontBold").toBool());
     font.setItalic(Reg.value("FontItalic").toBool());
     font.setUnderline(Reg.value("FontUnderline").toBool());
@@ -3518,27 +3509,13 @@ bool MainWindow::eventFilter(QObject* o, QEvent* e) {
     } else {
       return false;
     }
-  } else {
-    // pass the event on to the parent class
-    return QMainWindow::eventFilter(o, e);
   }
 
   if (e->type() == QEvent::ActivationChange) {
     if (QApplication::activeWindow() != this) {
-      writeINITab();
-      /*if (red > 55) {
-        this->setStyleSheet(
-            "QMainWindow { background-color: rgb(246,246,246);}");
-      } else {
-        this->setStyleSheet("QMainWindow { background-color: rgb(45,45,45);}");
+      if (!blExit) {
+        writeINITab();
       }
-    } else {
-      if (red > 55) {
-        this->setStyleSheet(
-            "QMainWindow { background-color: rgb(212,212,212);}");
-      } else {
-        this->setStyleSheet("QMainWindow { background-color: rgb(42,42,42);}");
-      }*/
     }
   }
 
