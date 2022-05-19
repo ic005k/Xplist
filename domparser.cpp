@@ -3,6 +3,10 @@
 
 #include <QRegExp>
 
+#include "mainwindow.h"
+extern MainWindow* mw_one;
+extern bool binPlistFile;
+
 QString strRootType;
 
 DomParser::DomParser() {}
@@ -113,6 +117,33 @@ void DomParser::parseElement(QDomElement& n, DomItem* item) {
           if (eType == "data") {
             QByteArray bytes = QByteArray::fromBase64(eValue.toUtf8());
             eValue = ByteToHexStr(bytes);
+          }
+
+          if (eType == "real") {
+            QString a = eValue;
+            if (binPlistFile && a.length() > 15) {
+              QString a1;
+              for (int k = 0; k < a.length(); k++) {
+                if (a.mid(k, 1) == "9" && a.mid(k + 1, 1) == "9") {
+                  a1 = a.mid(0, k);
+                  int b = a1.mid(a1.length() - 1, 1).toInt();
+                  QString b1 =
+                      a1.mid(0, a1.length() - 1) + QString::number(b + 1);
+                  a = b1;
+                  break;
+                }
+              }
+
+              for (int k = 0; k < a.length(); k++) {
+                if (a.mid(k, 1) == "0" && a.mid(k + 1, 1) == "0") {
+                  a1 = a.mid(0, k);
+                  a = a1;
+                  break;
+                }
+              }
+            }
+
+            eValue = a;
           }
 
           // set data
