@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 7.0.0, 2022-05-18T12:44:43. -->
+<!-- Written by QtCreator 7.0.0, 2022-05-19T10:18:29. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -408,7 +408,7 @@
      <value type="QString" key="identifier">90678318-9C7C-485E-B984-160891D013A5</value>
      <value type="int" key="type">1</value>
     </valuemap>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Run Xplist on iOS Simulator</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Run  on iOS Simulator</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.IosRunConfiguration:/Volumes/DATABAK/qt-test/Xplist/Xplist-src/Xplist.pro</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/Volumes/DATABAK/qt-test/Xplist/Xplist-src/Xplist.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>

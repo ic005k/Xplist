@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVersion = "1.2.46";
+QString CurVersion = "1.2.47";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;

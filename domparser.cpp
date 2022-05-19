@@ -119,7 +119,7 @@ void DomParser::parseElement(QDomElement& n, DomItem* item) {
             eValue = ByteToHexStr(bytes);
           }
 
-          if (eType == "real") {
+          /*if (eType == "real") {
             QString a = eValue;
             if (binPlistFile && a.length() > 15) {
               QString a1;
@@ -146,7 +146,7 @@ void DomParser::parseElement(QDomElement& n, DomItem* item) {
             }
 
             eValue = a;
-          }
+          }*/
 
           // set data
           domItem->setData(eName, eType, eValue);
