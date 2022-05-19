@@ -124,7 +124,9 @@ void DomParser::parseElement(QDomElement& n, DomItem* item) {
             if (binPlistFile && a.length() > 15) {
               QString a1;
               for (int k = 0; k < a.length(); k++) {
-                if (a.mid(k, 1) == "9" && a.mid(k + 1, 1) == "9") {
+                if (a.mid(k, 1) == "9" && a.mid(k + 1, 1) == "9" &&
+                    a.mid(k + 2, 1) == "9" && a.mid(k + 3, 1) == "9" &&
+                    a.mid(k + 4, 1) == "9") {
                   a1 = a.mid(0, k);
                   int b = a1.mid(a1.length() - 1, 1).toInt();
                   QString b1 =
