@@ -209,7 +209,11 @@ void AutoUpdateDialog::startDownload(bool Database) {
 
   // github redirects the request, so this attribute must be set to true,
   // otherwise returns nothing from qt5.6
+#if QT_VERSION_MAJOR >= 6
+  request.setAttribute(QNetworkRequest::RedirectionTargetAttribute, true);
+#else
   request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+#endif
 
   reply = manager->get(request);  //发送请求
   connect(reply, &QNetworkReply::readyRead, this,

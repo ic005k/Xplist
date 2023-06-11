@@ -1,5 +1,14 @@
 #ifndef MYHIGHLIGHTER_H
 #define MYHIGHLIGHTER_H
+
+#include <QString>
+
+#if QT_VERSION_MAJOR >= 6
+#include <QRegularExpression>
+#else
+#include <QRegExp>
+#endif
+
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 #include <QTextDocument>
@@ -15,13 +24,22 @@ protected:
 
 private:
     struct HighlightingRule {
+#if QT_VERSION_MAJOR >= 6
+        QRegularExpression pattern;
+#else
         QRegExp pattern;
+#endif
         QTextCharFormat format;
     };
     QVector<HighlightingRule> highlightingRules;
 
+#if QT_VERSION_MAJOR >= 6
+    QRegularExpression commentStartExpression;
+    QRegularExpression commentEndExpression;
+#else
     QRegExp commentStartExpression;
     QRegExp commentEndExpression;
+#endif
 
     QTextCharFormat keywordFormat;
     QTextCharFormat classFormat;

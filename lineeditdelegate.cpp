@@ -57,8 +57,13 @@ void LineEditDelegate::setEditorData(QWidget* editor,
   if (item->getType() == "string") setTextCompleter(lineEdit);
 
   if (item->getType() == "data" && index.column() == 2) {
+#if QT_VERSION_MAJOR >= 6
+    QRegularExpression regx("[A-Fa-f0-9- ]{2,1024}");
+    QValidator* validator = new QRegularExpressionValidator(regx, lineEdit);
+#else
     QRegExp regx("[A-Fa-f0-9- ]{2,1024}");
     QValidator* validator = new QRegExpValidator(regx, lineEdit);
+#endif
     lineEdit->setValidator(validator);
     lineEdit->setPlaceholderText(tr("Hexadecimal"));
   }
@@ -140,7 +145,11 @@ bool LineEditDelegate::checkInput(const QString& type, const QString& val,
   }
 
   if (type == "data" && col == 2) {
+#if QT_VERSION_MAJOR >= 6
+    if (val.trimmed().length() % 2 != 0) return 0;
+#else
     if (val.trimmed().count() % 2 != 0) return 0;
+#endif
   }
 
   if (val.trimmed() == "plist") return 0;

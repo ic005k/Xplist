@@ -105,7 +105,11 @@ void ComboBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
 
       if (val == "string") {
         if (oldValue == "data") {
+#if QT_VERSION_MAJOR >= 6
+          NewValue = CurrentValue.remove(QRegularExpression("\\s"));  // 16进制去除所有空格
+#else
           NewValue = CurrentValue.remove(QRegExp("\\s"));  // 16进制去除所有空格
+#endif
           NewValue = HexStrToByte(CurrentValue);
 
         } else if (oldValue == "bool")

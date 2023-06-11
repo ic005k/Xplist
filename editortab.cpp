@@ -414,10 +414,20 @@ void EditorTab::treeView_clicked(const QModelIndex& index) {
   if (mw_one->ui->actionShowPlistText->isChecked()) mw_one->goPlistText();
 
   if (item->getType() == "data") {
+#if QT_VERSION_MAJOR >= 6
+    QString str =
+        item->getValue().remove(QRegularExpression("\\s"));  // 16进制去除所有空格
+
+    mw_one->ui->lblBytes->setText(QString::number(str.length() / 2) + " " +
+                                  tr("bytes"));
+#else
     QString str =
         item->getValue().remove(QRegExp("\\s"));  // 16进制去除所有空格
+
     mw_one->ui->lblBytes->setText(QString::number(str.count() / 2) + " " +
                                   tr("bytes"));
+#endif
+        
     mw_one->ui->editHex->setText(str);
     mw_one->ui->editASCII->setText(HexStrToByte(str));
     mw_one->ui->editBase64->setText(HexStrToByte(str).toBase64());
@@ -540,8 +550,13 @@ void EditorTab::on_copyAction() {
   QModelIndexList selectedsList = selections->selectedRows();
 
   copy_item.clear();
+#if QT_VERSION_MAJOR >= 6
+  std::sort(selectedsList.begin(), selectedsList.end());
+#else
   std::sort(selectedsList.begin(), selectedsList.end(),
             qGreater<QModelIndex>());
+#endif
+
   foreach (QModelIndex index, selectedsList) {
     item = model->itemForIndex(index);
     if (item->getName() != "plist") {
@@ -557,8 +572,12 @@ void EditorTab::on_cutAction() {
   QModelIndexList selectedsList = selections->selectedRows();
 
   copy_item.clear();
+#if QT_VERSION_MAJOR >= 6
+  std::sort(selectedsList.begin(), selectedsList.end());
+#else
   std::sort(selectedsList.begin(), selectedsList.end(),
             qGreater<QModelIndex>());
+#endif
   foreach (QModelIndex index, selectedsList) {
     if (index.parent().data().toString() != "")  //最顶层不允许剪切
     {

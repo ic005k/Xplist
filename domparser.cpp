@@ -1,7 +1,11 @@
 
 #include "domparser.h"
 
+#if QT_VERSION_MAJOR >= 6
+#include <QRegularExpression>
+#else
 #include <QRegExp>
+#endif
 
 #include "mainwindow.h"
 extern MainWindow* mw_one;
@@ -191,16 +195,32 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc) {
   QString value = item->getValue();
 
   if (name != "plist") {
+#if QT_VERSION_MAJOR >= 6
+    QRegularExpression rp("Item\\s\\d+");  //正则表达式，排除Item
+#else
     QRegExp rp("Item\\s\\d+");  //正则表达式，排除Item
+#endif
 
     // item without key
+#if QT_VERSION_MAJOR >= 6
+    QRegularExpressionMatch rpm = rp.match(name);
+
+    if (rpm.hasMatch()) {
+#else
     if (rp.exactMatch(name)) {
+#endif
+
       // QDomElement container = doc.createElement(type);
 
       if (type == "bool") value = value.trimmed();
 
       if (type == "data") {
+#if QT_VERSION_MAJOR >= 6
+        QString v = value.remove(QRegularExpression("\\s"));  // 16进制去除所有空格
+#else
         QString v = value.remove(QRegExp("\\s"));  // 16进制去除所有空格
+#endif
+
         value = QString::fromLatin1(HexStrToByte(v).toBase64());
       }
 
@@ -240,7 +260,11 @@ void DomParser::parseItem(DomItem* item, QDomElement& n, QDomDocument& doc) {
 
       if (type == "data")  //新增：解决16进制字串转换问题
       {
+#if QT_VERSION_MAJOR >= 6
+        value = value.remove(QRegularExpression("\\s"));  // 16进制去除所有空格
+#else
         value = value.remove(QRegExp("\\s"));  // 16进制去除所有空格
+#endif
 
         if (name.trimmed().mid(0, 4) == "Item")
           valText = doc.createTextNode(value);
