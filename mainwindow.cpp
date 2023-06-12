@@ -728,11 +728,17 @@ QString MainWindow::readText(QString textFile) {
   if (fi.exists()) {
     QFile file(textFile);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
+#if QT_VERSION_MAJOR >= 6
+      QMessageBox::warning(
+          this, tr("Application"),
+          tr("Cannot read file %1:\n%2.")
+              .arg(QDir::toNativeSeparators(textFile), file.errorString()), QMessageBox::Ok, QMessageBox::NoButton);
+#else
       QMessageBox::warning(
           this, tr("Application"),
           tr("Cannot read file %1:\n%2.")
               .arg(QDir::toNativeSeparators(textFile), file.errorString()));
-
+#endif
     } else {
       QTextStream in(&file);
 #if QT_VERSION_MAJOR >= 6
@@ -762,11 +768,17 @@ QDomDocument MainWindow::readXMLPlist(QDomDocument document, QString filePath) {
 bool MainWindow::getBinPlist(QString filePath) {
   QFile file(filePath);
   if (!file.open(QFile::ReadOnly | QFile::Text)) {
+#if QT_VERSION_MAJOR >= 6
+    QMessageBox::warning(
+        this, tr("Application"),
+        tr("Cannot read file %1:\n%2.")
+            .arg(QDir::toNativeSeparators(fileName), file.errorString()), QMessageBox::Ok, QMessageBox::NoButton);
+#else
     QMessageBox::warning(
         this, tr("Application"),
         tr("Cannot read file %1:\n%2.")
             .arg(QDir::toNativeSeparators(fileName), file.errorString()));
-
+#endif
   } else {
     QTextStream in(&file);
 #if QT_VERSION_MAJOR >= 6
@@ -2071,16 +2083,27 @@ int MainWindow::parse_UpdateJSON(QString str) {
 
       if (!ui->actionAutoUpdateCheck->isChecked()) {
         if (!blAutoCheckUpdate) {
-          int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
+#if QT_VERSION_MAJOR >= 6
+          int ret = QMessageBox::warning(this, tr("Download"), warningStr,
+                                         QMessageBox::Ok, QMessageBox::Cancel);
+#
+#else
+         int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
                                          tr("Cancel"));
+#endif
           if (ret == 0) {
             ShowAutoUpdateDlg(false);
           }
         }
 
       } else {
+#if QT_VERSION_MAJOR >= 6
+        int ret = QMessageBox::warning(this, tr("Download"), warningStr,
+                                       QMessageBox::Ok, QMessageBox::Cancel);
+#else
         int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
                                        tr("Cancel"));
+#endif
         if (ret == 0) {
           ShowAutoUpdateDlg(false);
         }
@@ -2235,11 +2258,17 @@ void MainWindow::loadPlistText(QString textFile) {
   QFile file(textFile);
   if (file.exists()) {
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
+#if QT_VERSION_MAJOR >= 6
+      QMessageBox::warning(
+          this, tr("Application"),
+          tr("Cannot read file %1:\n%2.")
+              .arg(QDir::toNativeSeparators(fileName), file.errorString()), QMessageBox::Ok, QMessageBox::NoButton);
+#else
       QMessageBox::warning(
           this, tr("Application"),
           tr("Cannot read file %1:\n%2.")
               .arg(QDir::toNativeSeparators(fileName), file.errorString()));
-
+#endif
     } else {
       QTextStream in(&file);
   #if QT_VERSION_MAJOR >= 6
@@ -3544,14 +3573,24 @@ void MainWindow::on_btnSave_clicked() { actionSave(); }
 void MainWindow::mousePressEvent(QMouseEvent* e) {
   if (e->button() == Qt::LeftButton) {
     isDrag = true;
+#if QT_VERSION_MAJOR >= 6
+    QPointF pos = e->globalPosition();
+    m_position = pos.toPoint() - this->pos();
+#else
     m_position = e->globalPos() - this->pos();
+#endif
     e->accept();
   }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* e) {
   if (isDrag & (e->buttons() & Qt::LeftButton)) {
+#if QT_VERSION_MAJOR >= 6
+    QPointF pos = e->globalPosition();
+    move(pos.toPoint() - m_position);
+#else
     move(e->globalPos() - m_position);
+#endif
     e->accept();
   }
 }

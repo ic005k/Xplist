@@ -35,9 +35,13 @@ void MyTabBar::mouseMoveEvent(QMouseEvent* event) {
       theDragOut = true;
       emit beginDragOut(this->currentIndex());
 
-      QMouseEvent* e = new QMouseEvent(
-          QEvent::MouseButtonRelease, this->mapFromGlobal(QCursor::pos()),
+#if QT_VERSION_MAJOR >= 6
+      QMouseEvent* e = new QMouseEvent(QEvent::MouseButtonRelease, this->mapFromGlobal(QCursor::pos()), this->mapFromGlobal(QCursor::pos()),
+          Qt::LeftButton, Qt::LeftButton, Qt::NoModifier, QPointingDevice::primaryPointingDevice());
+#else
+      QMouseEvent* e = new QMouseEvent(QEvent::MouseButtonRelease, QEvent::MouseButtonRelease, this->mapFromGlobal(QCursor::pos()),
           Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
+#endif
 
       QApplication::postEvent(this, e);
     }

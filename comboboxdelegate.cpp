@@ -131,14 +131,22 @@ void ComboBoxDelegate::setModelData(QWidget* editor, QAbstractItemModel* model,
           NewValue = QString("%1")
                          .arg(dec, 4, 16, QLatin1Char('0'))
                          .toUpper();  // 最少保留四位，不足补零
+#if QT_VERSION_MAJOR >= 6
+          if (NewValue.trimmed().length() % 2 != 0) NewValue = "0" + NewValue;
+#else
           if (NewValue.trimmed().count() % 2 != 0) NewValue = "0" + NewValue;
+#endif
         }
 
         if (oldValue == "real") {
           qreal r = CurrentValue.toDouble();
           qulonglong dec = r;
           NewValue = QString("%1").arg(dec, 4, 16, QLatin1Char('0')).toUpper();
+#if QT_VERSION_MAJOR >= 6
+          if (NewValue.trimmed().length() % 2 != 0) NewValue = "0" + NewValue;
+#else
           if (NewValue.trimmed().count() % 2 != 0) NewValue = "0" + NewValue;
+#endif
         }
 
         if (oldValue == "bool") {

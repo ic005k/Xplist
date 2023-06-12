@@ -2,7 +2,7 @@
 Type=Application
 Name=Xplist
 Exec=AppRun %F
-Icon=icon
+Icon=xplist
 Comment=PlistEditor
 Categories=Application;
 Terminal=true
