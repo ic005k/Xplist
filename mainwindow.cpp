@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVersion = "1.2.47";
+QString CurVersion = "1.2.48";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -2626,7 +2626,7 @@ void MainWindow::on_actionAbout_triggered() {
   QString last = str + appInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
   QString str1 =
       "<a style='color:blue;' href = "
-      "https://github.com/ic005k/" +
+      "https://github.com/andyvand/" +
       appName + ">" + appName + "</a><br><br>";
   QString str2 = "V " + CurVersion;
   QString str3 = "<br><br>";
@@ -3194,7 +3194,7 @@ void MainWindow::AddUEFIDrivers(QString fileStr) {
 }
 
 void MainWindow::on_actionBug_Report_triggered() {
-  QUrl url(QString("https://github.com/ic005k/" + appName + "/issues"));
+  QUrl url(QString("https://github.com/andyvand/" + appName + "/issues"));
   QDesktopServices::openUrl(url);
 }
 
