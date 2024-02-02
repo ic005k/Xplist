@@ -15,7 +15,9 @@ void MyTabPopup::setContentWidget(QWidget* page)
         return;
     content = page;
     QVBoxLayout* layout = new QVBoxLayout(this);
+#if QT_VERSION_MAJOR < 6
     layout->setMargin(0);
+#endif
     layout->addWidget(page);
 }
 
@@ -33,7 +35,12 @@ bool MyTabPopup::event(QEvent* event)
     if (event->type() == QEvent::NonClientAreaMouseButtonRelease) {
         QMouseEvent* e = static_cast<QMouseEvent*>(event);
         if (e && e->button() == Qt::LeftButton) {
+#if QT_VERSION_MAJOR >= 6
+            QPointF pos = e->globalPosition();
+            emit dragRelease(pos.toPoint());
+#else
             emit dragRelease(e->globalPos());
+#endif
         }
     }
 

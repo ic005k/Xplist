@@ -17,7 +17,7 @@ using namespace std;
 #include <QSettings>
 #include <QUrl>
 
-QString CurVersion = "1.2.47";
+QString CurVersion = "1.2.48";
 EditorTabsWidget* tabWidget;
 QUndoGroup* undoGroup;
 QString fileName;
@@ -289,7 +289,9 @@ void MainWindow::initMenuToolsBar() {
 
   ui->actionAbout->setMenuRole(QAction::AboutRole);
   ui->mainToolBar->setIconSize(QSize(26, 26));
+#if QT_VERSION_MAJOR < 6
   ui->mainToolBar->layout()->setMargin(1);
+#endif
   ui->mainToolBar->layout()->setSpacing(1);
 
   ui->cboxFileType->setToolTip(tr("Select the file storage format"));
@@ -726,14 +728,24 @@ QString MainWindow::readText(QString textFile) {
   if (fi.exists()) {
     QFile file(textFile);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
+#if QT_VERSION_MAJOR >= 6
+      QMessageBox::warning(
+          this, tr("Application"),
+          tr("Cannot read file %1:\n%2.")
+              .arg(QDir::toNativeSeparators(textFile), file.errorString()), QMessageBox::Ok, QMessageBox::NoButton);
+#else
       QMessageBox::warning(
           this, tr("Application"),
           tr("Cannot read file %1:\n%2.")
               .arg(QDir::toNativeSeparators(textFile), file.errorString()));
-
+#endif
     } else {
       QTextStream in(&file);
+#if QT_VERSION_MAJOR >= 6
+      in.setEncoding(QStringConverter::Utf8);
+#else
       in.setCodec("UTF-8");
+#endif
       QString text = in.readAll();
       return text;
     }
@@ -756,14 +768,24 @@ QDomDocument MainWindow::readXMLPlist(QDomDocument document, QString filePath) {
 bool MainWindow::getBinPlist(QString filePath) {
   QFile file(filePath);
   if (!file.open(QFile::ReadOnly | QFile::Text)) {
+#if QT_VERSION_MAJOR >= 6
+    QMessageBox::warning(
+        this, tr("Application"),
+        tr("Cannot read file %1:\n%2.")
+            .arg(QDir::toNativeSeparators(fileName), file.errorString()), QMessageBox::Ok, QMessageBox::NoButton);
+#else
     QMessageBox::warning(
         this, tr("Application"),
         tr("Cannot read file %1:\n%2.")
             .arg(QDir::toNativeSeparators(fileName), file.errorString()));
-
+#endif
   } else {
     QTextStream in(&file);
+#if QT_VERSION_MAJOR >= 6
+    in.setEncoding(QStringConverter::Utf8);
+#else
     in.setCodec("UTF-8");
+#endif
     QString text = in.readAll().trimmed();
     if (text.mid(0, 8) == "bplist00")
       return true;
@@ -816,9 +838,20 @@ void MainWindow::on_TabCloseRequest(int i) {
     msgBox.setInformativeText(tr("Do you want to save your changes?"));
     msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard |
                               QMessageBox::Cancel);
+
+#if QT_VERSION_MAJOR >= 6
+    QAbstractButton *save = msgBox.button(QMessageBox::Save);
+    save->setText(QString(tr("Save")));
+    QAbstractButton *cancel = msgBox.button(QMessageBox::Cancel);
+    cancel->setText(QString(tr("Cancel")));
+    QAbstractButton *discard = msgBox.button(QMessageBox::Discard);
+    discard->setText(QString(tr("Discard")));
+#else
     msgBox.setButtonText(QMessageBox::Save, QString(tr("Save")));
     msgBox.setButtonText(QMessageBox::Cancel, QString(tr("Cancel")));
     msgBox.setButtonText(QMessageBox::Discard, QString(tr("Discard")));
+#endif
+
     msgBox.setDefaultButton(QMessageBox::Save);
     int ret = msgBox.exec();
 
@@ -890,7 +923,11 @@ void MainWindow::savePlist(QString filePath) {
       QFile file(filePath);
       file.open(QIODevice::WriteOnly);
       QTextStream out(&file);
+#if QT_VERSION_MAJOR >= 6
+      out.setEncoding(QStringConverter::Utf8);
+#else
       out.setCodec("UTF-8");
+#endif
       doc.save(out, 4, QDomNode::EncodingFromDocument);
       file.close();
 
@@ -934,7 +971,11 @@ void MainWindow::savePlist(QString filePath) {
           QFile file(filePath);
           file.open(QIODevice::WriteOnly);
           QTextStream out(&file);
+#if QT_VERSION_MAJOR >= 6
+          out.setEncoding(QStringConverter::Utf8);
+#else
           out.setCodec("UTF-8");
+#endif
           doc.save(out, 4, QDomNode::EncodingFromDocument);
           file.close();
 
@@ -954,7 +995,11 @@ void MainWindow::savePlist(QString filePath) {
           QFile file(strSource);
           file.open(QIODevice::WriteOnly);
           QTextStream out(&file);
+#if QT_VERSION_MAJOR >= 6
+          out.setEncoding(QStringConverter::Utf8);
+#else
           out.setCodec("UTF-8");
+#endif
           doc.save(out, 4, QDomNode::EncodingFromDocument);
           file.close();
 
@@ -990,7 +1035,11 @@ void MainWindow::savePlist(QString filePath) {
           QFile file(strSource);
           file.open(QIODevice::WriteOnly);
           QTextStream out(&file);
+#if QT_VERSION_MAJOR >= 6
+          out.setEncoding(QStringConverter::Utf8);
+#else
           out.setCodec("UTF-8");
+#endif
           doc.save(out, 4, QDomNode::EncodingFromDocument);
           file.close();
 
@@ -1024,7 +1073,11 @@ void MainWindow::savePlist(QString filePath) {
           QFile file(filePath);
           file.open(QIODevice::WriteOnly);
           QTextStream out(&file);
+#if QT_VERSION_MAJOR >= 6
+          out.setEncoding(QStringConverter::Utf8);
+#else
           out.setCodec("UTF-8");
+#endif
           doc.save(out, 4, QDomNode::EncodingFromDocument);
           file.close();
           QProcess::execute("plutil", QStringList() << "-convert"
@@ -1124,9 +1177,13 @@ void MainWindow::actionRemove_activated() {
     QItemSelectionModel* selections = tab->treeView->selectionModel();
     QModelIndexList selectedsList = selections->selectedRows();
 
+#if QT_VERSION_MAJOR >= 6
+    std::sort(selectedsList.begin(), selectedsList.end());  // so that rows are removed 
+#else
     std::sort(selectedsList.begin(), selectedsList.end(),
               qGreater<QModelIndex>());  // so that rows are removed from
                                          // highest index
+#endif
 
     foreach (QModelIndex index, selectedsList) {
       if (index.isValid()) {
@@ -1695,7 +1752,11 @@ void MainWindow::showMsg() {
     str7 = "";
 
   str1 = index.data().toString().trimmed();
+#if QT_VERSION_MAJOR >= 6
+  if (str1.length() >= 100) str1 = str1.mid(0, 97) + "...";
+#else
   if (str1.count() >= 100) str1 = str1.mid(0, 97) + "...";
+#endif
 
   lblStaInfo0->setText(str1);
 
@@ -2022,16 +2083,27 @@ int MainWindow::parse_UpdateJSON(QString str) {
 
       if (!ui->actionAutoUpdateCheck->isChecked()) {
         if (!blAutoCheckUpdate) {
-          int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
+#if QT_VERSION_MAJOR >= 6
+          int ret = QMessageBox::warning(this, tr("Download"), warningStr,
+                                         QMessageBox::Ok, QMessageBox::Cancel);
+#
+#else
+         int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
                                          tr("Cancel"));
+#endif
           if (ret == 0) {
             ShowAutoUpdateDlg(false);
           }
         }
 
       } else {
+#if QT_VERSION_MAJOR >= 6
+        int ret = QMessageBox::warning(this, tr("Download"), warningStr,
+                                       QMessageBox::Ok, QMessageBox::Cancel);
+#else
         int ret = QMessageBox::warning(this, "", warningStr, tr("Download"),
                                        tr("Cancel"));
+#endif
         if (ret == 0) {
           ShowAutoUpdateDlg(false);
         }
@@ -2186,14 +2258,24 @@ void MainWindow::loadPlistText(QString textFile) {
   QFile file(textFile);
   if (file.exists()) {
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
+#if QT_VERSION_MAJOR >= 6
+      QMessageBox::warning(
+          this, tr("Application"),
+          tr("Cannot read file %1:\n%2.")
+              .arg(QDir::toNativeSeparators(fileName), file.errorString()), QMessageBox::Ok, QMessageBox::NoButton);
+#else
       QMessageBox::warning(
           this, tr("Application"),
           tr("Cannot read file %1:\n%2.")
               .arg(QDir::toNativeSeparators(fileName), file.errorString()));
-
+#endif
     } else {
       QTextStream in(&file);
+  #if QT_VERSION_MAJOR >= 6
+      in.setEncoding(QStringConverter::Utf8);
+  #else
       in.setCodec("UTF-8");
+  #endif
       QString text = in.readAll();
       plistTextEditor->setPlainText(text);
     }
@@ -2544,7 +2626,7 @@ void MainWindow::on_actionAbout_triggered() {
   QString last = str + appInfo.lastModified().toString("yyyy-MM-dd hh:mm:ss");
   QString str1 =
       "<a style='color:blue;' href = "
-      "https://github.com/ic005k/" +
+      "https://github.com/andyvand/" +
       appName + ">" + appName + "</a><br><br>";
   QString str2 = "V " + CurVersion;
   QString str3 = "<br><br>";
@@ -2566,7 +2648,9 @@ void MainWindow::on_actionSave_as_triggered() { actionSaveAs(); }
 
 void MainWindow::initFindReplace() {
   //初始化查找与替换界面
+#if QT_VERSION_MAJOR < 6
   ui->frameFind->layout()->setMargin(1);
+#endif
   ui->frameFind->close();
   ui->btnPrevious->setEnabled(false);
   ui->btnNext->setEnabled(false);
@@ -3110,7 +3194,7 @@ void MainWindow::AddUEFIDrivers(QString fileStr) {
 }
 
 void MainWindow::on_actionBug_Report_triggered() {
-  QUrl url(QString("https://github.com/ic005k/" + appName + "/issues"));
+  QUrl url(QString("https://github.com/andyvand/" + appName + "/issues"));
   QDesktopServices::openUrl(url);
 }
 
@@ -3296,7 +3380,11 @@ void MainWindow::TextEditToFile(QTextEdit* txtEdit, QString fileName) {
   bool ok = file->open(QIODevice::WriteOnly);
   if (ok) {
     QTextStream out(file);
+#if QT_VERSION_MAJOR >= 6
+    out.setEncoding(QStringConverter::Utf8);
+#else
     out.setCodec("UTF-8");
+#endif
     out << txtEdit->toPlainText();
     file->close();
     delete file;
@@ -3339,7 +3427,11 @@ void MainWindow::on_btnUpdateHex_clicked() {
   if (!ui->editHex->isModified()) return;
 
   QString str = ui->editHex->text();
+#if QT_VERSION_MAJOR >= 6
+  QString strHex = str.remove(QRegularExpression("\\s")).toUpper();
+#else
   QString strHex = str.remove(QRegExp("\\s")).toUpper();
+#endif
 
   EditorTab* tab = tabWidget->getCurentTab();
   QModelIndex index = tab->currentIndex();
@@ -3481,14 +3573,24 @@ void MainWindow::on_btnSave_clicked() { actionSave(); }
 void MainWindow::mousePressEvent(QMouseEvent* e) {
   if (e->button() == Qt::LeftButton) {
     isDrag = true;
+#if QT_VERSION_MAJOR >= 6
+    QPointF pos = e->globalPosition();
+    m_position = pos.toPoint() - this->pos();
+#else
     m_position = e->globalPos() - this->pos();
+#endif
     e->accept();
   }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent* e) {
   if (isDrag & (e->buttons() & Qt::LeftButton)) {
+#if QT_VERSION_MAJOR >= 6
+    QPointF pos = e->globalPosition();
+    move(pos.toPoint() - m_position);
+#else
     move(e->globalPos() - m_position);
+#endif
     e->accept();
   }
 }
@@ -3634,7 +3736,11 @@ QString MainWindow::loadText(QString textFile) {
 
     } else {
       QTextStream in(&file);
+#if QT_VERSION_MAJOR >= 6
+      in.setEncoding(QStringConverter::Utf8);
+#else
       in.setCodec("UTF-8");
+#endif
       QString text = in.readAll();
       return text;
     }

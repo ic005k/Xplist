@@ -24,25 +24,25 @@ AutoUpdateDialog::AutoUpdateDialog(QWidget* parent)
 AutoUpdateDialog::~AutoUpdateDialog() { delete ui; }
 
 void AutoUpdateDialog::Init() {
-  //"https://raw.fastgit.org/ic005k/"  //HK
+  //"https://raw.fastgit.org/andyvand/"  //HK
   strWinUrl =
-      "https://ghproxy.com/https://raw.githubusercontent.com/ic005k/"
+      "https://ghproxy.com/https://raw.githubusercontent.com/andyvand/"
       "QtOpenCoreConfigDatabase/main/win.zip";
 
   strMacUrl =
-      "https://ghproxy.com/https://raw.githubusercontent.com/ic005k/"
+      "https://ghproxy.com/https://raw.githubusercontent.com/andyvand/"
       "QtOpenCoreConfigDatabase/main/Contents.zip";
 
   strMacClassicalUrl =
-      "https://ghproxy.com/https://github.com/ic005k/QtOpenCoreConfigDatabase/"
+      "https://ghproxy.com/https://github.com/andyvand/QtOpenCoreConfigDatabase/"
       "releases/download/1.0.0/Contents.zip";
 
   strLinuxUrl =
-      "https://ghproxy.com/https://github.com/ic005k/QtOpenCoreConfigDatabase/"
+      "https://ghproxy.com/https://github.com/andyvand/QtOpenCoreConfigDatabase/"
       "releases/download/1.0.0/OCAuxiliaryTools-Linux-x86_64.AppImage";
 
   strDatabaseUrl =
-      "https://ghproxy.com/https://raw.githubusercontent.com/ic005k/"
+      "https://ghproxy.com/https://raw.githubusercontent.com/andyvand/"
       "QtOpenCoreConfigDatabase/main/Database.zip";
 
   manager = new QNetworkAccessManager(this);
@@ -209,7 +209,11 @@ void AutoUpdateDialog::startDownload(bool Database) {
 
   // github redirects the request, so this attribute must be set to true,
   // otherwise returns nothing from qt5.6
+#if QT_VERSION_MAJOR >= 6
+  request.setAttribute(QNetworkRequest::RedirectionTargetAttribute, true);
+#else
   request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+#endif
 
   reply = manager->get(request);  //发送请求
   connect(reply, &QNetworkReply::readyRead, this,

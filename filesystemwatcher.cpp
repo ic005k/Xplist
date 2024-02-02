@@ -12,6 +12,14 @@ extern MainWindow* mw_one;
 extern QVector<QString> openFileList;
 extern bool Save;
 
+#if QT_VERSION_MAJOR >= 6
+template <typename T>
+QSet<T> QListToQSet(const QList<T>& qlist)
+{
+  return QSet<T> (qlist.constBegin(), qlist.constEnd());
+}
+#endif
+
 FileSystemWatcher* FileSystemWatcher::m_pInstance = NULL;
 
 FileSystemWatcher::FileSystemWatcher(QObject* parent) : QObject(parent) {}
@@ -58,11 +66,23 @@ void FileSystemWatcher::directoryUpdated(const QString& path) {
   QStringList newEntryList = dir.entryList(
       QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files, QDir::DirsFirst);
 
+#if QT_VERSION_MAJOR >= 6
+  QSet<QString> newDirSet =
+QListToQSet(newEntryList);
+#else
   QSet<QString> newDirSet = QSet<QString>::fromList(newEntryList);  //旧
   // QSet<QString> newDirSet = QSet<QString>(newEntryList.begin(),
   // newEntryList.end());//新
+#endif
 
-  QSet<QString> currentDirSet = QSet<QString>::fromList(currEntryList);  //旧
+#if QT_VERSION_MAJOR >= 6
+  QSet<QString> currentDirSet =
+QListToQSet(currEntryList);
+#else
+  QSet<QString> currentDirSet =
+QSet<QString>::fromList(currEntryList);  //旧
+#endif
+
   // QSet<QString> currentDirSet = QSet<QString>(currEntryList.begin(),
   // currEntryList.end());//新
 
